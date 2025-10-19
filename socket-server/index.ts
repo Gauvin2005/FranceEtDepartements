@@ -178,8 +178,30 @@ io.on('connection', (socket) => {
       socket.join(code);
 
       let isSpectator = false;
+      const existingPlayer = gameState.game.players.find(
+        (p: any) => p.user?.pseudo === pseudo || p.guestPseudo === pseudo
+      );
 
-      if (gameState.game.status !== 'lobby') {
+      // Si le joueur existe déjà, il reste un joueur même si la partie est en cours
+      if (existingPlayer) {
+        isSpectator = false;
+        // Mettre à jour le userId si le joueur est maintenant connecté
+        if (token && existingPlayer.userId === null) {
+          try {
+            const jwt = require('jsonwebtoken');
+            const payload = jwt.verify(token, process.env.JWT_SECRET);
+            await prisma.gamePlayer.update({
+              where: { id: existingPlayer.id },
+              data: { userId: payload.userId }
+            });
+            existingPlayer.userId = payload.userId;
+            console.log(`Joueur ${existingPlayer.id} associé à l'utilisateur ${payload.userId}`);
+          } catch (error) {
+            console.log('Token invalide pour association userId');
+          }
+        }
+      } else if (gameState.game.status !== 'lobby') {
+        // Nouveau joueur qui rejoint une partie en cours = spectateur
         isSpectator = true;
         if (!gameState.spectators) {
           gameState.spectators = [];
@@ -187,22 +209,33 @@ io.on('connection', (socket) => {
         gameState.spectators.push(socket.id);
         await setGameState(code, gameState);
       } else {
-        const existingPlayer = gameState.game.players.find(
-          (p: any) => p.user?.pseudo === pseudo || p.guestPseudo === pseudo
-        );
-
-        if (!existingPlayer && gameState.game.players.length >= gameState.game.maxPlayers) {
+        // Partie en lobby
+        if (gameState.game.players.length >= gameState.game.maxPlayers) {
           isSpectator = true;
           if (!gameState.spectators) {
             gameState.spectators = [];
           }
           gameState.spectators.push(socket.id);
           await setGameState(code, gameState);
-        } else if (!existingPlayer) {
+        } else {
+          // Déterminer le userId si le joueur est connecté
+          let userId = null;
+          if (token) {
+            try {
+              const jwt = require('jsonwebtoken');
+              const payload = jwt.verify(token, process.env.JWT_SECRET);
+              userId = payload.userId;
+              console.log(`Nouveau joueur connecté: ${pseudo} -> userId: ${userId}`);
+            } catch (error) {
+              console.log('Token invalide pour nouveau joueur');
+            }
+          }
+
           const newPlayer = await prisma.gamePlayer.create({
             data: {
               gameId: gameState.game.id,
-              guestPseudo: pseudo,
+              userId: userId,
+              guestPseudo: userId ? null : pseudo,
               playerOrder: gameState.game.players.length,
               position: 0,
               money: 5000,
@@ -465,6 +498,9 @@ io.on('connection', (socket) => {
           playerId: nextPlayer.id,
           indicesRevealed: [],
         };
+
+        console.log(`Tour suivant: joueur ${nextPlayer.id} (${nextPlayer.user?.pseudo || nextPlayer.guestPseudo}) - userId: ${nextPlayer.userId}`);
+        console.log('GameState currentTurn mis à jour:', gameState.currentTurn);
 
         await prisma.game.update({
           where: { id: gameState.game.id },

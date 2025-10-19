@@ -228,9 +228,31 @@ export default function GamePage() {
   const currentPlayer = gameState.game.players.find(
     (p) => p.id === gameState.currentTurn?.playerId
   );
-  const isMyTurn =
-    currentPlayer?.userId === user?.id || currentPlayer?.guestPseudo === pseudo;
+  
+  console.log('Recherche currentPlayer:', {
+    currentTurnPlayerId: gameState.currentTurn?.playerId,
+    allPlayers: gameState.game.players.map(p => ({ id: p.id, userId: p.userId, guestPseudo: p.guestPseudo, userPseudo: p.user?.pseudo })),
+    foundPlayer: currentPlayer
+  });
+  const isMyTurn = 
+    (currentPlayer?.userId === user?.id) || 
+    (currentPlayer?.guestPseudo === pseudo) ||
+    (currentPlayer?.user?.pseudo === user?.pseudo);
   const isLobby = gameState.game.status === 'lobby';
+
+  console.log('Debug tour:', {
+    currentPlayerId: gameState.currentTurn?.playerId,
+    currentPlayer: currentPlayer,
+    userId: user?.id,
+    pseudo: pseudo,
+    isMyTurn: isMyTurn,
+    gameStatus: gameState.game.status,
+    checks: {
+      userIdMatch: currentPlayer?.userId === user?.id,
+      guestPseudoMatch: currentPlayer?.guestPseudo === pseudo,
+      userPseudoMatch: currentPlayer?.user?.pseudo === user?.pseudo
+    }
+  });
 
   return (
     <>
