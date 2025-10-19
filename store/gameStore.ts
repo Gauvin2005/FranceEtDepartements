@@ -29,6 +29,7 @@ interface GameActions {
   // Actions de base
   addPlayer: (name: string) => void;
   removePlayer: (id: number) => void;
+  updatePlayerName: (id: number, newName: string) => void;
   startGame: () => void;
   endGame: () => void;
   
@@ -224,6 +225,14 @@ export const useGameStore = create<GameState & GameActions>()(
           players: filteredPlayers,
           currentPlayerIndex: Math.min(currentPlayerIndex, filteredPlayers.length - 1),
         });
+      },
+      
+      updatePlayerName: (id: number, newName: string) => {
+        const { players } = get();
+        const updatedPlayers = players.map(player => 
+          player.id === id ? { ...player, name: newName } : player
+        );
+        set({ players: updatedPlayers });
       },
       
       startGame: () => {

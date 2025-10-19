@@ -6,14 +6,36 @@ interface ScoreBoardProps {
   players: Player[];
   currentPlayerIndex: number;
   onSellChampionCard: (playerId: number) => void;
+  onUpdatePlayerName?: (playerId: number, newName: string) => void;
 }
 
 export const ScoreBoard: React.FC<ScoreBoardProps> = ({
   players,
   currentPlayerIndex,
-  onSellChampionCard
+  onSellChampionCard,
+  onUpdatePlayerName
 }) => {
   const currentPlayer = players[currentPlayerIndex];
+  const [editingPlayerId, setEditingPlayerId] = React.useState<number | null>(null);
+  const [editingName, setEditingName] = React.useState('');
+
+  const handleStartEditing = (playerId: number, currentName: string) => {
+    setEditingPlayerId(playerId);
+    setEditingName(currentName);
+  };
+
+  const handleSaveEdit = () => {
+    if (editingPlayerId && editingName.trim() && onUpdatePlayerName) {
+      onUpdatePlayerName(editingPlayerId, editingName.trim());
+      setEditingPlayerId(null);
+      setEditingName('');
+    }
+  };
+
+  const handleCancelEdit = () => {
+    setEditingPlayerId(null);
+    setEditingName('');
+  };
 
   return (
     <div className="space-y-4">
@@ -39,19 +61,57 @@ export const ScoreBoard: React.FC<ScoreBoardProps> = ({
               `}
             >
               <div className="flex justify-between items-start mb-3">
-                <div>
-                  <h3 className={`font-bold text-lg ${
-                    isCurrentPlayer 
-                      ? 'text-blue-900 dark:text-blue-100' 
-                      : 'text-gray-900 dark:text-white'
-                  }`}>
-                    {player.name}
-                    {isCurrentPlayer && (
-                      <span className="ml-2 text-sm bg-blue-600 text-white px-2 py-1 rounded-full">
-                        Tour actuel
-                      </span>
-                    )}
-                  </h3>
+                <div className="flex-1">
+                  {editingPlayerId === player.id ? (
+                    <div className="flex items-center space-x-2">
+                      <input
+                        type="text"
+                        value={editingName}
+                        onChange={(e) => setEditingName(e.target.value)}
+                        className="px-2 py-1 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-600 text-gray-900 dark:text-white font-bold text-lg"
+                        autoFocus
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') handleSaveEdit();
+                          if (e.key === 'Escape') handleCancelEdit();
+                        }}
+                      />
+                      <button
+                        onClick={handleSaveEdit}
+                        className="text-green-600 hover:text-green-700 font-semibold"
+                      >
+                        ✓
+                      </button>
+                      <button
+                        onClick={handleCancelEdit}
+                        className="text-red-600 hover:text-red-700 font-semibold"
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="flex items-center space-x-2">
+                      <h3 className={`font-bold text-lg ${
+                        isCurrentPlayer 
+                          ? 'text-blue-900 dark:text-blue-100' 
+                          : 'text-gray-900 dark:text-white'
+                      }`}>
+                        {player.name}
+                      </h3>
+                      {onUpdatePlayerName && (
+                        <button
+                          onClick={() => handleStartEditing(player.id, player.name)}
+                          className="text-blue-600 hover:text-blue-700 font-semibold text-sm"
+                        >
+                          ✏️
+                        </button>
+                      )}
+                      {isCurrentPlayer && (
+                        <span className="text-sm bg-blue-600 text-white px-2 py-1 rounded-full">
+                          Tour actuel
+                        </span>
+                      )}
+                    </div>
+                  )}
                   
                   <div className="text-2xl font-bold text-green-600 dark:text-green-400">
                     {player.score.toLocaleString()} pts

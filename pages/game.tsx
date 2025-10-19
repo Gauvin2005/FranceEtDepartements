@@ -32,6 +32,7 @@ const GamePage: React.FC = () => {
     startGame,
     addPlayer,
     removePlayer,
+    updatePlayerName,
     saveGame,
     loadGame,
     resetGame
@@ -44,6 +45,8 @@ const GamePage: React.FC = () => {
   const [showCompositions, setShowCompositions] = useState(false);
   const [showMarquee, setShowMarquee] = useState(false);
   const [marqueeText, setMarqueeText] = useState('');
+  const [editingPlayerId, setEditingPlayerId] = useState<number | null>(null);
+  const [editingName, setEditingName] = useState('');
 
   const currentPlayer = players[currentPlayerIndex];
 
@@ -143,6 +146,24 @@ const GamePage: React.FC = () => {
     setShowCompositions(false);
   };
 
+  const handleStartEditing = (playerId: number, currentName: string) => {
+    setEditingPlayerId(playerId);
+    setEditingName(currentName);
+  };
+
+  const handleSaveEdit = () => {
+    if (editingPlayerId && editingName.trim()) {
+      updatePlayerName(editingPlayerId, editingName.trim());
+      setEditingPlayerId(null);
+      setEditingName('');
+    }
+  };
+
+  const handleCancelEdit = () => {
+    setEditingPlayerId(null);
+    setEditingName('');
+  };
+
   return (
     <>
       <Head>
@@ -199,16 +220,54 @@ const GamePage: React.FC = () => {
                         key={player.id}
                         className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg"
                       >
-                        <span className="font-medium text-gray-900 dark:text-white">
-                          {player.name}
-                        </span>
-                        {players.length > 2 && (
-                          <button
-                            onClick={() => removePlayer(player.id)}
-                            className="text-red-600 hover:text-red-700 font-semibold"
-                          >
-                            Supprimer
-                          </button>
+                        {editingPlayerId === player.id ? (
+                          <div className="flex items-center space-x-2 flex-1">
+                            <input
+                              type="text"
+                              value={editingName}
+                              onChange={(e) => setEditingName(e.target.value)}
+                              className="flex-1 px-2 py-1 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-600 text-gray-900 dark:text-white text-sm"
+                              autoFocus
+                              onKeyDown={(e) => {
+                                if (e.key === 'Enter') handleSaveEdit();
+                                if (e.key === 'Escape') handleCancelEdit();
+                              }}
+                            />
+                            <button
+                              onClick={handleSaveEdit}
+                              className="text-green-600 hover:text-green-700 font-semibold text-sm"
+                            >
+                              ✓
+                            </button>
+                            <button
+                              onClick={handleCancelEdit}
+                              className="text-red-600 hover:text-red-700 font-semibold text-sm"
+                            >
+                              ✕
+                            </button>
+                          </div>
+                        ) : (
+                          <>
+                            <span className="font-medium text-gray-900 dark:text-white">
+                              {player.name}
+                            </span>
+                            <div className="flex space-x-2">
+                              <button
+                                onClick={() => handleStartEditing(player.id, player.name)}
+                                className="text-blue-600 hover:text-blue-700 font-semibold text-sm"
+                              >
+                                ✏️
+                              </button>
+                              {players.length > 2 && (
+                                <button
+                                  onClick={() => removePlayer(player.id)}
+                                  className="text-red-600 hover:text-red-700 font-semibold text-sm"
+                                >
+                                  🗑️
+                                </button>
+                              )}
+                            </div>
+                          </>
                         )}
                       </div>
                     ))}
@@ -282,6 +341,7 @@ const GamePage: React.FC = () => {
                   players={players}
                   currentPlayerIndex={currentPlayerIndex}
                   onSellChampionCard={handleSellChampionCard}
+                  onUpdatePlayerName={updatePlayerName}
                 />
               </div>
 
