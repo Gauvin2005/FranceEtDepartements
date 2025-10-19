@@ -73,8 +73,7 @@ interface GameActions {
 
 const initialGameState: GameState = {
   players: [
-    { id: 1, name: 'Joueur 1', score: 0, souvenirCards: [], championCards: 0, isActive: true },
-    { id: 2, name: 'Joueur 2', score: 0, souvenirCards: [], championCards: 0, isActive: true }
+    { id: 1, name: 'Joueur 1', score: 0, souvenirCards: [], championCards: 0, isActive: true }
   ],
   currentPlayerIndex: 0,
   diceResults: [],

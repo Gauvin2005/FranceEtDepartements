@@ -134,7 +134,7 @@ const GamePage: React.FC = () => {
   };
 
   const handleStartGame = () => {
-    if (players.length >= 2) {
+    if (players.length >= 1) {
       startGame();
       
       // Afficher le marquee pour le premier joueur
@@ -276,7 +276,7 @@ const GamePage: React.FC = () => {
                               >
                                 ✏️
                               </button>
-                              {players.length > 2 && (
+                              {players.length > 1 && (
                                 <button
                                   onClick={() => removePlayer(player.id)}
                                   className="text-red-600 hover:text-red-700 font-semibold text-sm"
@@ -316,10 +316,10 @@ const GamePage: React.FC = () => {
                   <div className="pt-4">
                     <button
                       onClick={handleStartGame}
-                      disabled={players.length < 2}
+                      disabled={players.length < 1}
                       className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white px-6 py-3 rounded-lg font-semibold text-lg transition-colors"
                     >
-                      {players.length < 2 ? 'Ajoutez au moins 2 joueurs' : 'Démarrer la partie'}
+                      {players.length < 1 ? 'Ajoutez au moins 1 joueur' : 'Démarrer la partie'}
                     </button>
                   </div>
                 </div>
