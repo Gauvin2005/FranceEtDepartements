@@ -36,7 +36,7 @@ export const Marquee: React.FC<MarqueeProps> = ({
           }
           return prev + 1;
         });
-      }, 30); // Rapide pour l'entrée
+      }, 15); // Plus rapide pour l'entrée
 
       return () => clearInterval(enterInterval);
     }
@@ -45,7 +45,7 @@ export const Marquee: React.FC<MarqueeProps> = ({
     if (animationPhase === 'display') {
       const displayTimeout = setTimeout(() => {
         setAnimationPhase('exit');
-      }, 2000); // 2 secondes pour lire
+      }, 1200); // 1.2 secondes pour lire
 
       return () => clearTimeout(displayTimeout);
     }
@@ -61,7 +61,7 @@ export const Marquee: React.FC<MarqueeProps> = ({
           }
           return prev - 1;
         });
-      }, 20); // Très rapide pour la sortie
+      }, 10); // Très rapide pour la sortie
 
       return () => clearInterval(exitInterval);
     }
@@ -74,8 +74,8 @@ export const Marquee: React.FC<MarqueeProps> = ({
   if (!isVisible) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50 pointer-events-none">
-      <div className="bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 text-white px-8 py-6 rounded-2xl shadow-2xl backdrop-blur-sm border border-white/20 max-w-2xl mx-4">
+    <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
+      <div className="bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 text-white px-8 py-6 rounded-2xl shadow-2xl backdrop-blur-sm border border-white/20 max-w-2xl mx-4 pointer-events-none">
         <div className="text-center">
           <div className="text-2xl font-bold tracking-wide mb-2">
             {displayText}
