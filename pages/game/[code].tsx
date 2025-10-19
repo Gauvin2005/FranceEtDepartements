@@ -10,7 +10,7 @@ import { IndicesPanel } from '@/components/IndicesPanel';
 import { useSocket } from '@/hooks/useSocket';
 import { useGameStore } from '@/stores/gameStore';
 import { useAuthStore } from '@/stores/authStore';
-import { Loader2, Save, ArrowLeft } from 'lucide-react';
+import { Loader2, ArrowLeft, Trophy, AlertTriangle } from 'lucide-react';
 import type { Department } from '@/types';
 
 export default function GamePage() {
@@ -40,8 +40,10 @@ export default function GamePage() {
   const [pseudo, setPseudo] = useState('');
   const [hasJoined, setHasJoined] = useState(false);
   const [connectionError, setConnectionError] = useState<string | null>(null);
+  const [showEndGameConfirm, setShowEndGameConfirm] = useState(false);
+  const [showFinalScores, setShowFinalScores] = useState(false);
 
-  const { isConnected, joinGame, startGame, rollDice, revealIndex, chooseComposition, saveGame } =
+  const { isConnected, joinGame, startGame, rollDice, revealIndex, chooseComposition } =
     useSocket({
       onStateUpdate: (state) => {
         console.log('État de la partie reçu:', state);
@@ -82,9 +84,6 @@ export default function GamePage() {
       },
       onGameFinished: (data) => {
         alert(`Partie terminée! Gagnant: ${data.winner.user?.pseudo || data.winner.guestPseudo}`);
-      },
-      onGameSaved: (data) => {
-        alert(data.message);
       },
       onSpectatorMode: (isSpec) => {
         setIsSpectator(isSpec);
@@ -154,10 +153,13 @@ export default function GamePage() {
     }
   };
 
-  const handleSaveGame = () => {
-    if (code && typeof code === 'string') {
-      saveGame(code);
-    }
+  const handleEndGame = () => {
+    setShowEndGameConfirm(false);
+    setShowFinalScores(true);
+  };
+
+  const handleNewGame = () => {
+    router.push('/');
   };
 
   const fetchDepartmentByCardNumber = async (cardNumber: number) => {
@@ -274,10 +276,16 @@ export default function GamePage() {
                 {isSpectator && ' (Spectateur)'}
               </p>
             </div>
-            <Button variant="outline" onClick={handleSaveGame}>
-              <Save className="w-4 h-4 mr-2" />
-              Sauvegarder
-            </Button>
+            {!isLobby && (
+              <Button 
+                variant="destructive" 
+                onClick={() => setShowEndGameConfirm(true)}
+              >
+                <Trophy className="w-4 h-4 mr-2" />
+                Fin du jeu
+              </Button>
+            )}
+            {isLobby && <div className="w-32"></div>}
           </div>
 
           {error && (
@@ -383,6 +391,140 @@ export default function GamePage() {
                   currentPlayerId={gameState.currentTurn?.playerId || 0}
                 />
               </div>
+            </div>
+          )}
+
+          {/* Modal de confirmation de fin de jeu */}
+          {showEndGameConfirm && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+              <Card className="max-w-md mx-4">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2 text-orange-600">
+                    <AlertTriangle className="w-6 h-6" />
+                    Terminer la partie ?
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <p className="text-gray-700">
+                    Êtes-vous sûr de vouloir terminer cette partie ? Cette action mettra fin au jeu et affichera les scores finaux.
+                  </p>
+                  <p className="text-sm text-red-600 font-semibold">
+                    ⚠️ Toute progression sera perdue et la partie ne pourra pas être reprise.
+                  </p>
+                  <div className="flex gap-3 justify-end">
+                    <Button 
+                      variant="outline" 
+                      onClick={() => setShowEndGameConfirm(false)}
+                    >
+                      Annuler
+                    </Button>
+                    <Button 
+                      variant="destructive"
+                      onClick={handleEndGame}
+                    >
+                      Oui, terminer la partie
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          )}
+
+          {/* Modal des scores finaux */}
+          {showFinalScores && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+              <Card className="max-w-4xl w-full max-h-[90vh] overflow-auto">
+                <CardHeader className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white">
+                  <CardTitle className="flex items-center gap-2 text-2xl">
+                    <Trophy className="w-8 h-8" />
+                    Scores Finaux
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="p-6 space-y-6">
+                  {gameState.game.players
+                    .slice()
+                    .sort((a, b) => b.money - a.money)
+                    .map((player, index) => {
+                      const souvenirCards = player.ownedCards.filter(oc => oc.card.type === 'souvenir');
+                      const championCards = player.ownedCards.filter(oc => oc.card.type === 'champion');
+                      const departments = player.ownedCards.map(oc => oc.card.department).filter(Boolean);
+                      
+                      return (
+                        <div 
+                          key={player.id} 
+                          className={`p-4 rounded-lg border-2 ${
+                            index === 0 
+                              ? 'bg-gradient-to-br from-yellow-50 to-orange-50 border-yellow-400' 
+                              : 'bg-gray-50 border-gray-300'
+                          }`}
+                        >
+                          <div className="flex items-center justify-between mb-3">
+                            <div className="flex items-center gap-3">
+                              {index === 0 && (
+                                <Trophy className="w-8 h-8 text-yellow-500" />
+                              )}
+                              <div>
+                                <h3 className="text-xl font-bold">
+                                  {index + 1}. {player.user?.pseudo || player.guestPseudo}
+                                </h3>
+                                {index === 0 && (
+                                  <span className="text-sm font-semibold text-yellow-600">
+                                    🏆 Vainqueur !
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+                            <div className="text-right">
+                              <div className="text-3xl font-bold text-blue-600">
+                                {player.money} pts
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="grid md:grid-cols-2 gap-4 mt-4">
+                            <div className="space-y-2">
+                              <div className="flex items-center gap-2">
+                                <span className="font-semibold">💳 Cartes Souvenir:</span>
+                                <span className="text-lg">{souvenirCards.length}</span>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <span className="font-semibold">🏆 Cartes Champion:</span>
+                                <span className="text-lg">{championCards.length}</span>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <span className="font-semibold">📍 Départements gagnés:</span>
+                                <span className="text-lg">{departments.length}</span>
+                              </div>
+                            </div>
+
+                            {departments.length > 0 && (
+                              <div>
+                                <p className="font-semibold mb-2">Départements:</p>
+                                <div className="text-sm space-y-1 max-h-32 overflow-y-auto">
+                                  {departments.map((dept: any) => (
+                                    <div key={dept.id} className="text-gray-700">
+                                      {dept.numero} - {dept.nom}
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      );
+                    })}
+
+                  <div className="flex justify-center pt-4">
+                    <Button 
+                      size="lg"
+                      onClick={handleNewGame}
+                      className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700"
+                    >
+                      Nouvelle Partie
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
             </div>
           )}
         </div>

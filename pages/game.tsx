@@ -7,6 +7,7 @@ import HintModal from '../components/HintModal';
 import { BonusModal } from '../components/BonusModal';
 import { Marquee } from '../components/Marquee';
 import ScoreBoard from '../components/ScoreBoard';
+import { Department, getDepartmentById } from '../data/departments';
 
 const GamePage: React.FC = () => {
   const {
@@ -47,6 +48,8 @@ const GamePage: React.FC = () => {
   const [marqueeText, setMarqueeText] = useState('');
   const [editingPlayerId, setEditingPlayerId] = useState<number | null>(null);
   const [editingName, setEditingName] = useState('');
+  const [showEndGameConfirm, setShowEndGameConfirm] = useState(false);
+  const [showFinalScores, setShowFinalScores] = useState(false);
 
   const currentPlayer = players[currentPlayerIndex];
 
@@ -164,6 +167,16 @@ const GamePage: React.FC = () => {
     setEditingName('');
   };
 
+  const handleEndGame = () => {
+    setShowEndGameConfirm(false);
+    setShowFinalScores(true);
+  };
+
+  const handleNewGame = () => {
+    setShowFinalScores(false);
+    resetGame();
+  };
+
   return (
     <>
       <Head>
@@ -186,18 +199,23 @@ const GamePage: React.FC = () => {
               </div>
               
               <div className="flex space-x-2">
-                <button
-                  onClick={saveGame}
-                  className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition-colors"
-                >
-                  Sauvegarder
-                </button>
-                <button
-                  onClick={resetGame}
-                  className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg font-semibold transition-colors"
-                >
-                  Nouvelle partie
-                </button>
+                {gameStarted && !gameEnded && (
+                  <button
+                    onClick={() => setShowEndGameConfirm(true)}
+                    className="px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white rounded-lg font-semibold transition-colors flex items-center gap-2"
+                  >
+                    <span>🏆</span>
+                    Fin du jeu
+                  </button>
+                )}
+                {!gameStarted && (
+                  <button
+                    onClick={resetGame}
+                    className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg font-semibold transition-colors"
+                  >
+                    Nouvelle partie
+                  </button>
+                )}
               </div>
             </div>
           </div>
@@ -425,6 +443,137 @@ const GamePage: React.FC = () => {
           isVisible={showMarquee}
           onComplete={() => setShowMarquee(false)}
         />
+
+        {/* Modal de confirmation de fin de jeu */}
+        {showEndGameConfirm && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-2xl p-6 max-w-md mx-4">
+              <div className="mb-4">
+                <h3 className="text-xl font-bold text-orange-600 dark:text-orange-400 flex items-center gap-2">
+                  <span>⚠️</span>
+                  Terminer la partie ?
+                </h3>
+              </div>
+              <div className="space-y-4">
+                <p className="text-gray-700 dark:text-gray-300">
+                  Êtes-vous sûr de vouloir terminer cette partie ? Cette action mettra fin au jeu et affichera les scores finaux.
+                </p>
+                <p className="text-sm text-red-600 dark:text-red-400 font-semibold">
+                  ⚠️ Toute progression sera perdue et la partie ne pourra pas être reprise.
+                </p>
+                <div className="flex gap-3 justify-end">
+                  <button
+                    onClick={() => setShowEndGameConfirm(false)}
+                    className="px-4 py-2 bg-gray-300 hover:bg-gray-400 dark:bg-gray-600 dark:hover:bg-gray-700 text-gray-900 dark:text-white rounded-lg font-semibold transition-colors"
+                  >
+                    Annuler
+                  </button>
+                  <button
+                    onClick={handleEndGame}
+                    className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg font-semibold transition-colors"
+                  >
+                    Oui, terminer la partie
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Modal des scores finaux */}
+        {showFinalScores && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-auto">
+              <div className="bg-gradient-to-r from-yellow-400 to-orange-500 p-6 rounded-t-lg">
+                <h2 className="text-2xl font-bold text-white flex items-center gap-2">
+                  <span>🏆</span>
+                  Scores Finaux
+                </h2>
+              </div>
+              <div className="p-6 space-y-6">
+                {players
+                  .slice()
+                  .sort((a, b) => b.score - a.score)
+                  .map((player, index) => {
+                    const departments = player.souvenirCards.map(id => getDepartmentById(id)).filter(Boolean);
+                    
+                    return (
+                      <div 
+                        key={player.id} 
+                        className={`p-4 rounded-lg border-2 ${
+                          index === 0 
+                            ? 'bg-gradient-to-br from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20 border-yellow-400' 
+                            : 'bg-gray-50 dark:bg-gray-700 border-gray-300 dark:border-gray-600'
+                        }`}
+                      >
+                        <div className="flex items-center justify-between mb-3">
+                          <div className="flex items-center gap-3">
+                            {index === 0 && (
+                              <span className="text-4xl">🏆</span>
+                            )}
+                            <div>
+                              <h3 className="text-xl font-bold text-gray-900 dark:text-white">
+                                {index + 1}. {player.name}
+                              </h3>
+                              {index === 0 && (
+                                <span className="text-sm font-semibold text-yellow-600 dark:text-yellow-400">
+                                  Vainqueur !
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                          <div className="text-right">
+                            <div className="text-3xl font-bold text-blue-600 dark:text-blue-400">
+                              {player.score.toLocaleString()} pts
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="grid md:grid-cols-2 gap-4 mt-4">
+                          <div className="space-y-2">
+                            <div className="flex items-center gap-2">
+                              <span className="font-semibold text-gray-900 dark:text-white">💳 Cartes Souvenir:</span>
+                              <span className="text-lg text-gray-700 dark:text-gray-300">{player.souvenirCards.length}</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <span className="font-semibold text-gray-900 dark:text-white">🏆 Cartes Champion:</span>
+                              <span className="text-lg text-gray-700 dark:text-gray-300">{player.championCards}</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <span className="font-semibold text-gray-900 dark:text-white">📍 Départements gagnés:</span>
+                              <span className="text-lg text-gray-700 dark:text-gray-300">{departments.length}</span>
+                            </div>
+                          </div>
+
+                          {departments.length > 0 && (
+                            <div>
+                              <p className="font-semibold mb-2 text-gray-900 dark:text-white">Départements:</p>
+                              <div className="text-sm space-y-1 max-h-32 overflow-y-auto">
+                                {departments.map((dept) => dept && (
+                                  <div key={dept.id} className="text-gray-700 dark:text-gray-300">
+                                    {dept.id.toString().padStart(2, '0')} - {dept.name}
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
+
+                <div className="flex justify-center pt-4">
+                  <button
+                    onClick={handleNewGame}
+                    className="px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-lg font-semibold text-lg transition-colors"
+                  >
+                    Nouvelle Partie
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </>
   );
