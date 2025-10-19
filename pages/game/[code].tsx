@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import Head from 'next/head';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Dice } from '@/components/Dice';
+import Dice from '@/components/Dice';
 import { CompositionsList } from '@/components/CompositionsList';
 import { PlayersPanel } from '@/components/PlayersPanel';
 import { IndicesPanel } from '@/components/IndicesPanel';
@@ -325,7 +325,9 @@ export default function GamePage() {
                   <CardContent className="space-y-6">
                     <div>
                       <h3 className="text-lg font-semibold mb-4">Dés</h3>
-                      <Dice dice={currentDice} isRolling={isRolling} />
+                      <Dice value={currentDice?.d10a || 0} isRolling={isRolling} type="d10" />
+                      <Dice value={currentDice?.d10b || 0} isRolling={isRolling} type="d10" />
+                      <Dice value={currentDice?.d6 || 0} isRolling={isRolling} type="d6" />
                       {isMyTurn && !currentDice && (
                         <Button className="w-full mt-4" onClick={handleRollDice}>
                           Lancer les dés
