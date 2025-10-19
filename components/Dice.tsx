@@ -42,26 +42,27 @@ const Dice: React.FC<DiceProps> = ({
   }, [isRolling, value, type]);
 
   const sizeClasses = {
-    sm: 'w-12 h-12 text-lg',
-    md: 'w-16 h-16 text-xl',
-    lg: 'w-20 h-20 text-2xl'
+    sm: 'w-14 h-14 text-xl',
+    md: 'w-20 h-20 text-3xl',
+    lg: 'w-24 h-24 text-4xl'
   };
 
   const diceClasses = `
     ${sizeClasses[size]}
-    bg-white dark:bg-gray-800
-    border-2 border-gray-300 dark:border-gray-600
-    rounded-lg shadow-lg
+    bg-gradient-to-br from-purple-600 to-cyan-600
+    border-2 border-purple-400/50
+    rounded-xl shadow-2xl
     flex items-center justify-center
-    font-bold text-gray-800 dark:text-gray-200
+    font-black text-white
     transition-all duration-300
-    ${isAnimating ? 'animate-pulse scale-110' : ''}
+    ${isAnimating ? 'animate-glow-pulse scale-110 glow-effect' : ''}
     ${isRolling ? 'animate-spin' : ''}
+    hover:scale-105 hover:shadow-purple-500/50
   `;
 
   return (
     <div className={diceClasses}>
-      <span className={isAnimating ? 'opacity-50' : 'opacity-100'}>
+      <span className={isAnimating ? 'opacity-70' : 'opacity-100 glow-text'}>
         {displayValue}
       </span>
     </div>
@@ -91,56 +92,52 @@ export const DiceRoll: React.FC<DiceRollProps> = ({
   }, [isRolling, diceResults, onRollComplete]);
 
   return (
-    <div className="flex flex-col items-center space-y-4">
-      <h3 className="text-xl font-bold text-gray-900 dark:text-white">
-        Résultat des dés
-      </h3>
-      
-      <div className="flex space-x-4">
+    <div className="flex flex-col items-center space-y-6">
+      <div className="flex space-x-6">
         {/* Premier dé (0-9) */}
-        <div className="flex flex-col items-center space-y-2">
+        <div className="flex flex-col items-center space-y-3 animate-scale-in">
           <Dice 
             value={diceResults[0] || 0} 
             isRolling={isRolling}
             size="lg"
             type="d10"
           />
-          <span className="text-sm text-gray-600 dark:text-gray-400">
-            Dé 1 (0-9)
+          <span className="text-sm text-purple-300 font-bold px-3 py-1 bg-purple-500/20 rounded-full border border-purple-500/50">
+            D10 (0-9)
           </span>
         </div>
 
         {/* Deuxième dé (0-9) */}
-        <div className="flex flex-col items-center space-y-2">
+        <div className="flex flex-col items-center space-y-3 animate-scale-in" style={{ animationDelay: '0.1s' }}>
           <Dice 
             value={diceResults[1] || 0} 
             isRolling={isRolling}
             size="lg"
             type="d10"
           />
-          <span className="text-sm text-gray-600 dark:text-gray-400">
-            Dé 2 (0-9)
+          <span className="text-sm text-cyan-300 font-bold px-3 py-1 bg-cyan-500/20 rounded-full border border-cyan-500/50">
+            D10 (0-9)
           </span>
         </div>
 
         {/* Troisième dé (1-6) */}
-        <div className="flex flex-col items-center space-y-2">
+        <div className="flex flex-col items-center space-y-3 animate-scale-in" style={{ animationDelay: '0.2s' }}>
           <Dice 
             value={diceResults[2] || 1} 
             isRolling={isRolling}
             size="lg"
             type="d6"
           />
-          <span className="text-sm text-gray-600 dark:text-gray-400">
-            Dé 3 (1-6)
+          <span className="text-sm text-pink-300 font-bold px-3 py-1 bg-pink-500/20 rounded-full border border-pink-500/50">
+            D6 (1-6)
           </span>
         </div>
       </div>
 
       {showResults && diceResults.length === 3 && (
-        <div className="mt-4 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-          <p className="text-center text-blue-800 dark:text-blue-200 font-semibold">
-            Résultat: {diceResults[0]} - {diceResults[1]} - {diceResults[2]}
+        <div className="mt-4 p-4 bg-gradient-to-r from-purple-500/20 to-cyan-500/20 rounded-xl border-2 border-purple-500/50 animate-scale-in">
+          <p className="text-center text-white font-black text-lg">
+            Résultat: <span className="text-purple-300">{diceResults[0]}</span> - <span className="text-cyan-300">{diceResults[1]}</span> - <span className="text-pink-300">{diceResults[2]}</span>
           </p>
         </div>
       )}

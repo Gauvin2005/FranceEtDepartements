@@ -69,112 +69,112 @@ export const HintModal: React.FC<HintModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-md w-full mx-4 p-6">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-bold text-gray-900 dark:text-white">
-            Devinez le département
+    <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 animate-scale-in">
+      <div className="card-gaming max-w-md w-full mx-4 p-8 shadow-2xl animate-float">
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-3xl font-black bg-gradient-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent glow-text">
+            🎯 Devinez le département
           </h2>
           <button
             onClick={onClose}
-            className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+            className="text-red-400 hover:text-red-300 text-2xl font-bold transition-colors"
           >
             ✕
           </button>
         </div>
 
-        <div className="mb-6">
-          <p className="text-gray-700 dark:text-gray-300 mb-4">
-            Département numéro <span className="font-bold text-blue-600 dark:text-blue-400">{department.id}</span>
+        <div className="mb-6 p-4 bg-gradient-to-r from-purple-500/20 to-cyan-500/20 rounded-xl border-2 border-purple-500/50">
+          <p className="text-white text-center text-lg">
+            Département numéro <span className="font-black text-3xl bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">{department.numero}</span>
           </p>
         </div>
 
         {/* Boutons d'indices */}
         <div className="mb-6">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">
-            Choisissez vos indices
+          <h3 className="text-xl font-bold text-purple-300 mb-4">
+            💡 Choisissez vos indices
           </h3>
           
           {hintsUsed > 0 && (
-            <div className="mb-3 p-3 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg">
-              <p className="text-sm text-yellow-800 dark:text-yellow-200">
+            <div className="mb-4 p-3 bg-gradient-to-r from-orange-500/20 to-red-500/20 border-2 border-orange-500/50 rounded-xl">
+              <p className="text-sm text-orange-300 font-bold text-center">
                 ⚠️ Une fois votre choix fait, vous ne pouvez plus revenir en arrière pour éviter la triche !
               </p>
             </div>
           )}
           
-          <div className="grid grid-cols-2 gap-2 mb-4">
+          <div className="grid grid-cols-2 gap-3 mb-4">
             <button
               onClick={() => onUseHint(0)}
               disabled={hintsUsed > 0}
-              className={`px-4 py-2 rounded-lg font-semibold transition-all duration-200 ${
+              className={`px-4 py-3 rounded-xl font-bold transition-all duration-200 ${
                 hintsUsed === 0 
-                  ? 'bg-blue-600 text-white shadow-lg' 
+                  ? 'bg-gradient-to-r from-green-600 to-cyan-600 text-white shadow-xl border-2 border-green-400 glow-effect-cyan' 
                   : hintsUsed > 0
-                    ? 'bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-600 cursor-not-allowed'
-                    : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600'
+                    ? 'bg-gray-700/50 text-gray-500 cursor-not-allowed border-2 border-gray-600/50'
+                    : 'bg-purple-600/50 text-white hover:bg-purple-600 border-2 border-purple-400/50 hover:scale-105'
               }`}
             >
               Aucun indice
-              <div className="text-xs">±5000 pts</div>
+              <div className="text-sm font-black text-green-300">±5000 pts</div>
             </button>
             
             <button
               onClick={() => onUseHint(1)}
               disabled={hintsUsed > 1}
-              className={`px-4 py-2 rounded-lg font-semibold transition-all duration-200 ${
+              className={`px-4 py-3 rounded-xl font-bold transition-all duration-200 ${
                 hintsUsed === 1 
-                  ? 'bg-blue-600 text-white shadow-lg' 
+                  ? 'bg-gradient-to-r from-cyan-600 to-blue-600 text-white shadow-xl border-2 border-cyan-400 glow-effect-cyan' 
                   : hintsUsed > 1
-                    ? 'bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-600 cursor-not-allowed'
-                    : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600'
+                    ? 'bg-gray-700/50 text-gray-500 cursor-not-allowed border-2 border-gray-600/50'
+                    : 'bg-purple-600/50 text-white hover:bg-purple-600 border-2 border-purple-400/50 hover:scale-105'
               }`}
             >
               1 indice
-              <div className="text-xs">±2000 pts</div>
+              <div className="text-sm font-black text-cyan-300">±2000 pts</div>
             </button>
             
             <button
               onClick={() => onUseHint(2)}
               disabled={hintsUsed > 2}
-              className={`px-4 py-2 rounded-lg font-semibold transition-all duration-200 ${
+              className={`px-4 py-3 rounded-xl font-bold transition-all duration-200 ${
                 hintsUsed === 2 
-                  ? 'bg-blue-600 text-white shadow-lg' 
+                  ? 'bg-gradient-to-r from-yellow-600 to-orange-600 text-white shadow-xl border-2 border-yellow-400 glow-effect' 
                   : hintsUsed > 2
-                    ? 'bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-600 cursor-not-allowed'
-                    : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600'
+                    ? 'bg-gray-700/50 text-gray-500 cursor-not-allowed border-2 border-gray-600/50'
+                    : 'bg-purple-600/50 text-white hover:bg-purple-600 border-2 border-purple-400/50 hover:scale-105'
               }`}
             >
               2 indices
-              <div className="text-xs">±1000 pts</div>
+              <div className="text-sm font-black text-yellow-300">±1000 pts</div>
             </button>
             
             <button
               onClick={() => onUseHint(3)}
               disabled={hintsUsed > 3}
-              className={`px-4 py-2 rounded-lg font-semibold transition-all duration-200 ${
+              className={`px-4 py-3 rounded-xl font-bold transition-all duration-200 ${
                 hintsUsed === 3 
-                  ? 'bg-blue-600 text-white shadow-lg' 
+                  ? 'bg-gradient-to-r from-orange-600 to-red-600 text-white shadow-xl border-2 border-orange-400 glow-effect' 
                   : hintsUsed > 3
-                    ? 'bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-600 cursor-not-allowed'
-                    : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600'
+                    ? 'bg-gray-700/50 text-gray-500 cursor-not-allowed border-2 border-gray-600/50'
+                    : 'bg-purple-600/50 text-white hover:bg-purple-600 border-2 border-purple-400/50 hover:scale-105'
               }`}
             >
               3 indices
-              <div className="text-xs">±100 pts</div>
+              <div className="text-sm font-black text-red-300">±100 pts</div>
             </button>
           </div>
         </div>
 
         {/* Affichage des indices */}
         {hintsUsed > 0 && (
-          <div className="mb-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-            <h4 className="font-semibold text-blue-800 dark:text-blue-200 mb-2">
-              Indices révélés:
+          <div className="mb-6 p-4 bg-gradient-to-br from-cyan-500/20 to-blue-500/20 rounded-xl border-2 border-cyan-500/50">
+            <h4 className="font-bold text-cyan-300 mb-3 flex items-center gap-2">
+              💡 Indices révélés:
             </h4>
-            <ul className="space-y-1">
+            <ul className="space-y-2">
               {department.hints.slice(0, hintsUsed).map((hint, index) => (
-                <li key={index} className="text-blue-700 dark:text-blue-300 text-sm">
+                <li key={index} className="text-white font-semibold p-2 bg-cyan-500/10 rounded-lg">
                   • {hint}
                 </li>
               ))}
@@ -184,37 +184,37 @@ export const HintModal: React.FC<HintModalProps> = ({
 
         {/* Champ de devinette */}
         <div className="mb-6">
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-            Votre réponse:
+          <label className="block text-lg font-bold text-purple-300 mb-3">
+            ✍️ Votre réponse:
           </label>
           <input
             type="text"
             value={guess}
             onChange={(e) => setGuess(e.target.value)}
             placeholder="Nom du département..."
-            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full px-4 py-3 border-2 border-purple-500/50 rounded-xl bg-card/50 text-white placeholder-gray-400 focus:border-cyan-500 focus:outline-none transition-colors font-bold text-lg"
             disabled={showResult}
           />
         </div>
 
         {/* Résultat */}
         {showResult && (
-          <div className={`mb-4 p-4 rounded-lg ${
+          <div className={`mb-6 p-6 rounded-xl border-2 animate-scale-in ${
             isCorrect 
-              ? 'bg-green-50 dark:bg-green-900/20' 
-              : 'bg-red-50 dark:bg-red-900/20'
+              ? 'bg-gradient-to-r from-green-500/20 to-cyan-500/20 border-green-500 glow-effect-cyan' 
+              : 'bg-gradient-to-r from-red-500/20 to-orange-500/20 border-red-500 glow-effect'
           }`}>
-            <p className={`font-semibold ${
+            <p className={`font-black text-2xl mb-2 ${
               isCorrect 
-                ? 'text-green-800 dark:text-green-200' 
-                : 'text-red-800 dark:text-red-200'
+                ? 'text-green-300' 
+                : 'text-red-300'
             }`}>
-              {isCorrect ? 'Correct!' : 'Incorrect!'}
+              {isCorrect ? '✅ CORRECT!' : '❌ INCORRECT!'}
             </p>
-            <p className={`text-sm ${
+            <p className={`text-lg font-bold ${
               isCorrect 
-                ? 'text-green-700 dark:text-green-300' 
-                : 'text-red-700 dark:text-red-300'
+                ? 'text-green-200' 
+                : 'text-red-200'
             }`}>
               {isCorrect 
                 ? `+${getPointsForHints(hintsUsed)} points` 
@@ -222,8 +222,8 @@ export const HintModal: React.FC<HintModalProps> = ({
               }
             </p>
             {!isCorrect && (
-              <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                La réponse était: {department.name}
+              <p className="text-sm text-white mt-2 p-2 bg-purple-500/20 rounded-lg">
+                La réponse était: <span className="font-bold text-cyan-300">{department.name}</span>
               </p>
             )}
           </div>
@@ -234,17 +234,17 @@ export const HintModal: React.FC<HintModalProps> = ({
           <button
             onClick={handleSubmitGuess}
             disabled={!guess.trim() || showResult}
-            className="flex-1 bg-green-600 hover:bg-green-700 disabled:bg-gray-400 text-white px-4 py-2 rounded-lg font-semibold transition-colors"
+            className="flex-1 bg-gradient-to-r from-green-600 to-cyan-600 hover:from-green-700 hover:to-cyan-700 disabled:opacity-50 disabled:cursor-not-allowed text-white px-6 py-3 rounded-xl font-bold transition-all shadow-lg hover:scale-105"
           >
-            Valider
+            ✓ Valider
           </button>
           
           <button
             onClick={handlePassTurn}
             disabled={showResult}
-            className="flex-1 bg-gray-600 hover:bg-gray-700 disabled:bg-gray-400 text-white px-4 py-2 rounded-lg font-semibold transition-colors"
+            className="flex-1 bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 disabled:opacity-50 disabled:cursor-not-allowed text-white px-6 py-3 rounded-xl font-bold transition-all shadow-lg hover:scale-105"
           >
-            Tour du joueur suivant
+            ⏭️ Passer
           </button>
         </div>
       </div>

@@ -97,48 +97,51 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-8">
+      <main className="min-h-screen p-8">
         <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-12">
-            <h1 className="text-5xl font-bold text-blue-900 mb-4">
-              La France et ses 101 départements
+          <div className="text-center mb-12 animate-scale-in">
+            <div className="mb-6 text-7xl animate-float">🇫🇷</div>
+            <h1 className="text-6xl font-black bg-gradient-to-r from-purple-400 via-pink-400 to-cyan-400 bg-clip-text text-transparent glow-text mb-6 animate-neon-flicker">
+              LA FRANCE ET SES 101 DÉPARTEMENTS
             </h1>
-            <p className="text-xl text-gray-700">
-              Un jeu éducatif et ludique pour découvrir les départements français
+            <p className="text-2xl text-white font-bold">
+              Un jeu éducatif et ludique pour découvrir les départements français ⚡
             </p>
           </div>
 
           {message && (
-            <div className="mb-6 p-4 bg-blue-100 border border-blue-300 rounded-lg text-center">
-              {message}
+            <div className="mb-8 p-6 card-gaming border-cyan-500/50 text-center animate-scale-in">
+              <p className="text-cyan-300 font-bold text-lg">{message}</p>
             </div>
           )}
 
           <div className="grid md:grid-cols-2 gap-6 mb-8">
             {!user ? (
               <>
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <LogIn className="w-5 h-5" />
-                      Connexion
-                    </CardTitle>
-                    <CardDescription>Connectez-vous pour jouer</CardDescription>
-                  </CardHeader>
-                  <CardContent>
+                <div className="card-gaming p-8 shadow-2xl animate-slide-in-left">
+                  <div className="mb-6">
+                    <h3 className="text-3xl font-black text-cyan-400 flex items-center gap-3 mb-2">
+                      <LogIn className="w-8 h-8" />
+                      CONNEXION
+                    </h3>
+                    <p className="text-purple-300 font-semibold">Connectez-vous pour jouer</p>
+                  </div>
+                  <div>
                     {!showLogin ? (
-                      <Button className="w-full" onClick={() => setShowLogin(true)}>
+                      <button className="btn-gaming w-full px-6 py-3 text-white rounded-xl font-bold text-lg transition-all shadow-2xl animate-glow-pulse" onClick={() => setShowLogin(true)}>
                         Se connecter
-                      </Button>
+                      </button>
                     ) : (
                       <form onSubmit={handleLogin} className="space-y-4">
-                        <Input
+                        <input
+                          type="text"
                           placeholder="Pseudo ou email"
                           value={loginForm.login}
                           onChange={(e) => setLoginForm({ ...loginForm, login: e.target.value })}
                           required
+                          className="w-full px-4 py-3 border-2 border-purple-500/50 rounded-xl bg-card/50 text-white placeholder-gray-400 focus:border-cyan-500 focus:outline-none transition-colors font-bold"
                         />
-                        <Input
+                        <input
                           type="password"
                           placeholder="Mot de passe"
                           value={loginForm.password}
@@ -146,48 +149,51 @@ export default function Home() {
                             setLoginForm({ ...loginForm, password: e.target.value })
                           }
                           required
+                          className="w-full px-4 py-3 border-2 border-purple-500/50 rounded-xl bg-card/50 text-white placeholder-gray-400 focus:border-cyan-500 focus:outline-none transition-colors font-bold"
                         />
-                        <div className="flex gap-2">
-                          <Button type="submit" className="flex-1">
+                        <div className="flex gap-3">
+                          <button type="submit" className="flex-1 btn-gaming px-6 py-3 text-white rounded-xl font-bold transition-all shadow-lg hover:scale-105">
                             Connexion
-                          </Button>
-                          <Button
+                          </button>
+                          <button
                             type="button"
-                            variant="outline"
+                            className="flex-1 bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 text-white px-6 py-3 rounded-xl font-bold transition-all shadow-lg hover:scale-105"
                             onClick={() => setShowLogin(false)}
                           >
                             Annuler
-                          </Button>
+                          </button>
                         </div>
                       </form>
                     )}
-                  </CardContent>
-                </Card>
+                  </div>
+                </div>
 
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <UserPlus className="w-5 h-5" />
-                      Inscription
-                    </CardTitle>
-                    <CardDescription>Créez un compte pour commencer</CardDescription>
-                  </CardHeader>
-                  <CardContent>
+                <div className="card-gaming p-8 shadow-2xl animate-slide-in-right">
+                  <div className="mb-6">
+                    <h3 className="text-3xl font-black text-pink-400 flex items-center gap-3 mb-2">
+                      <UserPlus className="w-8 h-8" />
+                      INSCRIPTION
+                    </h3>
+                    <p className="text-purple-300 font-semibold">Créez un compte pour commencer</p>
+                  </div>
+                  <div>
                     {!showRegister ? (
-                      <Button className="w-full" onClick={() => setShowRegister(true)}>
+                      <button className="btn-gaming w-full px-6 py-3 text-white rounded-xl font-bold text-lg transition-all shadow-2xl animate-glow-pulse" onClick={() => setShowRegister(true)}>
                         S&apos;inscrire
-                      </Button>
+                      </button>
                     ) : (
                       <form onSubmit={handleRegister} className="space-y-4">
-                        <Input
+                        <input
+                          type="text"
                           placeholder="Pseudo"
                           value={registerForm.pseudo}
                           onChange={(e) =>
                             setRegisterForm({ ...registerForm, pseudo: e.target.value })
                           }
                           required
+                          className="w-full px-4 py-3 border-2 border-purple-500/50 rounded-xl bg-card/50 text-white placeholder-gray-400 focus:border-cyan-500 focus:outline-none transition-colors font-bold"
                         />
-                        <Input
+                        <input
                           type="email"
                           placeholder="Email"
                           value={registerForm.email}
@@ -195,8 +201,9 @@ export default function Home() {
                             setRegisterForm({ ...registerForm, email: e.target.value })
                           }
                           required
+                          className="w-full px-4 py-3 border-2 border-purple-500/50 rounded-xl bg-card/50 text-white placeholder-gray-400 focus:border-cyan-500 focus:outline-none transition-colors font-bold"
                         />
-                        <Input
+                        <input
                           type="password"
                           placeholder="Mot de passe"
                           value={registerForm.password}
@@ -204,119 +211,145 @@ export default function Home() {
                             setRegisterForm({ ...registerForm, password: e.target.value })
                           }
                           required
+                          className="w-full px-4 py-3 border-2 border-purple-500/50 rounded-xl bg-card/50 text-white placeholder-gray-400 focus:border-cyan-500 focus:outline-none transition-colors font-bold"
                         />
-                        <div className="flex gap-2">
-                          <Button type="submit" className="flex-1">
+                        <div className="flex gap-3">
+                          <button type="submit" className="flex-1 btn-gaming px-6 py-3 text-white rounded-xl font-bold transition-all shadow-lg hover:scale-105">
                             S&apos;inscrire
-                          </Button>
-                          <Button
+                          </button>
+                          <button
                             type="button"
-                            variant="outline"
+                            className="flex-1 bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 text-white px-6 py-3 rounded-xl font-bold transition-all shadow-lg hover:scale-105"
                             onClick={() => setShowRegister(false)}
                           >
                             Annuler
-                          </Button>
+                          </button>
                         </div>
                       </form>
                     )}
-                  </CardContent>
-                </Card>
+                  </div>
+                </div>
               </>
             ) : (
-              <Card className="md:col-span-2">
-                <CardHeader>
-                  <CardTitle>Bienvenue, {user.pseudo}!</CardTitle>
-                  <CardDescription>Créez ou rejoignez une partie</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <Button variant="outline" onClick={logout}>
-                    Déconnexion
-                  </Button>
-                </CardContent>
-              </Card>
+              <div className="md:col-span-2 card-gaming p-8 shadow-2xl animate-scale-in">
+                <div className="mb-4">
+                  <h3 className="text-3xl font-black bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent mb-2">
+                    Bienvenue, {user.pseudo}! 👋
+                  </h3>
+                  <p className="text-purple-300 font-semibold">Créez ou rejoignez une partie</p>
+                </div>
+                <div>
+                  <button className="bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-700 hover:to-orange-700 text-white px-6 py-3 rounded-xl font-bold transition-all shadow-lg hover:scale-105" onClick={logout}>
+                    🚪 Déconnexion
+                  </button>
+                </div>
+              </div>
             )}
           </div>
 
-          <div className="grid md:grid-cols-2 gap-6">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Users className="w-5 h-5" />
-                  Créer une partie
-                </CardTitle>
-                <CardDescription>
+          <div className="grid md:grid-cols-3 gap-6">
+            <div className="card-gaming p-8 shadow-2xl animate-scale-in">
+              <div className="mb-6">
+                <h3 className="text-3xl font-black text-yellow-400 flex items-center gap-3 mb-2">
+                  <Play className="w-8 h-8" />
+                  JEU SOLO
+                </h3>
+                <p className="text-purple-300 font-semibold">
+                  Jouez seul pour vous entraîner
+                </p>
+              </div>
+              <div>
+                <button className="btn-gaming w-full px-6 py-3 text-white rounded-xl font-bold text-lg transition-all shadow-2xl animate-glow-pulse flex items-center justify-center gap-2" onClick={() => router.push('/game')}>
+                  <Play className="w-5 h-5" />
+                  Jouer en solo
+                </button>
+              </div>
+            </div>
+          
+            <div className="card-gaming p-8 shadow-2xl animate-slide-in-left">
+              <div className="mb-6">
+                <h3 className="text-3xl font-black text-green-400 flex items-center gap-3 mb-2">
+                  <Users className="w-8 h-8" />
+                  CRÉER UNE PARTIE
+                </h3>
+                <p className="text-purple-300 font-semibold">
                   Créez une nouvelle partie et invitez vos amis
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
+                </p>
+              </div>
+              <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium mb-2">
+                  <label className="block text-lg font-bold text-purple-300 mb-3">
                     Nombre de joueurs maximum
                   </label>
-                  <Input
+                  <input
                     type="number"
                     min={2}
                     max={6}
                     value={createGamePlayers}
                     onChange={(e) => setCreateGamePlayers(parseInt(e.target.value))}
+                    className="w-full px-4 py-3 border-2 border-purple-500/50 rounded-xl bg-card/50 text-white focus:border-cyan-500 focus:outline-none transition-colors font-bold text-lg"
                   />
                 </div>
-                <Button className="w-full" onClick={handleCreateGame} disabled={!user}>
-                  <Play className="w-4 h-4 mr-2" />
-                  Créer une partie
-                </Button>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
+                <button className="btn-gaming w-full px-6 py-3 text-white rounded-xl font-bold text-lg transition-all shadow-2xl animate-glow-pulse flex items-center justify-center gap-2" onClick={handleCreateGame} disabled={!user}>
                   <Play className="w-5 h-5" />
-                  Rejoindre une partie
-                </CardTitle>
-                <CardDescription>Entrez le code de la partie</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <Input
+                  Créer une partie
+                </button>
+              </div>
+            </div>
+
+            <div className="card-gaming p-8 shadow-2xl animate-slide-in-right">
+              <div className="mb-6">
+                <h3 className="text-3xl font-black text-cyan-400 flex items-center gap-3 mb-2">
+                  <Play className="w-8 h-8" />
+                  REJOINDRE
+                </h3>
+                <p className="text-purple-300 font-semibold">Entrez le code de la partie</p>
+              </div>
+              <div className="space-y-4">
+                <input
+                  type="text"
                   placeholder="Code de la partie (ex: ABC123)"
                   value={gameCode}
                   onChange={(e) => setGameCode(e.target.value.toUpperCase())}
                   maxLength={6}
+                  className="w-full px-4 py-3 border-2 border-purple-500/50 rounded-xl bg-card/50 text-white placeholder-gray-400 focus:border-cyan-500 focus:outline-none transition-colors font-bold text-lg"
                 />
-                <Button className="w-full" onClick={handleJoinGame} disabled={!gameCode}>
+                <button className="btn-gaming w-full px-6 py-3 text-white rounded-xl font-bold text-lg transition-all shadow-2xl animate-glow-pulse disabled:opacity-50 disabled:cursor-not-allowed" onClick={handleJoinGame} disabled={!gameCode}>
                   Rejoindre
-                </Button>
-              </CardContent>
-            </Card>
+                </button>
+              </div>
+            </div>
           </div>
 
-          <div className="mt-12 bg-white rounded-lg shadow-lg p-8">
-            <h2 className="text-2xl font-bold text-center mb-6">Comment jouer?</h2>
-            <div className="grid md:grid-cols-3 gap-6">
-              <div className="text-center">
-                <div className="w-16 h-16 bg-blue-500 text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">
+          <div className="mt-12 card-gaming p-10 shadow-2xl animate-scale-in">
+            <h2 className="text-4xl font-black text-center mb-10 bg-gradient-to-r from-yellow-400 to-orange-400 bg-clip-text text-transparent glow-text">
+              ❓ COMMENT JOUER ?
+            </h2>
+            <div className="grid md:grid-cols-3 gap-8">
+              <div className="text-center p-6 bg-gradient-to-br from-purple-500/10 to-cyan-500/10 rounded-xl border-2 border-purple-500/50 hover:border-cyan-500 transition-all hover:scale-105">
+                <div className="w-20 h-20 bg-gradient-to-r from-purple-600 to-cyan-600 text-white rounded-full flex items-center justify-center text-3xl font-black mx-auto mb-4 glow-effect animate-glow-pulse">
                   1
                 </div>
-                <h3 className="font-semibold mb-2">Lancez les dés</h3>
-                <p className="text-sm text-gray-600">
+                <h3 className="font-black text-xl text-cyan-400 mb-3">🎲 Lancez les dés</h3>
+                <p className="text-white font-semibold">
                   Lancez 2 dés D10 et 1 dé D6 pour obtenir des nombres
                 </p>
               </div>
-              <div className="text-center">
-                <div className="w-16 h-16 bg-blue-500 text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">
+              <div className="text-center p-6 bg-gradient-to-br from-pink-500/10 to-purple-500/10 rounded-xl border-2 border-pink-500/50 hover:border-purple-500 transition-all hover:scale-105">
+                <div className="w-20 h-20 bg-gradient-to-r from-pink-600 to-purple-600 text-white rounded-full flex items-center justify-center text-3xl font-black mx-auto mb-4 glow-effect animate-glow-pulse">
                   2
                 </div>
-                <h3 className="font-semibold mb-2">Composez votre nombre</h3>
-                <p className="text-sm text-gray-600">
+                <h3 className="font-black text-xl text-pink-400 mb-3">🔢 Composez votre nombre</h3>
+                <p className="text-white font-semibold">
                   Utilisez les dés pour former un nombre entre 1 et 101
                 </p>
               </div>
-              <div className="text-center">
-                <div className="w-16 h-16 bg-blue-500 text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">
+              <div className="text-center p-6 bg-gradient-to-br from-yellow-500/10 to-orange-500/10 rounded-xl border-2 border-yellow-500/50 hover:border-orange-500 transition-all hover:scale-105">
+                <div className="w-20 h-20 bg-gradient-to-r from-yellow-600 to-orange-600 text-white rounded-full flex items-center justify-center text-3xl font-black mx-auto mb-4 glow-effect animate-glow-pulse">
                   3
                 </div>
-                <h3 className="font-semibold mb-2">Trouvez le département</h3>
-                <p className="text-sm text-gray-600">
+                <h3 className="font-black text-xl text-yellow-400 mb-3">🗺️ Trouvez le département</h3>
+                <p className="text-white font-semibold">
                   Identifiez le département correspondant et collectez des points
                 </p>
               </div>

@@ -184,25 +184,26 @@ const GamePage: React.FC = () => {
         <meta name="description" content="Jouez à La France et ses 101 départements" />
       </Head>
 
-      <div className="min-h-screen bg-gray-100 dark:bg-gray-900">
-        {/* En-tête */}
-        <div className="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
-          <div className="max-w-7xl mx-auto px-4 py-4">
+      <div className="min-h-screen">
+        {/* En-tête Gaming */}
+        <div className="relative border-b border-white/10 backdrop-blur-xl bg-card/30 shadow-2xl">
+          <div className="absolute inset-0 bg-gradient-to-r from-purple-500/10 via-transparent to-cyan-500/10"></div>
+          <div className="max-w-7xl mx-auto px-4 py-6 relative z-10">
             <div className="flex justify-between items-center">
               <div>
-                <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+                <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-400 via-pink-400 to-cyan-400 bg-clip-text text-transparent glow-text animate-neon-flicker">
                   La France et ses 101 départements
                 </h1>
-                <p className="text-gray-600 dark:text-gray-400">
-                  {gameStarted ? `Tour de ${currentPlayer.name}` : 'Configuration de la partie'}
+                <p className="text-purple-300/80 font-semibold mt-1">
+                  {gameStarted ? `⚡ Tour de ${currentPlayer.name}` : '🎮 Configuration de la partie'}
                 </p>
               </div>
               
-              <div className="flex space-x-2">
+              <div className="flex space-x-3">
                 {gameStarted && !gameEnded && (
                   <button
                     onClick={() => setShowEndGameConfirm(true)}
-                    className="px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white rounded-lg font-semibold transition-colors flex items-center gap-2"
+                    className="btn-gaming px-6 py-3 text-white rounded-lg font-bold transition-all flex items-center gap-2 shadow-lg"
                   >
                     <span>🏆</span>
                     Fin du jeu
@@ -211,7 +212,7 @@ const GamePage: React.FC = () => {
                 {!gameStarted && (
                   <button
                     onClick={resetGame}
-                    className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg font-semibold transition-colors"
+                    className="px-6 py-3 bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-700 hover:to-orange-700 text-white rounded-lg font-bold transition-all shadow-lg glow-effect"
                   >
                     Nouvelle partie
                   </button>
@@ -224,10 +225,10 @@ const GamePage: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 py-6">
           {!gameStarted ? (
             /* Configuration de la partie */
-            <div className="space-y-6">
-              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
-                <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
-                  Configuration des joueurs
+            <div className="space-y-6 animate-scale-in">
+              <div className="card-gaming p-8 shadow-2xl">
+                <h2 className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent mb-6">
+                  ⚙️ Configuration des joueurs
                 </h2>
                 
                 <div className="space-y-4">
@@ -236,7 +237,7 @@ const GamePage: React.FC = () => {
                     {players.map((player) => (
                       <div
                         key={player.id}
-                        className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg"
+                        className="flex items-center justify-between p-4 bg-gradient-to-r from-purple-500/10 to-cyan-500/10 rounded-xl border border-white/10 hover:border-purple-500/50 transition-all"
                       >
                         {editingPlayerId === player.id ? (
                           <div className="flex items-center space-x-2 flex-1">
@@ -244,7 +245,7 @@ const GamePage: React.FC = () => {
                               type="text"
                               value={editingName}
                               onChange={(e) => setEditingName(e.target.value)}
-                              className="flex-1 px-2 py-1 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-600 text-gray-900 dark:text-white text-sm"
+                              className="flex-1 px-3 py-2 border border-purple-500/50 rounded-lg bg-card/50 text-white text-sm focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/30"
                               autoFocus
                               onKeyDown={(e) => {
                                 if (e.key === 'Enter') handleSaveEdit();
@@ -253,33 +254,33 @@ const GamePage: React.FC = () => {
                             />
                             <button
                               onClick={handleSaveEdit}
-                              className="text-green-600 hover:text-green-700 font-semibold text-sm"
+                              className="px-3 py-1 bg-green-600 hover:bg-green-700 text-white rounded-lg font-semibold text-sm transition-all shadow-md"
                             >
                               ✓
                             </button>
                             <button
                               onClick={handleCancelEdit}
-                              className="text-red-600 hover:text-red-700 font-semibold text-sm"
+                              className="px-3 py-1 bg-red-600 hover:bg-red-700 text-white rounded-lg font-semibold text-sm transition-all shadow-md"
                             >
                               ✕
                             </button>
                           </div>
                         ) : (
                           <>
-                            <span className="font-medium text-gray-900 dark:text-white">
+                            <span className="font-bold text-white text-lg">
                               {player.name}
                             </span>
                             <div className="flex space-x-2">
                               <button
                                 onClick={() => handleStartEditing(player.id, player.name)}
-                                className="text-blue-600 hover:text-blue-700 font-semibold text-sm"
+                                className="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold text-sm transition-all shadow-md hover:scale-105"
                               >
                                 ✏️
                               </button>
                               {players.length > 1 && (
                                 <button
                                   onClick={() => removePlayer(player.id)}
-                                  className="text-red-600 hover:text-red-700 font-semibold text-sm"
+                                  className="px-3 py-1 bg-red-600 hover:bg-red-700 text-white rounded-lg font-semibold text-sm transition-all shadow-md hover:scale-105"
                                 >
                                   🗑️
                                 </button>
@@ -293,19 +294,19 @@ const GamePage: React.FC = () => {
 
                   {/* Ajouter un joueur */}
                   {players.length < 4 && (
-                    <div className="flex space-x-2">
+                    <div className="flex space-x-3">
                       <input
                         type="text"
                         value={newPlayerName}
                         onChange={(e) => setNewPlayerName(e.target.value)}
                         placeholder="Nom du nouveau joueur"
-                        className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        className="flex-1 px-4 py-3 border border-purple-500/50 rounded-xl bg-card/50 text-white placeholder-gray-400 focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/30 transition-all"
                         onKeyPress={(e) => e.key === 'Enter' && handleAddPlayer()}
                       />
                       <button
                         onClick={handleAddPlayer}
                         disabled={!newPlayerName.trim()}
-                        className="px-4 py-2 bg-green-600 hover:bg-green-700 disabled:bg-gray-400 text-white rounded-lg font-semibold transition-colors"
+                        className="px-6 py-3 btn-gaming text-white rounded-xl font-bold transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
                       >
                         Ajouter
                       </button>
@@ -313,13 +314,13 @@ const GamePage: React.FC = () => {
                   )}
 
                   {/* Bouton démarrer */}
-                  <div className="pt-4">
+                  <div className="pt-6">
                     <button
                       onClick={handleStartGame}
                       disabled={players.length < 1}
-                      className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white px-6 py-3 rounded-lg font-semibold text-lg transition-colors"
+                      className="w-full btn-gaming text-white px-8 py-4 rounded-xl font-bold text-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-2xl animate-glow-pulse"
                     >
-                      {players.length < 1 ? 'Ajoutez au moins 1 joueur' : 'Démarrer la partie'}
+                      {players.length < 1 ? 'Ajoutez au moins 1 joueur' : '🎮 Démarrer la partie'}
                     </button>
                   </div>
                 </div>
@@ -327,26 +328,29 @@ const GamePage: React.FC = () => {
             </div>
           ) : gameEnded ? (
             /* Fin de partie */
-            <div className="text-center space-y-6">
-              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8">
-                <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
-                  Partie terminée !
-                </h2>
+            <div className="text-center space-y-6 animate-scale-in">
+              <div className="card-gaming p-10 shadow-2xl animate-float">
+                <div className="mb-6 animate-glow-pulse">
+                  <div className="text-6xl mb-4">🏆</div>
+                  <h2 className="text-4xl font-black bg-gradient-to-r from-yellow-400 via-orange-400 to-yellow-400 bg-clip-text text-transparent glow-text mb-6">
+                    PARTIE TERMINÉE !
+                  </h2>
+                </div>
                 {winner && (
-                  <div className="mb-6">
-                    <div className="text-2xl font-semibold text-yellow-600 dark:text-yellow-400 mb-2">
-                      🏆 {winner.name} gagne !
+                  <div className="mb-8 p-6 bg-gradient-to-r from-yellow-500/20 to-orange-500/20 rounded-xl border-2 border-yellow-500/50">
+                    <div className="text-3xl font-black bg-gradient-to-r from-yellow-300 to-orange-300 bg-clip-text text-transparent mb-3">
+                      {winner.name} GAGNE !
                     </div>
-                    <div className="text-xl text-gray-700 dark:text-gray-300">
-                      Score final: {winner.score.toLocaleString()} points
+                    <div className="text-2xl font-bold text-white">
+                      Score final: <span className="text-cyan-400">{winner.score.toLocaleString()}</span> points
                     </div>
                   </div>
                 )}
                 <button
                   onClick={resetGame}
-                  className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold text-lg transition-colors"
+                  className="btn-gaming px-10 py-4 text-white rounded-xl font-bold text-xl transition-all shadow-2xl animate-glow-pulse"
                 >
-                  Nouvelle partie
+                  🎮 Nouvelle partie
                 </button>
               </div>
             </div>
@@ -366,7 +370,10 @@ const GamePage: React.FC = () => {
               {/* Zone centrale - Jeu */}
               <div className="lg:col-span-2 space-y-6">
                 {/* Dés */}
-                <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+                <div className="card-gaming p-8 shadow-2xl animate-slide-in-left">
+                  <h3 className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent mb-4">
+                    🎲 Dés
+                  </h3>
                   <DiceRoll
                     diceResults={diceResults}
                     isRolling={isRolling}
@@ -378,9 +385,9 @@ const GamePage: React.FC = () => {
                       <button
                         onClick={handleRollDice}
                         disabled={isRolling}
-                        className="bg-green-600 hover:bg-green-700 disabled:bg-gray-400 text-white px-8 py-3 rounded-lg font-semibold text-lg transition-colors"
+                        className="btn-gaming px-10 py-4 text-white rounded-xl font-bold text-xl transition-all disabled:opacity-50 shadow-2xl"
                       >
-                        {isRolling ? 'Lancement...' : 'Lancer les dés'}
+                        {isRolling ? '🎲 Lancement...' : '🎲 Lancer les dés'}
                       </button>
                     </div>
                   )}
@@ -388,7 +395,7 @@ const GamePage: React.FC = () => {
 
                 {/* Compositions */}
                 {phase === 'choosing' && compositions.length > 0 && showCompositions && (
-                  <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+                  <div className="card-gaming p-8 shadow-2xl animate-scale-in">
                     <CompositionChoices
                       compositions={compositions}
                       availableDepartments={availableDepartments}
@@ -398,13 +405,13 @@ const GamePage: React.FC = () => {
                 )}
 
                 {/* Actions */}
-                <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+                <div className="card-gaming p-6 shadow-2xl">
                   <div className="text-center">
                     <button
                       onClick={handlePassTurn}
-                      className="bg-gray-600 hover:bg-gray-700 text-white px-6 py-2 rounded-lg font-semibold transition-colors"
+                      className="px-8 py-3 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 text-white rounded-xl font-bold transition-all shadow-lg hover:scale-105"
                     >
-                      Tour du joueur suivant
+                      ⏭️ Tour du joueur suivant
                     </button>
                   </div>
                 </div>
@@ -446,31 +453,33 @@ const GamePage: React.FC = () => {
 
         {/* Modal de confirmation de fin de jeu */}
         {showEndGameConfirm && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-2xl p-6 max-w-md mx-4">
-              <div className="mb-4">
-                <h3 className="text-xl font-bold text-orange-600 dark:text-orange-400 flex items-center gap-2">
-                  <span>⚠️</span>
+          <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 animate-scale-in">
+            <div className="card-gaming p-8 max-w-md mx-4 shadow-2xl animate-float">
+              <div className="mb-6 text-center">
+                <div className="text-6xl mb-4 animate-glow-pulse">⚠️</div>
+                <h3 className="text-3xl font-black bg-gradient-to-r from-orange-400 to-red-400 bg-clip-text text-transparent glow-text">
                   Terminer la partie ?
                 </h3>
               </div>
               <div className="space-y-4">
-                <p className="text-gray-700 dark:text-gray-300">
+                <p className="text-white text-lg text-center">
                   Êtes-vous sûr de vouloir terminer cette partie ? Cette action mettra fin au jeu et affichera les scores finaux.
                 </p>
-                <p className="text-sm text-red-600 dark:text-red-400 font-semibold">
-                  ⚠️ Toute progression sera perdue et la partie ne pourra pas être reprise.
-                </p>
-                <div className="flex gap-3 justify-end">
+                <div className="p-4 bg-gradient-to-r from-red-500/20 to-orange-500/20 rounded-xl border-2 border-red-500/50">
+                  <p className="text-red-300 font-bold text-center">
+                    ⚠️ Toute progression sera perdue et la partie ne pourra pas être reprise.
+                  </p>
+                </div>
+                <div className="flex gap-3 justify-center pt-4">
                   <button
                     onClick={() => setShowEndGameConfirm(false)}
-                    className="px-4 py-2 bg-gray-300 hover:bg-gray-400 dark:bg-gray-600 dark:hover:bg-gray-700 text-gray-900 dark:text-white rounded-lg font-semibold transition-colors"
+                    className="px-6 py-3 bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 text-white rounded-xl font-bold transition-all shadow-lg hover:scale-105"
                   >
                     Annuler
                   </button>
                   <button
                     onClick={handleEndGame}
-                    className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg font-semibold transition-colors"
+                    className="px-6 py-3 bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-700 hover:to-orange-700 text-white rounded-xl font-bold transition-all shadow-lg hover:scale-105 animate-glow-pulse"
                   >
                     Oui, terminer la partie
                   </button>
@@ -482,13 +491,15 @@ const GamePage: React.FC = () => {
 
         {/* Modal des scores finaux */}
         {showFinalScores && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-auto">
-              <div className="bg-gradient-to-r from-yellow-400 to-orange-500 p-6 rounded-t-lg">
-                <h2 className="text-2xl font-bold text-white flex items-center gap-2">
-                  <span>🏆</span>
-                  Scores Finaux
-                </h2>
+          <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-scale-in">
+            <div className="card-gaming max-w-4xl w-full max-h-[90vh] overflow-auto shadow-2xl animate-float">
+              <div className="bg-gradient-to-r from-yellow-500/30 to-orange-500/30 p-8 rounded-t-xl border-b-2 border-yellow-500/50">
+                <div className="text-center">
+                  <div className="text-6xl mb-4 animate-glow-pulse">🏆</div>
+                  <h2 className="text-4xl font-black bg-gradient-to-r from-yellow-300 to-orange-300 bg-clip-text text-transparent glow-text">
+                    SCORES FINAUX
+                  </h2>
+                </div>
               </div>
               <div className="p-6 space-y-6">
                 {players
@@ -500,58 +511,59 @@ const GamePage: React.FC = () => {
                     return (
                       <div 
                         key={player.id} 
-                        className={`p-4 rounded-lg border-2 ${
+                        className={`p-6 rounded-xl border-2 transition-all duration-300 ${
                           index === 0 
-                            ? 'bg-gradient-to-br from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20 border-yellow-400' 
-                            : 'bg-gray-50 dark:bg-gray-700 border-gray-300 dark:border-gray-600'
+                            ? 'bg-gradient-to-br from-yellow-500/20 to-orange-500/20 border-yellow-500 glow-effect animate-glow-pulse' 
+                            : 'bg-gradient-to-br from-purple-500/10 to-cyan-500/10 border-purple-500/50'
                         }`}
                       >
-                        <div className="flex items-center justify-between mb-3">
+                        <div className="flex items-center justify-between mb-4">
                           <div className="flex items-center gap-3">
                             {index === 0 && (
-                              <span className="text-4xl">🏆</span>
+                              <span className="text-5xl animate-glow-pulse">🏆</span>
                             )}
                             <div>
-                              <h3 className="text-xl font-bold text-gray-900 dark:text-white">
+                              <h3 className="text-2xl font-black bg-gradient-to-r from-purple-300 to-cyan-300 bg-clip-text text-transparent">
                                 {index + 1}. {player.name}
                               </h3>
                               {index === 0 && (
-                                <span className="text-sm font-semibold text-yellow-600 dark:text-yellow-400">
-                                  Vainqueur !
+                                <span className="text-sm font-bold bg-gradient-to-r from-yellow-300 to-orange-300 bg-clip-text text-transparent glow-text">
+                                  VAINQUEUR !
                                 </span>
                               )}
                             </div>
                           </div>
                           <div className="text-right">
-                            <div className="text-3xl font-bold text-blue-600 dark:text-blue-400">
-                              {player.score.toLocaleString()} pts
+                            <div className="text-4xl font-black bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
+                              {player.score.toLocaleString()}
                             </div>
+                            <div className="text-sm text-cyan-300">points</div>
                           </div>
                         </div>
 
                         <div className="grid md:grid-cols-2 gap-4 mt-4">
-                          <div className="space-y-2">
-                            <div className="flex items-center gap-2">
-                              <span className="font-semibold text-gray-900 dark:text-white">💳 Cartes Souvenir:</span>
-                              <span className="text-lg text-gray-700 dark:text-gray-300">{player.souvenirCards.length}</span>
+                          <div className="space-y-3">
+                            <div className="flex items-center gap-2 p-2 bg-purple-500/10 rounded-lg">
+                              <span className="font-bold text-white">💳 Cartes Souvenir:</span>
+                              <span className="text-xl font-bold text-purple-300">{player.souvenirCards.length}</span>
                             </div>
-                            <div className="flex items-center gap-2">
-                              <span className="font-semibold text-gray-900 dark:text-white">🏆 Cartes Champion:</span>
-                              <span className="text-lg text-gray-700 dark:text-gray-300">{player.championCards}</span>
+                            <div className="flex items-center gap-2 p-2 bg-cyan-500/10 rounded-lg">
+                              <span className="font-bold text-white">🏆 Cartes Champion:</span>
+                              <span className="text-xl font-bold text-cyan-300">{player.championCards}</span>
                             </div>
-                            <div className="flex items-center gap-2">
-                              <span className="font-semibold text-gray-900 dark:text-white">📍 Départements gagnés:</span>
-                              <span className="text-lg text-gray-700 dark:text-gray-300">{departments.length}</span>
+                            <div className="flex items-center gap-2 p-2 bg-pink-500/10 rounded-lg">
+                              <span className="font-bold text-white">📍 Départements gagnés:</span>
+                              <span className="text-xl font-bold text-pink-300">{departments.length}</span>
                             </div>
                           </div>
 
                           {departments.length > 0 && (
-                            <div>
-                              <p className="font-semibold mb-2 text-gray-900 dark:text-white">Départements:</p>
-                              <div className="text-sm space-y-1 max-h-32 overflow-y-auto">
+                            <div className="p-3 bg-gradient-to-br from-purple-500/10 to-cyan-500/10 rounded-lg border border-purple-500/30">
+                              <p className="font-bold mb-2 text-purple-300">Départements:</p>
+                              <div className="text-sm space-y-1 max-h-32 overflow-y-auto custom-scrollbar">
                                 {departments.map((dept) => dept && (
-                                  <div key={dept.id} className="text-gray-700 dark:text-gray-300">
-                                    {dept.numero} - {dept.name}
+                                  <div key={dept.id} className="text-white p-1 hover:bg-purple-500/20 rounded transition-colors">
+                                    <span className="font-bold text-cyan-300">{dept.numero}</span> - {dept.name}
                                   </div>
                                 ))}
                               </div>
@@ -562,12 +574,12 @@ const GamePage: React.FC = () => {
                     );
                   })}
 
-                <div className="flex justify-center pt-4">
+                <div className="flex justify-center pt-6">
                   <button
                     onClick={handleNewGame}
-                    className="px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-lg font-semibold text-lg transition-colors"
+                    className="btn-gaming px-10 py-4 text-white rounded-xl font-bold text-xl transition-all shadow-2xl animate-glow-pulse"
                   >
-                    Nouvelle Partie
+                    🎮 Nouvelle Partie
                   </button>
                 </div>
               </div>

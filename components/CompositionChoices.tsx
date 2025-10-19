@@ -26,9 +26,9 @@ export const CompositionChoices: React.FC<CompositionChoicesProps> = ({
 
   if (compositions.length === 0) {
     return (
-      <div className="text-center p-6 bg-gray-50 dark:bg-gray-800 rounded-lg">
-        <p className="text-gray-600 dark:text-gray-400">
-          Lancez les dés pour voir les compositions possibles
+      <div className="text-center p-8 card-gaming">
+        <p className="text-purple-300/80 text-lg">
+          🎲 Lancez les dés pour voir les compositions possibles
         </p>
       </div>
     );
@@ -36,8 +36,8 @@ export const CompositionChoices: React.FC<CompositionChoicesProps> = ({
 
   return (
     <div className="space-y-4">
-      <h3 className="text-xl font-bold text-gray-900 dark:text-white">
-        Compositions possibles
+      <h3 className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent">
+        🎯 Compositions possibles
       </h3>
       
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
@@ -50,23 +50,24 @@ export const CompositionChoices: React.FC<CompositionChoicesProps> = ({
               onClick={() => handleSelectComposition(composition)}
               disabled={disabled || !isAvailable}
               className={`
-                p-4 rounded-lg border-2 transition-all duration-200
+                relative p-5 rounded-xl border-2 transition-all duration-300 group overflow-hidden
                 ${isAvailable 
-                  ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20 hover:bg-blue-100 dark:hover:bg-blue-900/30' 
-                  : 'border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-700'
+                  ? 'border-purple-500/50 bg-gradient-to-br from-purple-500/20 to-cyan-500/20 hover:border-purple-400 hover:shadow-xl hover:shadow-purple-500/30' 
+                  : 'border-red-500/30 bg-gray-800/50 opacity-50'
                 }
                 ${disabled || !isAvailable 
-                  ? 'opacity-50 cursor-not-allowed' 
-                  : 'cursor-pointer hover:scale-105'
+                  ? 'cursor-not-allowed' 
+                  : 'cursor-pointer hover:scale-110 hover:-translate-y-1'
                 }
               `}
             >
-              <div className="text-center">
-                <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">
+              <div className="absolute inset-0 bg-gradient-to-br from-purple-600/0 to-cyan-600/0 group-hover:from-purple-600/20 group-hover:to-cyan-600/20 transition-all duration-300"></div>
+              <div className="text-center relative z-10">
+                <div className={`text-3xl font-black ${isAvailable ? 'text-transparent bg-clip-text bg-gradient-to-r from-purple-300 to-cyan-300' : 'text-red-500'}`}>
                   {composition}
                 </div>
                 {!isAvailable && (
-                  <div className="text-xs text-red-600 dark:text-red-400 mt-1">
+                  <div className="text-xs text-red-400 font-semibold mt-1">
                     Déjà pris
                   </div>
                 )}
