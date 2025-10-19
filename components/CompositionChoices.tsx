@@ -1,10 +1,9 @@
 import React from 'react';
-import { getDepartmentById } from '../data/departments';
 
 interface CompositionChoicesProps {
-  compositions: number[];
-  availableDepartments: number[];
-  onSelectComposition: (departmentId: number) => void;
+  compositions: string[];
+  availableDepartments: string[];
+  onSelectComposition: (numero: string) => void;
   disabled?: boolean;
 }
 
@@ -19,9 +18,9 @@ export const CompositionChoices: React.FC<CompositionChoicesProps> = ({
     availableDepartments.includes(comp)
   );
 
-  const handleSelectComposition = (departmentId: number) => {
+  const handleSelectComposition = (numero: string) => {
     if (!disabled) {
-      onSelectComposition(departmentId);
+      onSelectComposition(numero);
     }
   };
 
@@ -43,7 +42,6 @@ export const CompositionChoices: React.FC<CompositionChoicesProps> = ({
       
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
         {availableCompositions.map((composition) => {
-          const department = getDepartmentById(composition);
           const isAvailable = availableDepartments.includes(composition);
           
           return (

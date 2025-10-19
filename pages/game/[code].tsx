@@ -503,7 +503,7 @@ export default function GamePage() {
                                 <div className="text-sm space-y-1 max-h-32 overflow-y-auto">
                                   {departments.map((dept: any) => (
                                     <div key={dept.id} className="text-gray-700">
-                                      {dept.numero} - {dept.nom}
+                                      {dept.numero} - {dept.name}
                                     </div>
                                   ))}
                                 </div>

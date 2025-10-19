@@ -77,8 +77,8 @@ const GamePage: React.FC = () => {
     }, 1500);
   };
 
-  const handleSelectComposition = (departmentId: number) => {
-    selectComposition(departmentId);
+  const handleSelectComposition = (numero: string) => {
+    selectComposition(numero);
     setShowHintModal(true);
   };
 
@@ -551,7 +551,7 @@ const GamePage: React.FC = () => {
                               <div className="text-sm space-y-1 max-h-32 overflow-y-auto">
                                 {departments.map((dept) => dept && (
                                   <div key={dept.id} className="text-gray-700 dark:text-gray-300">
-                                    {dept.id.toString().padStart(2, '0')} - {dept.name}
+                                    {dept.numero} - {dept.name}
                                   </div>
                                 ))}
                               </div>

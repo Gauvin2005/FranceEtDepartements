@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { Department, getDepartmentById } from '../data/departments';
+import { Department, getDepartmentById, getDepartmentByNumero, departments } from '../data/departments';
 
 export interface Player {
   id: number;
@@ -15,8 +15,8 @@ export interface GameState {
   players: Player[];
   currentPlayerIndex: number;
   diceResults: number[];
-  availableDepartments: number[];
-  compositions: number[];
+  availableDepartments: string[];
+  compositions: string[];
   hintsUsed: number;
   currentDepartment?: Department;
   phase: 'rolling' | 'choosing' | 'guessing' | 'end';
@@ -38,8 +38,8 @@ interface GameActions {
   setDiceResults: (results: number[]) => void;
   
   // Actions de composition
-  setCompositions: (compositions: number[]) => void;
-  selectComposition: (departmentId: number) => void;
+  setCompositions: (compositions: string[]) => void;
+  selectComposition: (numero: string) => void;
   
   // Actions d'indices
   setHintCount: (hintCount: number) => void;
@@ -77,7 +77,7 @@ const initialGameState: GameState = {
   ],
   currentPlayerIndex: 0,
   diceResults: [],
-  availableDepartments: Array.from({ length: 101 }, (_, i) => i + 1),
+  availableDepartments: departments.map(d => d.numero),
   compositions: [],
   hintsUsed: 0,
   phase: 'rolling',
@@ -86,16 +86,16 @@ const initialGameState: GameState = {
 };
 
 // Fonction pour calculer les compositions possibles
-const calculateCompositions = (diceResults: number[]): number[] => {
+const calculateCompositions = (diceResults: number[]): string[] => {
   if (diceResults.length !== 3) return [];
   
   const [dice1, dice2, dice3] = diceResults;
-  const compositions = new Set<number>();
+  const compositions = new Set<string>();
   
   // Ajouter les valeurs individuelles des dés
-  compositions.add(dice1);
-  compositions.add(dice2);
-  compositions.add(dice3);
+  compositions.add(dice1.toString().padStart(2, '0'));
+  compositions.add(dice2.toString().padStart(2, '0'));
+  compositions.add(dice3.toString().padStart(2, '0'));
   
   // Générer toutes les combinaisons possibles avec les 3 dés
   const dice = [dice1, dice2, dice3];
@@ -104,10 +104,8 @@ const calculateCompositions = (diceResults: number[]): number[] => {
   for (let i = 0; i < dice.length; i++) {
     for (let j = 0; j < dice.length; j++) {
       if (i !== j) {
-        const twoDigit = dice[i] * 10 + dice[j];
-        if (twoDigit >= 1 && twoDigit <= 101) {
-          compositions.add(twoDigit);
-        }
+        const twoDigit = dice[i].toString() + dice[j].toString();
+        compositions.add(twoDigit.padStart(2, '0'));
       }
     }
   }
@@ -117,10 +115,8 @@ const calculateCompositions = (diceResults: number[]): number[] => {
     for (let j = 0; j < dice.length; j++) {
       for (let k = 0; k < dice.length; k++) {
         if (i !== j && i !== k && j !== k) {
-          const threeDigit = dice[i] * 100 + dice[j] * 10 + dice[k];
-          if (threeDigit >= 1 && threeDigit <= 101) {
-            compositions.add(threeDigit);
-          }
+          const threeDigit = dice[i].toString() + dice[j].toString() + dice[k].toString();
+          compositions.add(threeDigit);
         }
       }
     }
@@ -135,15 +131,15 @@ const calculateCompositions = (diceResults: number[]): number[] => {
         
         // Addition
         const add = a + b;
-        if (add >= 1 && add <= 101) compositions.add(add);
+        if (add >= 1 && add <= 101) compositions.add(add.toString().padStart(2, '0'));
         
         // Soustraction (résultat positif)
         const sub1 = Math.abs(a - b);
-        if (sub1 >= 1 && sub1 <= 101) compositions.add(sub1);
+        if (sub1 >= 1 && sub1 <= 101) compositions.add(sub1.toString().padStart(2, '0'));
         
         // Multiplication
         const mult = a * b;
-        if (mult >= 1 && mult <= 101) compositions.add(mult);
+        if (mult >= 1 && mult <= 101) compositions.add(mult.toString().padStart(2, '0'));
       }
     }
   }
@@ -159,29 +155,41 @@ const calculateCompositions = (diceResults: number[]): number[] => {
           
           // Addition de 3 nombres
           const add3 = a + b + c;
-          if (add3 >= 1 && add3 <= 101) compositions.add(add3);
+          if (add3 >= 1 && add3 <= 101) compositions.add(add3.toString().padStart(2, '0'));
           
           // Addition de 2 puis soustraction du 3ème
           const addSub = (a + b) - c;
-          if (addSub >= 1 && addSub <= 101) compositions.add(addSub);
+          if (addSub >= 1 && addSub <= 101) compositions.add(addSub.toString().padStart(2, '0'));
           
           // Multiplication de 2 puis addition du 3ème
           const multAdd = (a * b) + c;
-          if (multAdd >= 1 && multAdd <= 101) compositions.add(multAdd);
+          if (multAdd >= 1 && multAdd <= 101) compositions.add(multAdd.toString().padStart(2, '0'));
           
           // Multiplication de 2 puis soustraction du 3ème
           const multSub = (a * b) - c;
-          if (multSub >= 1 && multSub <= 101) compositions.add(multSub);
+          if (multSub >= 1 && multSub <= 101) compositions.add(multSub.toString().padStart(2, '0'));
           
           // Multiplication de 3 nombres
           const mult3 = a * b * c;
-          if (mult3 >= 1 && mult3 <= 101) compositions.add(mult3);
+          if (mult3 >= 1 && mult3 <= 101) compositions.add(mult3.toString().padStart(2, '0'));
         }
       }
     }
   }
   
-  return Array.from(compositions).sort((a, b) => a - b);
+  // Filtrer uniquement les numéros qui correspondent à des départements existants
+  const validNumeros = departments.map(d => d.numero);
+  const validCompositions = Array.from(compositions).filter(c => validNumeros.includes(c));
+  
+  return validCompositions.sort((a, b) => {
+    // Tri numérique pour les numéros standards, alphabétique pour les spéciaux
+    const aNum = parseInt(a);
+    const bNum = parseInt(b);
+    if (!isNaN(aNum) && !isNaN(bNum)) {
+      return aNum - bNum;
+    }
+    return a.localeCompare(b);
+  });
 };
 
 // Fonction pour calculer les points selon les indices utilisés
@@ -271,12 +279,12 @@ export const useGameStore = create<GameState & GameActions>()(
         set({ diceResults: results, compositions });
       },
       
-      setCompositions: (compositions: number[]) => {
+      setCompositions: (compositions: string[]) => {
         set({ compositions });
       },
       
-      selectComposition: (departmentId: number) => {
-        const department = getDepartmentById(departmentId);
+      selectComposition: (numero: string) => {
+        const department = getDepartmentByNumero(numero);
         if (!department) return;
         
         set({
@@ -330,7 +338,7 @@ export const useGameStore = create<GameState & GameActions>()(
           
           // Retirer le département des disponibles
           const { availableDepartments } = get();
-          const newAvailableDepartments = availableDepartments.filter(id => id !== currentDepartment.id);
+          const newAvailableDepartments = availableDepartments.filter(num => num !== currentDepartment.numero);
           
           set({
             availableDepartments: newAvailableDepartments,
