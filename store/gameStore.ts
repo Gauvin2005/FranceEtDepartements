@@ -163,18 +163,35 @@ const calculateCompositions = (diceResults: number[]): string[] => {
           
           // Multiplication de 2 puis addition du 3ème
           const multAdd = (a * b) + c;
-          if (multAdd >= 1 && multAdd <= 101) compositions.add(multAdd.toString().padStart(2, '0'));
+          if (multAdd >= 1 && multAdd <= 1000) compositions.add(multAdd.toString());
           
           // Multiplication de 2 puis soustraction du 3ème
           const multSub = (a * b) - c;
-          if (multSub >= 1 && multSub <= 101) compositions.add(multSub.toString().padStart(2, '0'));
+          if (multSub >= 1 && multSub <= 1000) compositions.add(multSub.toString());
           
           // Multiplication de 3 nombres
           const mult3 = a * b * c;
-          if (mult3 >= 1 && mult3 <= 101) compositions.add(mult3.toString().padStart(2, '0'));
+          if (mult3 >= 1 && mult3 <= 1000) compositions.add(mult3.toString());
         }
       }
     }
+  }
+  
+  // Règles spéciales pour la Corse (2A et 2B)
+  // Si on a un 2 dans les dés, on peut obtenir la Corse
+  if (dice.includes(2)) {
+    compositions.add('2A');
+    compositions.add('2B');
+  }
+  
+  // Règles spéciales pour les DOM (971, 972, 973, 974, 976)
+  // Si on a un 9 et un 7 dans les dés, on peut obtenir les DOM
+  if (dice.includes(9) && dice.includes(7)) {
+    compositions.add('971');
+    compositions.add('972');
+    compositions.add('973');
+    compositions.add('974');
+    compositions.add('976');
   }
   
   // Filtrer uniquement les numéros qui correspondent à des départements existants
