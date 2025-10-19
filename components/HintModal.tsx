@@ -95,13 +95,24 @@ export const HintModal: React.FC<HintModalProps> = ({
             Choisissez vos indices
           </h3>
           
+          {hintsUsed > 0 && (
+            <div className="mb-3 p-3 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg">
+              <p className="text-sm text-yellow-800 dark:text-yellow-200">
+                ⚠️ Une fois votre choix fait, vous ne pouvez plus revenir en arrière pour éviter la triche !
+              </p>
+            </div>
+          )}
+          
           <div className="grid grid-cols-2 gap-2 mb-4">
             <button
               onClick={() => onUseHint(0)}
+              disabled={hintsUsed > 0}
               className={`px-4 py-2 rounded-lg font-semibold transition-all duration-200 ${
                 hintsUsed === 0 
                   ? 'bg-blue-600 text-white shadow-lg' 
-                  : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600'
+                  : hintsUsed > 0
+                    ? 'bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-600 cursor-not-allowed'
+                    : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600'
               }`}
             >
               Aucun indice
@@ -110,10 +121,13 @@ export const HintModal: React.FC<HintModalProps> = ({
             
             <button
               onClick={() => onUseHint(1)}
+              disabled={hintsUsed > 1}
               className={`px-4 py-2 rounded-lg font-semibold transition-all duration-200 ${
                 hintsUsed === 1 
                   ? 'bg-blue-600 text-white shadow-lg' 
-                  : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600'
+                  : hintsUsed > 1
+                    ? 'bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-600 cursor-not-allowed'
+                    : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600'
               }`}
             >
               1 indice
@@ -122,10 +136,13 @@ export const HintModal: React.FC<HintModalProps> = ({
             
             <button
               onClick={() => onUseHint(2)}
+              disabled={hintsUsed > 2}
               className={`px-4 py-2 rounded-lg font-semibold transition-all duration-200 ${
                 hintsUsed === 2 
                   ? 'bg-blue-600 text-white shadow-lg' 
-                  : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600'
+                  : hintsUsed > 2
+                    ? 'bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-600 cursor-not-allowed'
+                    : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600'
               }`}
             >
               2 indices
@@ -134,10 +151,13 @@ export const HintModal: React.FC<HintModalProps> = ({
             
             <button
               onClick={() => onUseHint(3)}
+              disabled={hintsUsed > 3}
               className={`px-4 py-2 rounded-lg font-semibold transition-all duration-200 ${
                 hintsUsed === 3 
                   ? 'bg-blue-600 text-white shadow-lg' 
-                  : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600'
+                  : hintsUsed > 3
+                    ? 'bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-600 cursor-not-allowed'
+                    : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600'
               }`}
             >
               3 indices
