@@ -1,0 +1,1215 @@
+[
+  {
+    "id": 1,
+    "numero": "01",
+    "nom": "Ain",
+    "prefecture": "Bourg-en-Bresse",
+    "indices": [
+      "Département limitrophe de la Suisse",
+      "Célèbre pour ses volailles et son fromage bleu",
+      "Abrite le monastère de Brou"
+    ],
+    "blason": "/blasons/01.png"
+  },
+  {
+    "id": 2,
+    "numero": "02",
+    "nom": "Aisne",
+    "prefecture": "Laon",
+    "indices": [
+      "Département des Hauts-de-France",
+      "Marqué par la bataille du Chemin des Dames",
+      "Capitale perchée sur une colline fortifiée"
+    ],
+    "blason": "/blasons/02.png"
+  },
+  {
+    "id": 3,
+    "numero": "03",
+    "nom": "Allier",
+    "prefecture": "Moulins",
+    "indices": [
+      "Au cœur de l'Auvergne",
+      "Station thermale de Vichy célèbre",
+      "Forêt de Tronçais réputée"
+    ],
+    "blason": "/blasons/03.png"
+  },
+  {
+    "id": 4,
+    "numero": "04",
+    "nom": "Alpes-de-Haute-Provence",
+    "prefecture": "Digne-les-Bains",
+    "indices": [
+      "Champs de lavande à perte de vue",
+      "Route Napoléon traverse ce département",
+      "Géologie exceptionnelle avec réserve UNESCO"
+    ],
+    "blason": "/blasons/04.png"
+  },
+  {
+    "id": 5,
+    "numero": "05",
+    "nom": "Hautes-Alpes",
+    "prefecture": "Gap",
+    "indices": [
+      "Département le plus élevé de France",
+      "Parc national des Écrins",
+      "Briançon, ville fortifiée par Vauban"
+    ],
+    "blason": "/blasons/05.png"
+  },
+  {
+    "id": 6,
+    "numero": "06",
+    "nom": "Alpes-Maritimes",
+    "prefecture": "Nice",
+    "indices": [
+      "Côte d'Azur et Promenade des Anglais",
+      "Festival de Cannes mondialement connu",
+      "Arrière-pays montagneux avec le Mercantour"
+    ],
+    "blason": "/blasons/06.png"
+  },
+  {
+    "id": 7,
+    "numero": "07",
+    "nom": "Ardèche",
+    "prefecture": "Privas",
+    "indices": [
+      "Gorges spectaculaires et Pont d'Arc",
+      "Grotte Chauvet, art préhistorique",
+      "Châtaignes et marrons emblématiques"
+    ],
+    "blason": "/blasons/07.png"
+  },
+  {
+    "id": 8,
+    "numero": "08",
+    "nom": "Ardennes",
+    "prefecture": "Charleville-Mézières",
+    "indices": [
+      "Berceau du poète Rimbaud",
+      "Forêt mythique et légendaire",
+      "Frontière avec la Belgique"
+    ],
+    "blason": "/blasons/08.png"
+  },
+  {
+    "id": 9,
+    "numero": "09",
+    "nom": "Ariège",
+    "prefecture": "Foix",
+    "indices": [
+      "Pyrénées ariégeoises",
+      "Château cathare sur un piton rocheux",
+      "Grottes préhistoriques de Niaux"
+    ],
+    "blason": "/blasons/09.png"
+  },
+  {
+    "id": 10,
+    "numero": "10",
+    "nom": "Aube",
+    "prefecture": "Troyes",
+    "indices": [
+      "Capitale historique de la bonneterie",
+      "Cœur de ville en forme de bouchon de champagne",
+      "Lacs de la forêt d'Orient"
+    ],
+    "blason": "/blasons/10.png"
+  },
+  {
+    "id": 11,
+    "numero": "11",
+    "nom": "Aude",
+    "prefecture": "Carcassonne",
+    "indices": [
+      "Cité médiévale fortifiée classée UNESCO",
+      "Canal du Midi traverse le département",
+      "Vignobles du Languedoc"
+    ],
+    "blason": "/blasons/11.png"
+  },
+  {
+    "id": 12,
+    "numero": "12",
+    "nom": "Aveyron",
+    "prefecture": "Rodez",
+    "indices": [
+      "Viaduc de Millau, pont le plus haut du monde",
+      "Roquefort, fromage mondialement célèbre",
+      "Villages de pierre caussenards"
+    ],
+    "blason": "/blasons/12.png"
+  },
+  {
+    "id": 13,
+    "numero": "13",
+    "nom": "Bouches-du-Rhône",
+    "prefecture": "Marseille",
+    "indices": [
+      "Plus ancienne ville de France",
+      "Calanques spectaculaires",
+      "Camargue et chevaux sauvages"
+    ],
+    "blason": "/blasons/13.png"
+  },
+  {
+    "id": 14,
+    "numero": "14",
+    "nom": "Calvados",
+    "prefecture": "Caen",
+    "indices": [
+      "Plages du Débarquement de 1944",
+      "Pommeraies et cidre réputé",
+      "Tapisserie de Bayeux"
+    ],
+    "blason": "/blasons/14.png"
+  },
+  {
+    "id": 15,
+    "numero": "15",
+    "nom": "Cantal",
+    "prefecture": "Aurillac",
+    "indices": [
+      "Plus grand volcan d'Europe",
+      "Fromages AOP célèbres",
+      "Vaches Salers en estive"
+    ],
+    "blason": "/blasons/15.png"
+  },
+  {
+    "id": 16,
+    "numero": "16",
+    "nom": "Charente",
+    "prefecture": "Angoulême",
+    "indices": [
+      "Festival international de la bande dessinée",
+      "Cognac produit dans la région",
+      "Ville perchée sur un promontoire"
+    ],
+    "blason": "/blasons/16.png"
+  },
+  {
+    "id": 17,
+    "numero": "17",
+    "nom": "Charente-Maritime",
+    "prefecture": "La Rochelle",
+    "indices": [
+      "Port historique avec tours médiévales",
+      "Île de Ré reliée par un pont",
+      "Huîtres de Marennes-Oléron"
+    ],
+    "blason": "/blasons/17.png"
+  },
+  {
+    "id": 18,
+    "numero": "18",
+    "nom": "Cher",
+    "prefecture": "Bourges",
+    "indices": [
+      "Cathédrale gothique classée UNESCO",
+      "Route Jacques Cœur",
+      "Vignobles de Sancerre et Menetou-Salon"
+    ],
+    "blason": "/blasons/18.png"
+  },
+  {
+    "id": 19,
+    "numero": "19",
+    "nom": "Corrèze",
+    "prefecture": "Tulle",
+    "indices": [
+      "Brive-la-Gaillarde, ville principale",
+      "Plateau de Millevaches",
+      "Manufacture d'armes et dentelle"
+    ],
+    "blason": "/blasons/19.png"
+  },
+  {
+    "id": 20,
+    "numero": "2A",
+    "nom": "Corse-du-Sud",
+    "prefecture": "Ajaccio",
+    "indices": [
+      "Ville natale de Napoléon Bonaparte",
+      "Îles Sanguinaires face à la ville",
+      "GR20 traverse le département"
+    ],
+    "blason": "/blasons/2A.png"
+  },
+  {
+    "id": 21,
+    "numero": "2B",
+    "nom": "Haute-Corse",
+    "prefecture": "Bastia",
+    "indices": [
+      "Port principal de l'île",
+      "Cap Corse et ses villages perchés",
+      "Désert des Agriates"
+    ],
+    "blason": "/blasons/2B.png"
+  },
+  {
+    "id": 22,
+    "numero": "21",
+    "nom": "Côte-d'Or",
+    "prefecture": "Dijon",
+    "indices": [
+      "Capitale des Ducs de Bourgogne",
+      "Route des Grands Crus",
+      "Moutarde célèbre dans le monde entier"
+    ],
+    "blason": "/blasons/21.png"
+  },
+  {
+    "id": 23,
+    "numero": "22",
+    "nom": "Côtes-d'Armor",
+    "prefecture": "Saint-Brieuc",
+    "indices": [
+      "Côte de Granit Rose unique",
+      "Cap Fréhel et Fort La Latte",
+      "Festival de Perros-Guirec"
+    ],
+    "blason": "/blasons/22.png"
+  },
+  {
+    "id": 24,
+    "numero": "23",
+    "nom": "Creuse",
+    "prefecture": "Guéret",
+    "indices": [
+      "Département le moins peuplé de France métropolitaine",
+      "Tapisseries d'Aubusson",
+      "Paysages bocagers préservés"
+    ],
+    "blason": "/blasons/23.png"
+  },
+  {
+    "id": 25,
+    "numero": "24",
+    "nom": "Dordogne",
+    "prefecture": "Périgueux",
+    "indices": [
+      "Périgord et gastronomie du foie gras",
+      "Grottes de Lascaux",
+      "Châteaux médiévaux et bastides"
+    ],
+    "blason": "/blasons/24.png"
+  },
+  {
+    "id": 26,
+    "numero": "25",
+    "nom": "Doubs",
+    "prefecture": "Besançon",
+    "indices": [
+      "Citadelle Vauban dominant la ville",
+      "Horlogerie et microtechnique",
+      "Rivière en forme de fer à cheval"
+    ],
+    "blason": "/blasons/25.png"
+  },
+  {
+    "id": 27,
+    "numero": "26",
+    "nom": "Drôme",
+    "prefecture": "Valence",
+    "indices": [
+      "Nougat de Montélimar",
+      "Vercors et ses gorges",
+      "Lavande de la Drôme provençale"
+    ],
+    "blason": "/blasons/26.png"
+  },
+  {
+    "id": 28,
+    "numero": "27",
+    "nom": "Eure",
+    "prefecture": "Évreux",
+    "indices": [
+      "Giverny et les jardins de Monet",
+      "Château Gaillard des Andelys",
+      "Normandie verdoyante"
+    ],
+    "blason": "/blasons/27.png"
+  },
+  {
+    "id": 29,
+    "numero": "28",
+    "nom": "Eure-et-Loir",
+    "prefecture": "Chartres",
+    "indices": [
+      "Cathédrale aux vitraux exceptionnels",
+      "Plaine de Beauce, grenier à blé",
+      "Pèlerinage médiéval célèbre"
+    ],
+    "blason": "/blasons/28.png"
+  },
+  {
+    "id": 30,
+    "numero": "29",
+    "nom": "Finistère",
+    "prefecture": "Quimper",
+    "indices": [
+      "Bout du monde en breton",
+      "Pointe du Raz et phares mythiques",
+      "Faïencerie traditionnelle"
+    ],
+    "blason": "/blasons/29.png"
+  },
+  {
+    "id": 31,
+    "numero": "30",
+    "nom": "Gard",
+    "prefecture": "Nîmes",
+    "indices": [
+      "Pont du Gard, aqueduc romain",
+      "Arènes romaines encore utilisées",
+      "Camargue gardoise"
+    ],
+    "blason": "/blasons/30.png"
+  },
+  {
+    "id": 32,
+    "numero": "31",
+    "nom": "Haute-Garonne",
+    "prefecture": "Toulouse",
+    "indices": [
+      "Ville rose et capitale aéronautique",
+      "Airbus et Cité de l'Espace",
+      "Canal du Midi commence ici"
+    ],
+    "blason": "/blasons/31.png"
+  },
+  {
+    "id": 33,
+    "numero": "32",
+    "nom": "Gers",
+    "prefecture": "Auch",
+    "indices": [
+      "Patrie de d'Artagnan",
+      "Armagnac et foie gras",
+      "Bastides et villages gascons"
+    ],
+    "blason": "/blasons/32.png"
+  },
+  {
+    "id": 34,
+    "numero": "33",
+    "nom": "Gironde",
+    "prefecture": "Bordeaux",
+    "indices": [
+      "Capitale mondiale du vin",
+      "Dune du Pilat, plus haute d'Europe",
+      "Place de la Bourse et miroir d'eau"
+    ],
+    "blason": "/blasons/33.png"
+  },
+  {
+    "id": 35,
+    "numero": "34",
+    "nom": "Hérault",
+    "prefecture": "Montpellier",
+    "indices": [
+      "Plus ancienne faculté de médecine",
+      "Station balnéaire du Cap d'Agde",
+      "Canal du Midi et étang de Thau"
+    ],
+    "blason": "/blasons/34.png"
+  },
+  {
+    "id": 36,
+    "numero": "35",
+    "nom": "Ille-et-Vilaine",
+    "prefecture": "Rennes",
+    "indices": [
+      "Capitale de la Bretagne",
+      "Saint-Malo, cité corsaire",
+      "Mont-Saint-Michel à la frontière"
+    ],
+    "blason": "/blasons/35.png"
+  },
+  {
+    "id": 37,
+    "numero": "36",
+    "nom": "Indre",
+    "prefecture": "Châteauroux",
+    "indices": [
+      "Berry méridional",
+      "George Sand à Nohant",
+      "Vallée de la Creuse pittoresque"
+    ],
+    "blason": "/blasons/36.png"
+  },
+  {
+    "id": 38,
+    "numero": "37",
+    "nom": "Indre-et-Loire",
+    "prefecture": "Tours",
+    "indices": [
+      "Jardin de la France",
+      "Châteaux de la Loire majestueux",
+      "Amboise, Chenonceau, Villandry"
+    ],
+    "blason": "/blasons/37.png"
+  },
+  {
+    "id": 39,
+    "numero": "38",
+    "nom": "Isère",
+    "prefecture": "Grenoble",
+    "indices": [
+      "Capitale des Alpes",
+      "Téléphérique vers la Bastille",
+      "JO d'hiver 1968"
+    ],
+    "blason": "/blasons/38.png"
+  },
+  {
+    "id": 40,
+    "numero": "39",
+    "nom": "Jura",
+    "prefecture": "Lons-le-Saunier",
+    "indices": [
+      "Comté et vin jaune",
+      "Cascades du Hérisson",
+      "Salines royales d'Arc-et-Senans"
+    ],
+    "blason": "/blasons/39.png"
+  },
+  {
+    "id": 41,
+    "numero": "40",
+    "nom": "Landes",
+    "prefecture": "Mont-de-Marsan",
+    "indices": [
+      "Plus grande forêt artificielle d'Europe",
+      "Hossegor et surf atlantique",
+      "Courses landaises traditionnelles"
+    ],
+    "blason": "/blasons/40.png"
+  },
+  {
+    "id": 42,
+    "numero": "41",
+    "nom": "Loir-et-Cher",
+    "prefecture": "Blois",
+    "indices": [
+      "Château royal avec escalier François Ier",
+      "Chambord, le plus grand des châteaux",
+      "Sologne et chasse"
+    ],
+    "blason": "/blasons/41.png"
+  },
+  {
+    "id": 43,
+    "numero": "42",
+    "nom": "Loire",
+    "prefecture": "Saint-Étienne",
+    "indices": [
+      "Manufacture d'armes et cycles",
+      "Gorges de la Loire sauvages",
+      "Stade Geoffroy-Guichard mythique"
+    ],
+    "blason": "/blasons/42.png"
+  },
+  {
+    "id": 44,
+    "numero": "43",
+    "nom": "Haute-Loire",
+    "prefecture": "Le Puy-en-Velay",
+    "indices": [
+      "Point de départ de Saint-Jacques",
+      "Rocher et chapelle Saint-Michel",
+      "Lentilles vertes AOP"
+    ],
+    "blason": "/blasons/43.png"
+  },
+  {
+    "id": 45,
+    "numero": "44",
+    "nom": "Loire-Atlantique",
+    "prefecture": "Nantes",
+    "indices": [
+      "Machines de l'île et éléphant",
+      "Château des ducs de Bretagne",
+      "Vignoble du Muscadet"
+    ],
+    "blason": "/blasons/44.png"
+  },
+  {
+    "id": 46,
+    "numero": "45",
+    "nom": "Loiret",
+    "prefecture": "Orléans",
+    "indices": [
+      "Jeanne d'Arc libératrice",
+      "Loire sauvage classée UNESCO",
+      "Cathédrale Sainte-Croix"
+    ],
+    "blason": "/blasons/45.png"
+  },
+  {
+    "id": 47,
+    "numero": "46",
+    "nom": "Lot",
+    "prefecture": "Cahors",
+    "indices": [
+      "Vin noir de Malbec",
+      "Pont Valentré médiéval",
+      "Rocamadour, cité sacrée"
+    ],
+    "blason": "/blasons/46.png"
+  },
+  {
+    "id": 48,
+    "numero": "47",
+    "nom": "Lot-et-Garonne",
+    "prefecture": "Agen",
+    "indices": [
+      "Pruneaux d'Agen réputés",
+      "Bastides du Sud-Ouest",
+      "Confluence entre Lot et Garonne"
+    ],
+    "blason": "/blasons/47.png"
+  },
+  {
+    "id": 49,
+    "numero": "48",
+    "nom": "Lozère",
+    "prefecture": "Mende",
+    "indices": [
+      "Département le moins peuplé",
+      "Aubrac et Margeride",
+      "Bête du Gévaudan légendaire"
+    ],
+    "blason": "/blasons/48.png"
+  },
+  {
+    "id": 50,
+    "numero": "49",
+    "nom": "Maine-et-Loire",
+    "prefecture": "Angers",
+    "indices": [
+      "Tapisserie de l'Apocalypse",
+      "Château et forteresse médiévale",
+      "Vignobles d'Anjou et Saumur"
+    ],
+    "blason": "/blasons/49.png"
+  },
+  {
+    "id": 51,
+    "numero": "50",
+    "nom": "Manche",
+    "prefecture": "Saint-Lô",
+    "indices": [
+      "Mont-Saint-Michel merveille",
+      "Cotentin et Cherbourg",
+      "Débarquement d'Utah Beach"
+    ],
+    "blason": "/blasons/50.png"
+  },
+  {
+    "id": 52,
+    "numero": "51",
+    "nom": "Marne",
+    "prefecture": "Châlons-en-Champagne",
+    "indices": [
+      "Champagne et grandes maisons",
+      "Cathédrale de Reims pour sacres",
+      "Batailles de la Grande Guerre"
+    ],
+    "blason": "/blasons/51.png"
+  },
+  {
+    "id": 53,
+    "numero": "52",
+    "nom": "Haute-Marne",
+    "prefecture": "Chaumont",
+    "indices": [
+      "Sources de la Marne",
+      "Cutellerie et métallurgie",
+      "Lac du Der-Chantecoq"
+    ],
+    "blason": "/blasons/52.png"
+  },
+  {
+    "id": 54,
+    "numero": "53",
+    "nom": "Mayenne",
+    "prefecture": "Laval",
+    "indices": [
+      "Vieux-Château médiéval",
+      "Bocage mayennais verdoyant",
+      "Grottes de Saulges préhistoriques"
+    ],
+    "blason": "/blasons/53.png"
+  },
+  {
+    "id": 55,
+    "numero": "54",
+    "nom": "Meurthe-et-Moselle",
+    "prefecture": "Nancy",
+    "indices": [
+      "Place Stanislas classée UNESCO",
+      "École de Nancy Art Nouveau",
+      "Mirabelles et quiche lorraine"
+    ],
+    "blason": "/blasons/54.png"
+  },
+  {
+    "id": 56,
+    "numero": "55",
+    "nom": "Meuse",
+    "prefecture": "Bar-le-Duc",
+    "indices": [
+      "Verdun et mémoire 14-18",
+      "Voie sacrée historique",
+      "Dragées réputées"
+    ],
+    "blason": "/blasons/55.png"
+  },
+  {
+    "id": 57,
+    "numero": "56",
+    "nom": "Morbihan",
+    "prefecture": "Vannes",
+    "indices": [
+      "Golfe parsemé d'îles",
+      "Alignements de Carnac",
+      "Belle-Île-en-Mer"
+    ],
+    "blason": "/blasons/56.png"
+  },
+  {
+    "id": 58,
+    "numero": "57",
+    "nom": "Moselle",
+    "prefecture": "Metz",
+    "indices": [
+      "Cathédrale gothique lumineuse",
+      "Centre Pompidou-Metz",
+      "Histoire franco-allemande"
+    ],
+    "blason": "/blasons/57.png"
+  },
+  {
+    "id": 59,
+    "numero": "58",
+    "nom": "Nièvre",
+    "prefecture": "Nevers",
+    "indices": [
+      "Faïences artistiques",
+      "Circuit de Nevers Magny-Cours",
+      "Morvan et lacs"
+    ],
+    "blason": "/blasons/58.png"
+  },
+  {
+    "id": 60,
+    "numero": "59",
+    "nom": "Nord",
+    "prefecture": "Lille",
+    "indices": [
+      "Beffrois flamands",
+      "Braderie la plus célèbre",
+      "Moules-frites traditionnelles"
+    ],
+    "blason": "/blasons/59.png"
+  },
+  {
+    "id": 61,
+    "numero": "60",
+    "nom": "Oise",
+    "prefecture": "Beauvais",
+    "indices": [
+      "Cathédrale au chœur le plus haut",
+      "Chantilly et son château",
+      "Forêt de Compiègne historique"
+    ],
+    "blason": "/blasons/60.png"
+  },
+  {
+    "id": 62,
+    "numero": "61",
+    "nom": "Orne",
+    "prefecture": "Alençon",
+    "indices": [
+      "Dentelle au point d'Alençon",
+      "Haras du Pin prestigieux",
+      "Camembert de Normandie"
+    ],
+    "blason": "/blasons/61.png"
+  },
+  {
+    "id": 63,
+    "numero": "62",
+    "nom": "Pas-de-Calais",
+    "prefecture": "Arras",
+    "indices": [
+      "Beffroi et Grand-Place",
+      "Cap Blanc-Nez et Gris-Nez",
+      "Plus proche de l'Angleterre"
+    ],
+    "blason": "/blasons/62.png"
+  },
+  {
+    "id": 64,
+    "numero": "63",
+    "nom": "Puy-de-Dôme",
+    "prefecture": "Clermont-Ferrand",
+    "indices": [
+      "Volcan emblématique culminant",
+      "Capitale du pneumatique",
+      "Chaîne des Puys classée"
+    ],
+    "blason": "/blasons/63.png"
+  },
+  {
+    "id": 65,
+    "numero": "64",
+    "nom": "Pyrénées-Atlantiques",
+    "prefecture": "Pau",
+    "indices": [
+      "Berceau d'Henri IV",
+      "Biarritz et surf basque",
+      "Fromage Ossau-Iraty"
+    ],
+    "blason": "/blasons/64.png"
+  },
+  {
+    "id": 66,
+    "numero": "65",
+    "nom": "Hautes-Pyrénées",
+    "prefecture": "Tarbes",
+    "indices": [
+      "Lourdes, lieu de pèlerinage",
+      "Pic du Midi observatoire",
+      "Cirque de Gavarnie majestueux"
+    ],
+    "blason": "/blasons/65.png"
+  },
+  {
+    "id": 67,
+    "numero": "66",
+    "nom": "Pyrénées-Orientales",
+    "prefecture": "Perpignan",
+    "indices": [
+      "Catalogne française",
+      "Canigou montagne sacrée",
+      "Côte Vermeille et Collioure"
+    ],
+    "blason": "/blasons/66.png"
+  },
+  {
+    "id": 68,
+    "numero": "67",
+    "nom": "Bas-Rhin",
+    "prefecture": "Strasbourg",
+    "indices": [
+      "Capitale européenne",
+      "Cathédrale de grès rose",
+      "Marché de Noël célèbre"
+    ],
+    "blason": "/blasons/67.png"
+  },
+  {
+    "id": 69,
+    "numero": "68",
+    "nom": "Haut-Rhin",
+    "prefecture": "Colmar",
+    "indices": [
+      "Petite Venise alsacienne",
+      "Route des vins pittoresque",
+      "Musée Unterlinden"
+    ],
+    "blason": "/blasons/68.png"
+  },
+  {
+    "id": 70,
+    "numero": "69",
+    "nom": "Rhône",
+    "prefecture": "Lyon",
+    "indices": [
+      "Capitale de la gastronomie",
+      "Confluence Rhône et Saône",
+      "Fête des Lumières"
+    ],
+    "blason": "/blasons/69.png"
+  },
+  {
+    "id": 71,
+    "numero": "70",
+    "nom": "Haute-Saône",
+    "prefecture": "Vesoul",
+    "indices": [
+      "Chanson de Jacques Brel",
+      "Chapelle Notre-Dame de la Motte",
+      "Forges et ferronnerie"
+    ],
+    "blason": "/blasons/70.png"
+  },
+  {
+    "id": 72,
+    "numero": "71",
+    "nom": "Saône-et-Loire",
+    "prefecture": "Mâcon",
+    "indices": [
+      "Vignobles bourguignons sud",
+      "Cluny abbaye bénédictine",
+      "Charolais et élevage bovin"
+    ],
+    "blason": "/blasons/71.png"
+  },
+  {
+    "id": 73,
+    "numero": "72",
+    "nom": "Sarthe",
+    "prefecture": "Le Mans",
+    "indices": [
+      "24 Heures mythiques",
+      "Rillettes réputées",
+      "Cité Plantagenêt médiévale"
+    ],
+    "blason": "/blasons/72.png"
+  },
+  {
+    "id": 74,
+    "numero": "73",
+    "nom": "Savoie",
+    "prefecture": "Chambéry",
+    "indices": [
+      "Lacs d'Annecy et du Bourget",
+      "Stations de ski olympiques",
+      "Fromages Beaufort et Reblochon"
+    ],
+    "blason": "/blasons/73.png"
+  },
+  {
+    "id": 75,
+    "numero": "74",
+    "nom": "Haute-Savoie",
+    "prefecture": "Annecy",
+    "indices": [
+      "Venise des Alpes",
+      "Mont-Blanc point culminant",
+      "Chamonix et alpinisme"
+    ],
+    "blason": "/blasons/74.png"
+  },
+  {
+    "id": 76,
+    "numero": "75",
+    "nom": "Paris",
+    "prefecture": "Paris",
+    "indices": [
+      "Capitale de la France",
+      "Tour Eiffel emblématique",
+      "Ville Lumière"
+    ],
+    "blason": "/blasons/75.png"
+  },
+  {
+    "id": 77,
+    "numero": "76",
+    "nom": "Seine-Maritime",
+    "prefecture": "Rouen",
+    "indices": [
+      "Jeanne d'Arc martyrisée",
+      "Falaises d'Étretat",
+      "Port du Havre"
+    ],
+    "blason": "/blasons/76.png"
+  },
+  {
+    "id": 78,
+    "numero": "77",
+    "nom": "Seine-et-Marne",
+    "prefecture": "Melun",
+    "indices": [
+      "Disneyland Paris",
+      "Forêt de Fontainebleau",
+      "Château Renaissance"
+    ],
+    "blason": "/blasons/77.png"
+  },
+  {
+    "id": 79,
+    "numero": "78",
+    "nom": "Yvelines",
+    "prefecture": "Versailles",
+    "indices": [
+      "Château du Roi Soleil",
+      "Galerie des Glaces",
+      "Jardins à la française"
+    ],
+    "blason": "/blasons/78.png"
+  },
+  {
+    "id": 80,
+    "numero": "79",
+    "nom": "Deux-Sèvres",
+    "prefecture": "Niort",
+    "indices": [
+      "Marais Poitevin vert",
+      "Mutualité et assurances",
+      "Angélique de Niort"
+    ],
+    "blason": "/blasons/79.png"
+  },
+  {
+    "id": 81,
+    "numero": "80",
+    "nom": "Somme",
+    "prefecture": "Amiens",
+    "indices": [
+      "Plus vaste cathédrale de France",
+      "Jules Verne résidant",
+      "Batailles de la Grande Guerre"
+    ],
+    "blason": "/blasons/80.png"
+  },
+  {
+    "id": 82,
+    "numero": "81",
+    "nom": "Tarn",
+    "prefecture": "Albi",
+    "indices": [
+      "Cathédrale fortifiée unique",
+      "Toulouse-Lautrec natif",
+      "Bastides médiévales"
+    ],
+    "blason": "/blasons/81.png"
+  },
+  {
+    "id": 83,
+    "numero": "82",
+    "nom": "Tarn-et-Garonne",
+    "prefecture": "Montauban",
+    "indices": [
+      "Briques roses omniprésentes",
+      "Ingres peintre célèbre",
+      "Chasselas de Moissac"
+    ],
+    "blason": "/blasons/82.png"
+  },
+  {
+    "id": 84,
+    "numero": "83",
+    "nom": "Var",
+    "prefecture": "Toulon",
+    "indices": [
+      "Base navale importante",
+      "Îles d'Hyères paradisiaques",
+      "Gorges du Verdon spectaculaires"
+    ],
+    "blason": "/blasons/83.png"
+  },
+  {
+    "id": 85,
+    "numero": "84",
+    "nom": "Vaucluse",
+    "prefecture": "Avignon",
+    "indices": [
+      "Palais des Papes",
+      "Pont Saint-Bénézet incomplet",
+      "Mont Ventoux géant de Provence"
+    ],
+    "blason": "/blasons/84.png"
+  },
+  {
+    "id": 86,
+    "numero": "85",
+    "nom": "Vendée",
+    "prefecture": "La Roche-sur-Yon",
+    "indices": [
+      "Puy du Fou parc historique",
+      "Guerres de Vendée",
+      "Île de Noirmoutier"
+    ],
+    "blason": "/blasons/85.png"
+  },
+  {
+    "id": 87,
+    "numero": "86",
+    "nom": "Vienne",
+    "prefecture": "Poitiers",
+    "indices": [
+      "Bataille de 732 décisive",
+      "Futuroscope parc d'attractions",
+      "Églises romanes nombreuses"
+    ],
+    "blason": "/blasons/86.png"
+  },
+  {
+    "id": 88,
+    "numero": "87",
+    "nom": "Haute-Vienne",
+    "prefecture": "Limoges",
+    "indices": [
+      "Porcelaine mondialement connue",
+      "Émail sur cuivre",
+      "Oradour-sur-Glane martyre"
+    ],
+    "blason": "/blasons/87.png"
+  },
+  {
+    "id": 89,
+    "numero": "88",
+    "nom": "Vosges",
+    "prefecture": "Épinal",
+    "indices": [
+      "Images d'Épinal colorées",
+      "Massif vosgien et ballons",
+      "Route des Crêtes panoramique"
+    ],
+    "blason": "/blasons/88.png"
+  },
+  {
+    "id": 90,
+    "numero": "89",
+    "nom": "Yonne",
+    "prefecture": "Auxerre",
+    "indices": [
+      "Vignobles de Chablis",
+      "Vézelay basilique",
+      "Abbaye de Pontigny"
+    ],
+    "blason": "/blasons/89.png"
+  },
+  {
+    "id": 91,
+    "numero": "90",
+    "nom": "Territoire de Belfort",
+    "prefecture": "Belfort",
+    "indices": [
+      "Lion de Bartholdi monumental",
+      "Trouée stratégique",
+      "Plus petit département"
+    ],
+    "blason": "/blasons/90.png"
+  },
+  {
+    "id": 92,
+    "numero": "91",
+    "nom": "Essonne",
+    "prefecture": "Évry-Corcouronnes",
+    "indices": [
+      "Cathédrale moderne circulaire",
+      "Vallée de Chevreuse",
+      "Plateau de Saclay scientifique"
+    ],
+    "blason": "/blasons/91.png"
+  },
+  {
+    "id": 93,
+    "numero": "92",
+    "nom": "Hauts-de-Seine",
+    "prefecture": "Nanterre",
+    "indices": [
+      "La Défense quartier d'affaires",
+      "Grande Arche moderne",
+      "Île de la Jatte impressionniste"
+    ],
+    "blason": "/blasons/92.png"
+  },
+  {
+    "id": 94,
+    "numero": "93",
+    "nom": "Seine-Saint-Denis",
+    "prefecture": "Bobigny",
+    "indices": [
+      "Stade de France",
+      "Basilique de Saint-Denis",
+      "Nécropole des rois"
+    ],
+    "blason": "/blasons/93.png"
+  },
+  {
+    "id": 95,
+    "numero": "94",
+    "nom": "Val-de-Marne",
+    "prefecture": "Créteil",
+    "indices": [
+      "Bords de Marne bucoliques",
+      "Château de Vincennes",
+      "MAC VAL musée d'art"
+    ],
+    "blason": "/blasons/94.png"
+  },
+  {
+    "id": 96,
+    "numero": "95",
+    "nom": "Val-d'Oise",
+    "prefecture": "Cergy-Pontoise",
+    "indices": [
+      "Ville nouvelle des années 70",
+      "Auvers-sur-Oise de Van Gogh",
+      "Abbaye de Royaumont"
+    ],
+    "blason": "/blasons/95.png"
+  },
+  {
+    "id": 97,
+    "numero": "971",
+    "nom": "Guadeloupe",
+    "prefecture": "Basse-Terre",
+    "indices": [
+      "Papillon des Caraïbes",
+      "Volcan de la Soufrière",
+      "Rhum agricole AOC"
+    ],
+    "blason": "/blasons/971.png"
+  },
+  {
+    "id": 98,
+    "numero": "972",
+    "nom": "Martinique",
+    "prefecture": "Fort-de-France",
+    "indices": [
+      "Île aux fleurs",
+      "Montagne Pelée volcanique",
+      "Bibliothèque Schœlcher"
+    ],
+    "blason": "/blasons/972.png"
+  },
+  {
+    "id": 99,
+    "numero": "973",
+    "nom": "Guyane",
+    "prefecture": "Cayenne",
+    "indices": [
+      "Centre spatial guyanais",
+      "Forêt amazonienne",
+      "Îles du Salut et bagne"
+    ],
+    "blason": "/blasons/973.png"
+  },
+  {
+    "id": 100,
+    "numero": "974",
+    "nom": "La Réunion",
+    "prefecture": "Saint-Denis",
+    "indices": [
+      "Piton de la Fournaise actif",
+      "Cirques classés UNESCO",
+      "Vanille Bourbon réputée"
+    ],
+    "blason": "/blasons/974.png"
+  },
+  {
+    "id": 101,
+    "numero": "976",
+    "nom": "Mayotte",
+    "prefecture": "Mamoudzou",
+    "indices": [
+      "101e département français",
+      "Lagon le plus vaste",
+      "Makis et tortues marines"
+    ],
+    "blason": "/blasons/976.png"
+  }
+]
+

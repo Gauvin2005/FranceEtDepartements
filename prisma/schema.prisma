@@ -1,0 +1,143 @@
+// This is your Prisma schema file
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           Int           @id @default(autoincrement())
+  pseudo       String        @unique
+  email        String        @unique
+  passwordHash String?
+  role         String        @default("player")
+  isConfirmed  Boolean       @default(false)
+  createdAt    DateTime      @default(now())
+  sessions     Session[]
+  gamesPlayed  GamePlayer[]
+  badges       Badge[]
+
+  @@index([email])
+  @@index([pseudo])
+}
+
+model Session {
+  id           Int      @id @default(autoincrement())
+  userId       Int?
+  guestPseudo  String?
+  jwtRefresh   String?  @db.Text
+  createdAt    DateTime @default(now())
+  user         User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model Department {
+  id         Int      @id @default(autoincrement())
+  numero     String   @unique
+  nom        String
+  prefecture String
+  indices    Json
+  blason     String?
+  card       Card?
+
+  @@index([numero])
+}
+
+model Card {
+  id           Int         @id @default(autoincrement())
+  cardNumber   Int         @unique
+  departmentId Int         @unique
+  type         String      @default("souvenir")
+  value        Int
+  createdAt    DateTime    @default(now())
+  department   Department  @relation(fields: [departmentId], references: [id], onDelete: Cascade)
+  ownedCards   OwnedCard[]
+
+  @@index([cardNumber])
+  @@index([type])
+}
+
+model Game {
+  id           Int          @id @default(autoincrement())
+  code         String       @unique
+  hostId       Int
+  status       String       @default("lobby")
+  maxPlayers   Int
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  turnIndex    Int          @default(0)
+  maxTurns     Int?
+  timeLimitSec Int?
+  players      GamePlayer[]
+  rounds       Round[]
+
+  @@index([code])
+  @@index([status])
+}
+
+model GamePlayer {
+  id           Int         @id @default(autoincrement())
+  gameId       Int
+  userId       Int?
+  guestPseudo  String?
+  position     Int         @default(0)
+  money        Int         @default(5000)
+  isEliminated Boolean     @default(false)
+  playerOrder  Int
+  createdAt    DateTime    @default(now())
+  ownedCards   OwnedCard[]
+  user         User?       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  game         Game        @relation(fields: [gameId], references: [id], onDelete: Cascade)
+  rounds       Round[]
+
+  @@index([gameId])
+  @@index([userId])
+}
+
+model OwnedCard {
+  id           Int        @id @default(autoincrement())
+  gamePlayerId Int
+  cardId       Int
+  isFaceUp     Boolean    @default(false)
+  createdAt    DateTime   @default(now())
+  gamePlayer   GamePlayer @relation(fields: [gamePlayerId], references: [id], onDelete: Cascade)
+  card         Card       @relation(fields: [cardId], references: [id], onDelete: Cascade)
+
+  @@index([gamePlayerId])
+  @@index([cardId])
+}
+
+model Round {
+  id                   Int        @id @default(autoincrement())
+  gameId               Int
+  playerId             Int
+  diceValues           String
+  compositions         String     @db.Text
+  chosenNumber         Int?
+  chosenDepartmentId   Int?
+  indicesUsed          Int        @default(0)
+  wonPoints            Int        @default(0)
+  createdAt            DateTime   @default(now())
+  game                 Game       @relation(fields: [gameId], references: [id], onDelete: Cascade)
+  player               GamePlayer @relation(fields: [playerId], references: [id], onDelete: Cascade)
+
+  @@index([gameId])
+  @@index([playerId])
+}
+
+model Badge {
+  id          Int      @id @default(autoincrement())
+  userId      Int
+  name        String
+  description String   @db.Text
+  createdAt   DateTime @default(now())
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
