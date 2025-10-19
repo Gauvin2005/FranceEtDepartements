@@ -74,14 +74,20 @@ export const Marquee: React.FC<MarqueeProps> = ({
   if (!isVisible) return null;
 
   return (
-    <div className="fixed top-4 left-0 right-0 z-50 pointer-events-none">
-      <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-3 shadow-lg">
+    <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50 pointer-events-none">
+      <div className="bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 text-white px-8 py-6 rounded-2xl shadow-2xl backdrop-blur-sm border border-white/20 max-w-2xl mx-4">
         <div className="text-center">
-          <div className="text-lg font-bold tracking-wide">
+          <div className="text-2xl font-bold tracking-wide mb-2">
             {displayText}
             {animationPhase === 'display' && currentIndex === text.length && (
-              <span className="animate-pulse">|</span>
+              <span className="animate-pulse text-yellow-300">|</span>
             )}
+          </div>
+          <div className="h-1 bg-white/20 rounded-full overflow-hidden">
+            <div className={`h-full bg-gradient-to-r from-yellow-400 to-orange-400 rounded-full transition-all duration-300 ${
+              animationPhase === 'enter' ? 'animate-pulse' : 
+              animationPhase === 'display' ? 'w-full' : 'w-0'
+            }`}></div>
           </div>
         </div>
       </div>
