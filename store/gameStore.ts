@@ -462,7 +462,7 @@ export const useGameStore = create<GameState & GameActions>()(
               ? { 
                   ...player, 
                   championCards: player.championCards - 1,
-                  score: player.score - 5000 + 2000
+                  score: player.score + 25000
                 }
               : player
           );

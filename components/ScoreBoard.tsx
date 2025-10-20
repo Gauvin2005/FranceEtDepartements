@@ -162,7 +162,7 @@ export const ScoreBoard: React.FC<ScoreBoardProps> = ({
                       onClick={() => onSellChampionCard(player.id)}
                       className="px-4 py-2 bg-gradient-to-r from-yellow-600 to-orange-600 hover:from-yellow-700 hover:to-orange-700 text-white text-xs rounded-lg font-bold transition-all shadow-lg hover:scale-105"
                     >
-                      💰 Vendre (-5000 +2000)
+                      💰 Vendre (+25000 pts)
                     </button>
                   </div>
                 </div>
