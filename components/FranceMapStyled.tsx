@@ -315,7 +315,7 @@ export const FranceMapStyled: React.FC<FranceMapStyledProps> = ({
 
   const mapContent = (
     <>
-      <svg viewBox="0 0 700 550" className={styles.svg} style={{ minHeight: isExpanded ? '80vh' : '600px' }}>
+      <svg viewBox="-50 0 750 550" className={styles.svg} style={{ minHeight: isExpanded ? '80vh' : '600px' }}>
         <defs>
           <filter id="glow">
             <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
