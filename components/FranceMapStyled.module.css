@@ -189,6 +189,11 @@
   animation: pulseHighlighted 2s ease-in-out infinite;
 }
 
+.deptBox.regionSelected {
+  stroke-width: 4;
+  animation: pulseRegionSelected 1.2s ease-in-out infinite;
+}
+
 @keyframes pulseCurrent {
   0%, 100% {
     opacity: 1;
@@ -206,6 +211,19 @@
   }
   50% {
     opacity: 0.8;
+  }
+}
+
+@keyframes pulseRegionSelected {
+  0%, 100% {
+    opacity: 1;
+    stroke-width: 4;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.9;
+    stroke-width: 5;
+    transform: scale(1.02);
   }
 }
 
@@ -274,13 +292,23 @@
   font-size: 16px;
   font-weight: 900;
   text-align: center;
-  margin-bottom: 16px;
+  margin-bottom: 8px;
   background: linear-gradient(135deg, #8b5cf6, #06b6d4);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   letter-spacing: 2px;
   font-family: 'Orbitron', 'Arial Black', sans-serif;
+}
+
+.legendSubtitle {
+  font-size: 12px;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 16px;
+  color: rgba(251, 191, 36, 0.9);
+  font-family: 'Share Tech Mono', 'Courier New', monospace;
+  font-style: italic;
 }
 
 .regionsGrid {
@@ -304,6 +332,23 @@
   background: rgba(0, 0, 0, 0.5);
   border-color: rgba(139, 92, 246, 0.5);
   transform: translateX(4px);
+}
+
+.regionLegendItemActive {
+  background: linear-gradient(135deg, rgba(251, 191, 36, 0.3), rgba(245, 158, 11, 0.3)) !important;
+  border: 2px solid rgba(251, 191, 36, 0.8) !important;
+  box-shadow: 0 0 20px rgba(251, 191, 36, 0.5);
+  transform: scale(1.05);
+  animation: pulseActive 1.5s ease-in-out infinite;
+}
+
+@keyframes pulseActive {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(251, 191, 36, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(251, 191, 36, 0.8);
+  }
 }
 
 .regionColorBox {
