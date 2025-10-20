@@ -106,10 +106,14 @@ const GamePage: React.FC = () => {
     nextTurn();
     setShowBonusModal(false);
     
-    // Afficher le marquee pour le tour suivant
-    const nextPlayer = players[(currentPlayerIndex + 1) % players.length];
-    setMarqueeText(`Tour de ${nextPlayer.name} - Score: ${nextPlayer.score} points`);
-    setShowMarquee(true);
+    // Attendre que React mette à jour l'état avant d'afficher le marquee
+    setTimeout(() => {
+      const newPlayerIndex = useGameStore.getState().currentPlayerIndex;
+      const updatedPlayers = useGameStore.getState().players;
+      const nextPlayer = updatedPlayers[newPlayerIndex];
+      setMarqueeText(`Tour de ${nextPlayer.name} - Score: ${nextPlayer.score} points`);
+      setShowMarquee(true);
+    }, 100);
   };
 
   const handlePassTurn = () => {
@@ -117,10 +121,14 @@ const GamePage: React.FC = () => {
     setShowHintModal(false);
     setShowCompositions(false);
     
-    // Afficher le marquee pour le tour suivant
-    const nextPlayer = players[(currentPlayerIndex + 1) % players.length];
-    setMarqueeText(`Tour de ${nextPlayer.name} - Score: ${nextPlayer.score} points`);
-    setShowMarquee(true);
+    // Attendre que React mette à jour l'état avant d'afficher le marquee
+    setTimeout(() => {
+      const newPlayerIndex = useGameStore.getState().currentPlayerIndex;
+      const updatedPlayers = useGameStore.getState().players;
+      const nextPlayer = updatedPlayers[newPlayerIndex];
+      setMarqueeText(`Tour de ${nextPlayer.name} - Score: ${nextPlayer.score} points`);
+      setShowMarquee(true);
+    }, 100);
   };
 
   const handleSellChampionCard = (playerId: number) => {
