@@ -68,6 +68,29 @@ export const FranceMapStyled: React.FC<FranceMapStyledProps> = ({
     return "#8b5cf6"; // Couleur par défaut
   };
 
+  // Fonction pour trouver le nom de la région d'un département
+  const getRegionNameByDeptNum = (num: string): string | null => {
+    for (const [regionName, data] of Object.entries(departmentsByRegion)) {
+      if (data.nums.includes(num)) {
+        return regionName;
+      }
+    }
+    // Vérifier les régions spéciales
+    if (["2A", "2B"].includes(num)) return "Corse";
+    if (["75", "77", "78", "91", "92", "93", "94", "95"].includes(num)) return "Île-de-France";
+    if (["971", "972", "973", "974", "976"].includes(num)) return "DOM-TOM";
+    return null;
+  };
+
+  // Handler pour le clic sur un département
+  const handleDepartmentClick = (deptNum: string) => {
+    const regionName = getRegionNameByDeptNum(deptNum);
+    if (regionName) {
+      // Toggle : si la région est déjà sélectionnée, on la désélectionne
+      setSelectedRegion(selectedRegion === regionName ? null : regionName);
+    }
+  };
+
 
   if (isMinimized) {
     return (
@@ -144,6 +167,8 @@ export const FranceMapStyled: React.FC<FranceMapStyledProps> = ({
                 stroke={isCurrent ? '#06b6d4' : isHighlighted ? '#22c55e' : isInSelectedRegion ? '#fbbf24' : regionColor}
                 fill={isCurrent ? 'rgba(6, 182, 212, 0.2)' : isHighlighted ? 'rgba(34, 197, 94, 0.2)' : isInSelectedRegion ? 'rgba(251, 191, 36, 0.3)' : 'rgba(0,0,0,0.8)'}
                 filter={isHovered || isCurrent || isInSelectedRegion ? "url(#glowStrong)" : "url(#glow)"}
+                onClick={() => handleDepartmentClick(dept.num)}
+                style={{ cursor: 'pointer' }}
               />
               <text
                 x={dept.labelX}
@@ -151,6 +176,7 @@ export const FranceMapStyled: React.FC<FranceMapStyledProps> = ({
                 className={styles.deptNum}
                 fill="#ffffff"
                 fontSize={`${12 * (dept.scale || 1)}px`}
+                style={{ pointerEvents: 'none' }}
               >
                 {dept.num}
               </text>
@@ -202,7 +228,7 @@ export const FranceMapStyled: React.FC<FranceMapStyledProps> = ({
 
       <div className={styles.regionsLegend}>
         <h4 className={styles.legendTitle}>ANCIENNES RÉGIONS</h4>
-        <p className={styles.legendSubtitle}>Cliquez sur une région pour localiser ses départements</p>
+        <p className={styles.legendSubtitle}>Cliquez sur une région ou un département pour localiser tous les départements de la région</p>
         <div className={styles.regionsGrid}>
           {Object.entries(departmentsByRegion).map(([name, data]) => (
             <div 
