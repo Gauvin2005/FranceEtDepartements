@@ -254,17 +254,71 @@
   letter-spacing: 2px;
 }
 
-.legend {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 20px;
+.legendSection {
   margin-top: 20px;
   padding: 12px;
   background: rgba(139, 92, 246, 0.1);
   border-radius: 8px;
   border: 1px solid rgba(139, 92, 246, 0.3);
-  flex-wrap: wrap;
+}
+
+.regionsLegend {
+  margin-top: 20px;
+  padding: 16px;
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(6, 182, 212, 0.1));
+  border-radius: 12px;
+  border: 2px solid rgba(139, 92, 246, 0.3);
+}
+
+.legendTitle {
+  font-size: 16px;
+  font-weight: 900;
+  text-align: center;
+  margin-bottom: 16px;
+  background: linear-gradient(135deg, #8b5cf6, #06b6d4);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: 2px;
+  font-family: 'Orbitron', 'Arial Black', sans-serif;
+}
+
+.regionsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+}
+
+.regionLegendItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 6px;
+  transition: all 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.regionLegendItem:hover {
+  background: rgba(0, 0, 0, 0.5);
+  border-color: rgba(139, 92, 246, 0.5);
+  transform: translateX(4px);
+}
+
+.regionColorBox {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  flex-shrink: 0;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.regionLegendName {
+  font-size: 13px;
+  font-weight: 700;
+  color: white;
+  font-family: 'Share Tech Mono', 'Courier New', monospace;
 }
 
 .searchContainer {
@@ -582,9 +636,21 @@
     font-size: 10px;
   }
   
-  .legend {
-    flex-direction: column;
-    gap: 12px;
+  .regionsGrid {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 10px;
+  }
+  
+  .regionLegendItem {
+    padding: 6px 10px;
+  }
+  
+  .regionLegendName {
+    font-size: 12px;
+  }
+  
+  .legendTitle {
+    font-size: 14px;
   }
   
   .searchContainer {
@@ -621,6 +687,29 @@
   
   .controls {
     padding: 12px;
+  }
+  
+  .regionsGrid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+  
+  .regionLegendItem {
+    padding: 6px 8px;
+  }
+  
+  .regionColorBox {
+    width: 16px;
+    height: 16px;
+  }
+  
+  .regionLegendName {
+    font-size: 11px;
+  }
+  
+  .legendTitle {
+    font-size: 12px;
+    margin-bottom: 12px;
   }
 }
 

@@ -49,8 +49,8 @@ export const FranceMapStyled: React.FC<FranceMapStyledProps> = ({
 
   const oldRegions: Region[] = [
     {
-      name: "NORD-PAS-DE-CALAIS",
-      color: "#8b5cf6",
+      name: "Nord-Pas-de-Calais",
+      color: "#FF6B6B",
       labelX: 220, labelY: 80,
       departments: [
         { num: "59", name: "Nord", x: 210, y: 60 },
@@ -58,8 +58,8 @@ export const FranceMapStyled: React.FC<FranceMapStyledProps> = ({
       ]
     },
     {
-      name: "PICARDIE",
-      color: "#a78bfa",
+      name: "Picardie",
+      color: "#4ECDC4",
       labelX: 220, labelY: 130,
       departments: [
         { num: "02", name: "Aisne", x: 240, y: 110 },
@@ -68,8 +68,8 @@ export const FranceMapStyled: React.FC<FranceMapStyledProps> = ({
       ]
     },
     {
-      name: "HAUTE-NORMANDIE",
-      color: "#c084fc",
+      name: "Haute-Normandie",
+      color: "#95E1D3",
       labelX: 130, labelY: 110,
       departments: [
         { num: "27", name: "Eure", x: 130, y: 120 },
@@ -77,8 +77,8 @@ export const FranceMapStyled: React.FC<FranceMapStyledProps> = ({
       ]
     },
     {
-      name: "BASSE-NORMANDIE",
-      color: "#d8b4fe",
+      name: "Basse-Normandie",
+      color: "#F38181",
       labelX: 70, labelY: 130,
       departments: [
         { num: "14", name: "Calvados", x: 70, y: 100 },
@@ -87,8 +87,8 @@ export const FranceMapStyled: React.FC<FranceMapStyledProps> = ({
       ]
     },
     {
-      name: "BRETAGNE",
-      color: "#e9d5ff",
+      name: "Bretagne",
+      color: "#FFE66D",
       labelX: 30, labelY: 180,
       departments: [
         { num: "22", name: "Côtes-d'Armor", x: 20, y: 150 },
@@ -98,8 +98,8 @@ export const FranceMapStyled: React.FC<FranceMapStyledProps> = ({
       ]
     },
     {
-      name: "PAYS DE LA LOIRE",
-      color: "#f3e8ff",
+      name: "Pays de la Loire",
+      color: "#A8E6CF",
       labelX: 80, labelY: 220,
       departments: [
         { num: "44", name: "Loire-Atlantique", x: 50, y: 220 },
@@ -110,8 +110,8 @@ export const FranceMapStyled: React.FC<FranceMapStyledProps> = ({
       ]
     },
     {
-      name: "CENTRE",
-      color: "#ddd6fe",
+      name: "Centre",
+      color: "#FFD3B6",
       labelX: 170, labelY: 200,
       departments: [
         { num: "18", name: "Cher", x: 200, y: 210 },
@@ -123,8 +123,8 @@ export const FranceMapStyled: React.FC<FranceMapStyledProps> = ({
       ]
     },
     {
-      name: "BOURGOGNE",
-      color: "#c4b5fd",
+      name: "Bourgogne",
+      color: "#FFAAA5",
       labelX: 270, labelY: 210,
       departments: [
         { num: "21", name: "Côte-d'Or", x: 280, y: 200 },
@@ -134,8 +134,8 @@ export const FranceMapStyled: React.FC<FranceMapStyledProps> = ({
       ]
     },
     {
-      name: "FRANCHE-COMTÉ",
-      color: "#a78bfa",
+      name: "Franche-Comté",
+      color: "#FF8B94",
       labelX: 340, labelY: 230,
       departments: [
         { num: "25", name: "Doubs", x: 350, y: 220 },
@@ -145,8 +145,8 @@ export const FranceMapStyled: React.FC<FranceMapStyledProps> = ({
       ]
     },
     {
-      name: "CHAMPAGNE-ARDENNE",
-      color: "#8b5cf6",
+      name: "Champagne-Ardenne",
+      color: "#C7CEEA",
       labelX: 280, labelY: 130,
       departments: [
         { num: "08", name: "Ardennes", x: 280, y: 90 },
@@ -156,8 +156,8 @@ export const FranceMapStyled: React.FC<FranceMapStyledProps> = ({
       ]
     },
     {
-      name: "LORRAINE",
-      color: "#7c3aed",
+      name: "Lorraine",
+      color: "#B4A7D6",
       labelX: 360, labelY: 130,
       departments: [
         { num: "54", name: "Meurthe-et-Moselle", x: 350, y: 130 },
@@ -167,8 +167,8 @@ export const FranceMapStyled: React.FC<FranceMapStyledProps> = ({
       ]
     },
     {
-      name: "ALSACE",
-      color: "#6d28d9",
+      name: "Alsace",
+      color: "#9D84B7",
       labelX: 410, labelY: 150,
       departments: [
         { num: "67", name: "Bas-Rhin", x: 410, y: 130 },
@@ -176,8 +176,8 @@ export const FranceMapStyled: React.FC<FranceMapStyledProps> = ({
       ]
     },
     {
-      name: "POITOU-CHARENTES",
-      color: "#f0abfc",
+      name: "Poitou-Charentes",
+      color: "#D4A5A5",
       labelX: 90, labelY: 290,
       departments: [
         { num: "16", name: "Charente", x: 100, y: 280 },
@@ -187,8 +187,8 @@ export const FranceMapStyled: React.FC<FranceMapStyledProps> = ({
       ]
     },
     {
-      name: "LIMOUSIN",
-      color: "#e879f9",
+      name: "Limousin",
+      color: "#F2B5D4",
       labelX: 160, labelY: 290,
       departments: [
         { num: "19", name: "Corrèze", x: 170, y: 300 },
@@ -197,8 +197,8 @@ export const FranceMapStyled: React.FC<FranceMapStyledProps> = ({
       ]
     },
     {
-      name: "AQUITAINE",
-      color: "#d946ef",
+      name: "Aquitaine",
+      color: "#FFB7B2",
       labelX: 70, labelY: 370,
       departments: [
         { num: "24", name: "Dordogne", x: 110, y: 320 },
@@ -209,8 +209,8 @@ export const FranceMapStyled: React.FC<FranceMapStyledProps> = ({
       ]
     },
     {
-      name: "MIDI-PYRÉNÉES",
-      color: "#c026d3",
+      name: "Midi-Pyrénées",
+      color: "#E2C2FF",
       labelX: 150, labelY: 400,
       departments: [
         { num: "09", name: "Ariège", x: 150, y: 440 },
@@ -224,8 +224,8 @@ export const FranceMapStyled: React.FC<FranceMapStyledProps> = ({
       ]
     },
     {
-      name: "AUVERGNE",
-      color: "#a855f7",
+      name: "Auvergne",
+      color: "#C9ADA7",
       labelX: 240, labelY: 300,
       departments: [
         { num: "03", name: "Allier", x: 240, y: 260 },
@@ -235,8 +235,8 @@ export const FranceMapStyled: React.FC<FranceMapStyledProps> = ({
       ]
     },
     {
-      name: "RHÔNE-ALPES",
-      color: "#9333ea",
+      name: "Rhône-Alpes",
+      color: "#A2D2FF",
       labelX: 330, labelY: 320,
       departments: [
         { num: "01", name: "Ain", x: 320, y: 280 },
@@ -250,8 +250,8 @@ export const FranceMapStyled: React.FC<FranceMapStyledProps> = ({
       ]
     },
     {
-      name: "LANGUEDOC-ROUSSILLON",
-      color: "#7e22ce",
+      name: "Languedoc-Roussillon",
+      color: "#BDB2FF",
       labelX: 250, labelY: 430,
       departments: [
         { num: "11", name: "Aude", x: 210, y: 430 },
@@ -262,8 +262,8 @@ export const FranceMapStyled: React.FC<FranceMapStyledProps> = ({
       ]
     },
     {
-      name: "PROVENCE-ALPES-CÔTE D'AZUR",
-      color: "#6b21a8",
+      name: "Provence-Alpes-Côte d'Azur",
+      color: "#FFC6FF",
       labelX: 360, labelY: 420,
       departments: [
         { num: "04", name: "Alpes-de-Haute-Provence", x: 350, y: 400 },
@@ -361,20 +361,11 @@ export const FranceMapStyled: React.FC<FranceMapStyledProps> = ({
                 </text>
               </g>
             ))}
-            <text
-              x={region.labelX}
-              y={region.labelY}
-              className={styles.regionLabel}
-              fill={region.color}
-            >
-              {region.name}
-            </text>
           </g>
         ))}
 
         <g className={styles.island}>
           <rect x="460" y="430" width="60" height="80" fill="none" stroke="#8b5cf6" strokeWidth="2" strokeDasharray="4" opacity="0.5" rx="5"/>
-          <text x="490" y="420" className={styles.islandLabel} fill="#a78bfa">CORSE</text>
           {corseDepts.map((dept) => (
             <g
               key={dept.num}
@@ -405,7 +396,6 @@ export const FranceMapStyled: React.FC<FranceMapStyledProps> = ({
 
         <g className={styles.island}>
           <rect x="495" y="50" width="120" height="120" fill="none" stroke="#d946ef" strokeWidth="2" strokeDasharray="4" opacity="0.5" rx="5"/>
-          <text x="555" y="45" className={styles.islandLabel} fill="#e879f9">ÎLE-DE-FRANCE</text>
           {idfDepts.map((dept) => (
             <g
               key={dept.num}
@@ -436,7 +426,6 @@ export const FranceMapStyled: React.FC<FranceMapStyledProps> = ({
 
         <g className={styles.island}>
           <rect x="505" y="190" width="140" height="85" fill="none" stroke="#c026d3" strokeWidth="2" strokeDasharray="4" opacity="0.5" rx="5"/>
-          <text x="575" y="185" className={styles.islandLabel} fill="#d946ef">DOM-TOM</text>
           {domTom.map((dept) => (
             <g
               key={dept.num}
@@ -473,7 +462,7 @@ export const FranceMapStyled: React.FC<FranceMapStyledProps> = ({
         </div>
       )}
 
-      <div className={styles.legend}>
+      <div className={styles.legendSection}>
         <div className={styles.searchContainer}>
           <div className={styles.searchWrapper}>
             <Search className={styles.searchIcon} />
@@ -506,13 +495,29 @@ export const FranceMapStyled: React.FC<FranceMapStyledProps> = ({
             </div>
           )}
         </div>
-        <div className={styles.legendItem}>
-          <div className={styles.legendDot} style={{ backgroundColor: '#22c55e', boxShadow: '0 0 10px #22c55e' }}></div>
-          <span>Gagnés</span>
-        </div>
-        <div className={styles.legendItem}>
-          <div className={styles.legendDot} style={{ backgroundColor: '#8b5cf6', boxShadow: '0 0 10px #8b5cf6' }}></div>
-          <span>Disponibles</span>
+      </div>
+
+      <div className={styles.regionsLegend}>
+        <h4 className={styles.legendTitle}>ANCIENNES RÉGIONS</h4>
+        <div className={styles.regionsGrid}>
+          {oldRegions.map((region, idx) => (
+            <div key={idx} className={styles.regionLegendItem}>
+              <div className={styles.regionColorBox} style={{ backgroundColor: region.color, boxShadow: `0 0 10px ${region.color}` }}></div>
+              <span className={styles.regionLegendName}>{region.name}</span>
+            </div>
+          ))}
+          <div className={styles.regionLegendItem}>
+            <div className={styles.regionColorBox} style={{ backgroundColor: '#8b5cf6', boxShadow: '0 0 10px #8b5cf6' }}></div>
+            <span className={styles.regionLegendName}>Corse</span>
+          </div>
+          <div className={styles.regionLegendItem}>
+            <div className={styles.regionColorBox} style={{ backgroundColor: '#d946ef', boxShadow: '0 0 10px #d946ef' }}></div>
+            <span className={styles.regionLegendName}>Île-de-France</span>
+          </div>
+          <div className={styles.regionLegendItem}>
+            <div className={styles.regionColorBox} style={{ backgroundColor: '#c026d3', boxShadow: '0 0 10px #c026d3' }}></div>
+            <span className={styles.regionLegendName}>DOM-TOM</span>
+          </div>
         </div>
       </div>
     </>
