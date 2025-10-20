@@ -7,6 +7,7 @@ import HintModal from '../components/HintModal';
 import { BonusModal } from '../components/BonusModal';
 import { Marquee } from '../components/Marquee';
 import ScoreBoard from '../components/ScoreBoard';
+import { FranceMapStyled } from '../components/FranceMapStyled';
 import { Department, getDepartmentById } from '../data/departments';
 
 const GamePage: React.FC = () => {
@@ -356,7 +357,7 @@ const GamePage: React.FC = () => {
             </div>
           ) : (
             /* Jeu en cours */
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
               {/* Zone gauche - Scores */}
               <div className="lg:col-span-1">
                 <ScoreBoard
@@ -415,6 +416,32 @@ const GamePage: React.FC = () => {
                     </button>
                   </div>
                 </div>
+              </div>
+
+              {/* Zone droite - Carte de France */}
+              <div className="lg:col-span-1">
+                <FranceMapStyled 
+                  currentDepartmentNumber={currentDepartment?.numero}
+                  highlightedDepartments={players[currentPlayerIndex]?.souvenirCards.map(id => {
+                    const dept = getDepartmentById(id);
+                    return dept?.numero || '';
+                  }).filter(Boolean) || []}
+                  showControls={true}
+                />
+                {currentDepartment && (
+                  <div className="mt-4 p-3 bg-gradient-to-r from-cyan-500/20 to-purple-500/20 rounded-xl border-2 border-cyan-500/50 animate-glow-pulse">
+                    <p className="text-white font-bold text-center text-sm">
+                      🎯 Département recherché : <span className="text-2xl text-cyan-300">{currentDepartment.numero}</span>
+                    </p>
+                  </div>
+                )}
+                {players[currentPlayerIndex]?.souvenirCards.length > 0 && (
+                  <div className="mt-3 p-2 bg-gradient-to-r from-green-500/20 to-emerald-500/20 rounded-xl border border-green-500/50">
+                    <p className="text-green-300 font-bold text-xs text-center">
+                      💳 {players[currentPlayerIndex].souvenirCards.length} département(s) gagné(s)
+                    </p>
+                  </div>
+                )}
               </div>
             </div>
           )}

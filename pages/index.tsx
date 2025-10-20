@@ -7,6 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { useAuth } from '@/hooks/useAuth';
 import { useAuthenticatedFetch } from '@/hooks/useAuthenticatedFetch';
 import { Users, Play, LogIn, UserPlus } from 'lucide-react';
+import { FranceMapStyled } from '@/components/FranceMapStyled';
 
 export default function Home() {
   const router = useRouter();
@@ -353,6 +354,21 @@ export default function Home() {
                   Identifiez le département correspondant et collectez des points
                 </p>
               </div>
+            </div>
+          </div>
+
+          <div className="mt-12 card-gaming p-8 shadow-2xl animate-scale-in">
+            <h2 className="text-4xl font-black text-center mb-8 bg-gradient-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent glow-text">
+              🗺️ EXPLOREZ LA FRANCE
+            </h2>
+            <p className="text-center text-purple-300 font-semibold mb-8 text-lg">
+              101 départements à découvrir, 22 anciennes régions à explorer
+            </p>
+            <FranceMapStyled showControls={true} />
+            <div className="mt-6 text-center">
+              <p className="text-cyan-300 font-bold text-sm animate-pulse">
+                💡 Cliquez sur le bouton <span className="inline-flex items-center gap-1 px-2 py-1 bg-purple-500/20 rounded">⛶</span> pour voir la carte en plein écran !
+              </p>
             </div>
           </div>
         </div>
