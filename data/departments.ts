@@ -99,7 +99,7 @@ export const departments: Department[] = [
   { id: 89, numero: "88", name: "Vosges", prefecture: "Épinal", hints: ["Est de la France", "Région Grand Est", "Commence par V"], blason: "88.png" },
   { id: 90, numero: "89", name: "Yonne", prefecture: "Auxerre", hints: ["Est de la France", "Région Bourgogne-Franche-Comté", "Commence par Y"], blason: "89.png" },
   { id: 91, numero: "90", name: "Territoire de Belfort", prefecture: "Belfort", hints: ["Est de la France", "Région Bourgogne-Franche-Comté", "Commence par T"], blason: "90.png" },
-  { id: 92, numero: "91", name: "Essonne", prefecture: "Évry", hints: ["Île-de-France", "Région Île-de-France", "Commence par E"], blason: "91.png" },
+  { id: 92, numero: "91", name: "Essonne", prefecture: "Évry-Courcouronnes", hints: ["Île-de-France", "Région Île-de-France", "Commence par E"], blason: "91.png" },
   { id: 93, numero: "92", name: "Hauts-de-Seine", prefecture: "Nanterre", hints: ["Île-de-France", "Région Île-de-France", "Commence par H"], blason: "92.png" },
   { id: 94, numero: "93", name: "Seine-Saint-Denis", prefecture: "Bobigny", hints: ["Île-de-France", "Région Île-de-France", "Commence par S"], blason: "93.png" },
   { id: 95, numero: "94", name: "Val-de-Marne", prefecture: "Créteil", hints: ["Île-de-France", "Région Île-de-France", "Commence par V"], blason: "94.png" },
