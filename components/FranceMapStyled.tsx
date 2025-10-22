@@ -2,20 +2,25 @@ import React, { useState, useMemo } from 'react';
 import { Maximize2, Minimize2, X, Search } from 'lucide-react';
 import styles from './FranceMapStyled.module.css';
 import { departments as allDepartments } from '../data/departments';
-import { departmentsPaths } from '../data/departmentsPaths';
+import { departmentsPathsRealistic } from '../data/departmentsPathsRealistic';
 
 interface FranceMapStyledProps {
   currentDepartmentNumber?: string;
   highlightedDepartments?: string[];
   compact?: boolean;
   showControls?: boolean;
+  // Timer
+  timeRemaining?: number;
+  timerActive?: boolean;
 }
 
 export const FranceMapStyled: React.FC<FranceMapStyledProps> = ({ 
   currentDepartmentNumber, 
   highlightedDepartments = [],
   compact = false,
-  showControls = true
+  showControls = true,
+  timeRemaining = 0,
+  timerActive = false
 }) => {
   const [hoveredDept, setHoveredDept] = useState<string | null>(null);
   const [isExpanded, setIsExpanded] = useState(false);
@@ -135,7 +140,7 @@ export const FranceMapStyled: React.FC<FranceMapStyledProps> = ({
         <rect x="505" y="190" width="140" height="85" fill="none" stroke="#c026d3" strokeWidth="2" strokeDasharray="4" opacity="0.5" rx="5"/>
 
         {/* Tous les départements */}
-        {departmentsPaths.map((dept) => {
+        {departmentsPathsRealistic.map((dept) => {
           let regionColor = getDepartmentColor(dept.num);
           
           // Couleurs spécifiques pour Corse, IDF et DOM-TOM
@@ -278,6 +283,18 @@ export const FranceMapStyled: React.FC<FranceMapStyledProps> = ({
             <div className={styles.controls}>
               <h3 className={styles.title}>🗺️ CARTE DE FRANCE</h3>
               <div className={styles.controlButtons}>
+                {/* Timer */}
+                {timerActive && (
+                  <div className={`${styles.timer} ${
+                    timeRemaining <= 30 
+                      ? styles.timerRed
+                      : timeRemaining <= 60 
+                      ? styles.timerOrange
+                      : styles.timerGreen
+                  }`}>
+                    ⏰ {Math.floor(timeRemaining / 60)}:{(timeRemaining % 60).toString().padStart(2, '0')}
+                  </div>
+                )}
                 <button
                   onClick={() => setIsExpanded(false)}
                   className={styles.controlButton}
@@ -312,6 +329,18 @@ export const FranceMapStyled: React.FC<FranceMapStyledProps> = ({
         <div className={styles.controls}>
           <h3 className={styles.title}>🗺️ CARTE DE FRANCE</h3>
           <div className={styles.controlButtons}>
+            {/* Timer */}
+            {timerActive && (
+              <div className={`${styles.timer} ${
+                timeRemaining <= 30 
+                  ? styles.timerRed
+                  : timeRemaining <= 60 
+                  ? styles.timerOrange
+                  : styles.timerGreen
+              }`}>
+                ⏰ {Math.floor(timeRemaining / 60)}:{(timeRemaining % 60).toString().padStart(2, '0')}
+              </div>
+            )}
             <button
               onClick={() => setIsExpanded(true)}
               className={styles.controlButton}

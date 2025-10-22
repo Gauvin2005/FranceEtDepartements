@@ -6,13 +6,18 @@ interface BonusModalProps {
   onClose: () => void;
   department: Department;
   onSubmitBonus: (prefecture: string) => boolean;
+  // Timer
+  timeRemaining?: number;
+  timerActive?: boolean;
 }
 
 export const BonusModal: React.FC<BonusModalProps> = ({
   isOpen,
   onClose,
   department,
-  onSubmitBonus
+  onSubmitBonus,
+  timeRemaining = 0,
+  timerActive = false
 }) => {
   const [prefectureGuess, setPrefectureGuess] = useState('');
   const [showResult, setShowResult] = useState(false);
@@ -67,12 +72,26 @@ export const BonusModal: React.FC<BonusModalProps> = ({
               QUESTION BONUS
             </h2>
           </div>
-          <button
-            onClick={handleSkipBonus}
-            className="text-red-400 hover:text-red-300 text-2xl font-bold transition-colors"
-          >
-            ✕
-          </button>
+          <div className="flex items-center gap-3">
+            {/* Timer */}
+            {timerActive && (
+              <div className={`px-3 py-1 rounded-lg font-bold text-lg transition-all ${
+                timeRemaining <= 30 
+                  ? 'bg-gradient-to-r from-red-500 to-orange-500 animate-pulse' 
+                  : timeRemaining <= 60 
+                  ? 'bg-gradient-to-r from-orange-500 to-yellow-500' 
+                  : 'bg-gradient-to-r from-green-500 to-cyan-500'
+              }`}>
+                ⏰ {Math.floor(timeRemaining / 60)}:{(timeRemaining % 60).toString().padStart(2, '0')}
+              </div>
+            )}
+            <button
+              onClick={handleSkipBonus}
+              className="text-red-400 hover:text-red-300 text-2xl font-bold transition-colors"
+            >
+              ✕
+            </button>
+          </div>
         </div>
 
         <div className="mb-6">

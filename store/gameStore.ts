@@ -23,6 +23,11 @@ export interface GameState {
   gameStarted: boolean;
   gameEnded: boolean;
   winner?: Player;
+  // Timer
+  timerDuration: number;
+  timeRemaining: number;
+  timerActive: boolean;
+  timerId?: NodeJS.Timeout;
 }
 
 interface GameActions {
@@ -65,6 +70,12 @@ interface GameActions {
   // Actions de phase
   setPhase: (phase: GameState['phase']) => void;
   
+  // Actions de timer
+  startTimer: () => void;
+  stopTimer: () => void;
+  resetTimer: () => void;
+  tickTimer: () => void;
+  
   // Actions de sauvegarde
   saveGame: () => void;
   loadGame: () => void;
@@ -83,6 +94,10 @@ const initialGameState: GameState = {
   phase: 'rolling',
   gameStarted: false,
   gameEnded: false,
+  // Timer
+  timerDuration: 120, // 120 secondes
+  timeRemaining: 120,
+  timerActive: false,
 };
 
 // Fonction pour calculer les compositions possibles
@@ -289,6 +304,11 @@ export const useGameStore = create<GameState & GameActions>()(
           phase: 'choosing',
           hintsUsed: 0,
         });
+        
+        // Démarrer le timer après le lancer de dés
+        setTimeout(() => {
+          get().startTimer();
+        }, 100);
       },
       
       setDiceResults: (results: number[]) => {
@@ -402,6 +422,9 @@ export const useGameStore = create<GameState & GameActions>()(
       },
 
       finishTurn: () => {
+        // Arrêter le timer
+        get().stopTimer();
+        
         set({
           currentDepartment: undefined,
           phase: 'rolling',
@@ -413,6 +436,9 @@ export const useGameStore = create<GameState & GameActions>()(
         const { players, currentPlayerIndex } = get();
         const activePlayers = players.filter(p => p.isActive);
         const nextIndex = (currentPlayerIndex + 1) % activePlayers.length;
+        
+        // Arrêter le timer actuel
+        get().stopTimer();
         
         set({
           currentPlayerIndex: nextIndex,
@@ -484,6 +510,65 @@ export const useGameStore = create<GameState & GameActions>()(
       
       setPhase: (phase: GameState['phase']) => {
         set({ phase });
+      },
+      
+      // Actions de timer
+      startTimer: () => {
+        const { timerId, timerDuration } = get();
+        
+        // Arrêter le timer existant s'il y en a un
+        if (timerId) {
+          clearInterval(timerId);
+        }
+        
+        // Démarrer le nouveau timer
+        const newTimerId = setInterval(() => {
+          const { timeRemaining, timerActive } = get();
+          
+          if (timerActive && timeRemaining > 0) {
+            set({ timeRemaining: timeRemaining - 1 });
+          } else if (timerActive && timeRemaining <= 0) {
+            // Timer terminé - déclencher le timeout
+            get().stopTimer();
+            // Le timeout sera géré par le composant parent
+          }
+        }, 1000);
+        
+        set({ 
+          timerActive: true, 
+          timeRemaining: timerDuration,
+          timerId: newTimerId 
+        });
+      },
+      
+      stopTimer: () => {
+        const { timerId } = get();
+        if (timerId) {
+          clearInterval(timerId);
+        }
+        set({ 
+          timerActive: false, 
+          timerId: undefined 
+        });
+      },
+      
+      resetTimer: () => {
+        const { timerId, timerDuration } = get();
+        if (timerId) {
+          clearInterval(timerId);
+        }
+        set({ 
+          timerActive: false, 
+          timeRemaining: timerDuration,
+          timerId: undefined 
+        });
+      },
+      
+      tickTimer: () => {
+        const { timeRemaining, timerActive } = get();
+        if (timerActive && timeRemaining > 0) {
+          set({ timeRemaining: timeRemaining - 1 });
+        }
       },
       
       saveGame: () => {

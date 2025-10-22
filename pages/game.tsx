@@ -5,6 +5,7 @@ import { DiceRoll } from '../components/Dice';
 import CompositionChoices from '../components/CompositionChoices';
 import HintModal from '../components/HintModal';
 import { BonusModal } from '../components/BonusModal';
+import { TimeoutModal } from '../components/TimeoutModal';
 import { Marquee } from '../components/Marquee';
 import ScoreBoard from '../components/ScoreBoard';
 import { FranceMapStyled } from '../components/FranceMapStyled';
@@ -23,6 +24,9 @@ const GamePage: React.FC = () => {
     gameStarted,
     gameEnded,
     winner,
+    // Timer
+    timeRemaining,
+    timerActive,
     rollDice,
     selectComposition,
     setHintCount,
@@ -37,12 +41,14 @@ const GamePage: React.FC = () => {
     updatePlayerName,
     saveGame,
     loadGame,
-    resetGame
+    resetGame,
+    stopTimer
   } = useGameStore();
 
   const [isRolling, setIsRolling] = useState(false);
   const [showHintModal, setShowHintModal] = useState(false);
   const [showBonusModal, setShowBonusModal] = useState(false);
+  const [showTimeoutModal, setShowTimeoutModal] = useState(false);
   const [newPlayerName, setNewPlayerName] = useState('');
   const [showCompositions, setShowCompositions] = useState(false);
   const [showMarquee, setShowMarquee] = useState(false);
@@ -65,6 +71,14 @@ const GamePage: React.FC = () => {
       saveGame();
     }
   }, [players, currentPlayerIndex, availableDepartments, gameStarted, saveGame]);
+
+  // Surveiller le timer pour déclencher le timeout
+  useEffect(() => {
+    if (timerActive && timeRemaining <= 0) {
+      setShowTimeoutModal(true);
+      stopTimer();
+    }
+  }, [timerActive, timeRemaining, stopTimer]);
 
   const handleRollDice = () => {
     setIsRolling(true);
@@ -186,6 +200,12 @@ const GamePage: React.FC = () => {
     resetGame();
   };
 
+  const handleTimeoutClose = () => {
+    setShowTimeoutModal(false);
+    // Passer automatiquement au tour suivant
+    handlePassTurn();
+  };
+
   return (
     <>
       <Head>
@@ -206,6 +226,25 @@ const GamePage: React.FC = () => {
                 <p className="text-purple-300/80 font-semibold mt-1">
                   {gameStarted ? `⚡ Tour de ${currentPlayer.name}` : '🎮 Configuration de la partie'}
                 </p>
+                {/* Timer */}
+                {gameStarted && !gameEnded && timerActive && (
+                  <div className="mt-2 flex items-center gap-2">
+                    <div className={`px-3 py-1 rounded-lg font-bold text-lg transition-all ${
+                      timeRemaining <= 30 
+                        ? 'bg-gradient-to-r from-red-500 to-orange-500 animate-pulse' 
+                        : timeRemaining <= 60 
+                        ? 'bg-gradient-to-r from-orange-500 to-yellow-500' 
+                        : 'bg-gradient-to-r from-green-500 to-cyan-500'
+                    }`}>
+                      ⏰ {Math.floor(timeRemaining / 60)}:{(timeRemaining % 60).toString().padStart(2, '0')}
+                    </div>
+                    {timeRemaining <= 30 && (
+                      <span className="text-red-300 text-sm font-semibold animate-pulse">
+                        ⚠️ Temps limité !
+                      </span>
+                    )}
+                  </div>
+                )}
               </div>
               
               <div className="flex space-x-3">
@@ -435,6 +474,8 @@ const GamePage: React.FC = () => {
                     return dept?.numero || '';
                   }).filter(Boolean) || []}
                   showControls={true}
+                  timeRemaining={timeRemaining}
+                  timerActive={timerActive}
                 />
                 {currentDepartment && (
                   <div className="mt-4 p-3 bg-gradient-to-r from-cyan-500/20 to-purple-500/20 rounded-xl border-2 border-cyan-500/50 animate-glow-pulse">
@@ -465,6 +506,8 @@ const GamePage: React.FC = () => {
               onSubmitGuess={handleSubmitGuess}
               onPassTurn={handlePassTurn}
               onCorrectAnswer={handleCorrectAnswer}
+              timeRemaining={timeRemaining}
+              timerActive={timerActive}
             />
           )}
         </div>
@@ -476,6 +519,8 @@ const GamePage: React.FC = () => {
             onClose={handleFinishTurn}
             department={currentDepartment}
             onSubmitBonus={handleBonusQuestion}
+            timeRemaining={timeRemaining}
+            timerActive={timerActive}
           />
         )}
 
@@ -621,6 +666,13 @@ const GamePage: React.FC = () => {
             </div>
           </div>
         )}
+
+        {/* Modal de timeout */}
+        <TimeoutModal
+          isOpen={showTimeoutModal}
+          onClose={handleTimeoutClose}
+          playerName={currentPlayer?.name || 'Joueur'}
+        />
       </div>
     </>
   );

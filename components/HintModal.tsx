@@ -10,6 +10,9 @@ interface HintModalProps {
   onSubmitGuess: (guess: string) => boolean;
   onPassTurn: () => void;
   onCorrectAnswer: () => void;
+  // Timer
+  timeRemaining?: number;
+  timerActive?: boolean;
 }
 
 export const HintModal: React.FC<HintModalProps> = ({
@@ -20,7 +23,9 @@ export const HintModal: React.FC<HintModalProps> = ({
   onUseHint,
   onSubmitGuess,
   onPassTurn,
-  onCorrectAnswer
+  onCorrectAnswer,
+  timeRemaining = 0,
+  timerActive = false
 }) => {
   const [guess, setGuess] = useState('');
   const [showResult, setShowResult] = useState(false);
@@ -75,12 +80,26 @@ export const HintModal: React.FC<HintModalProps> = ({
           <h2 className="text-3xl font-black bg-gradient-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent glow-text">
             🎯 Devinez le département
           </h2>
-          <button
-            onClick={onClose}
-            className="text-red-400 hover:text-red-300 text-2xl font-bold transition-colors"
-          >
-            ✕
-          </button>
+          <div className="flex items-center gap-3">
+            {/* Timer */}
+            {timerActive && (
+              <div className={`px-3 py-1 rounded-lg font-bold text-lg transition-all ${
+                timeRemaining <= 30 
+                  ? 'bg-gradient-to-r from-red-500 to-orange-500 animate-pulse' 
+                  : timeRemaining <= 60 
+                  ? 'bg-gradient-to-r from-orange-500 to-yellow-500' 
+                  : 'bg-gradient-to-r from-green-500 to-cyan-500'
+              }`}>
+                ⏰ {Math.floor(timeRemaining / 60)}:{(timeRemaining % 60).toString().padStart(2, '0')}
+              </div>
+            )}
+            <button
+              onClick={onClose}
+              className="text-red-400 hover:text-red-300 text-2xl font-bold transition-colors"
+            >
+              ✕
+            </button>
+          </div>
         </div>
 
         <div className="mb-6 p-4 bg-gradient-to-r from-purple-500/20 to-cyan-500/20 rounded-xl border-2 border-purple-500/50">
