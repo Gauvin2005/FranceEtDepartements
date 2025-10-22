@@ -2,7 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { Maximize2, Minimize2, X, Search } from 'lucide-react';
 import styles from './FranceMapStyled.module.css';
 import { departments as allDepartments } from '../data/departments';
-import { departmentsPathsRealistic } from '../data/departmentsPathsRealistic';
+import { departmentsPaths as departmentsPathsRealistic } from '../data/departmentsPathsRealistic';
 
 interface FranceMapStyledProps {
   currentDepartmentNumber?: string;
@@ -112,7 +112,7 @@ export const FranceMapStyled: React.FC<FranceMapStyledProps> = ({
 
   const mapContent = (
     <>
-      <svg viewBox="-50 0 750 550" className={styles.svg} style={{ minHeight: isExpanded ? '80vh' : '600px' }}>
+      <svg viewBox="0 0 1000 1000" className={styles.svg} style={{ minHeight: isExpanded ? '80vh' : '600px' }}>
         <defs>
           <filter id="glow">
             <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
@@ -131,13 +131,13 @@ export const FranceMapStyled: React.FC<FranceMapStyledProps> = ({
         </defs>
 
         {/* Cadre Corse */}
-        <rect x="460" y="430" width="60" height="80" fill="none" stroke="#8b5cf6" strokeWidth="2" strokeDasharray="4" opacity="0.5" rx="5"/>
+        <rect x="800" y="200" width="120" height="150" fill="none" stroke="#8b5cf6" strokeWidth="2" strokeDasharray="4" opacity="0.5" rx="5"/>
         
         {/* Cadre Île-de-France */}
-        <rect x="495" y="50" width="120" height="120" fill="none" stroke="#d946ef" strokeWidth="2" strokeDasharray="4" opacity="0.5" rx="5"/>
+        <rect x="400" y="300" width="200" height="200" fill="none" stroke="#d946ef" strokeWidth="2" strokeDasharray="4" opacity="0.5" rx="5"/>
         
         {/* Cadre DOM-TOM */}
-        <rect x="505" y="190" width="140" height="85" fill="none" stroke="#c026d3" strokeWidth="2" strokeDasharray="4" opacity="0.5" rx="5"/>
+        <rect x="50" y="50" width="200" height="150" fill="none" stroke="#c026d3" strokeWidth="2" strokeDasharray="4" opacity="0.5" rx="5"/>
 
         {/* Tous les départements */}
         {departmentsPathsRealistic.map((dept) => {

@@ -159,6 +159,7 @@
   width: 100%;
   height: auto;
   min-height: 600px;
+  max-height: 80vh;
   filter: drop-shadow(0 0 20px rgba(139, 92, 246, 0.3));
   position: relative;
   z-index: 1;
@@ -748,6 +749,11 @@
 }
 
 @media (max-width: 480px) {
+  .svg {
+    min-height: 400px;
+    max-height: 60vh;
+  }
+  
   .regionLabel {
     font-size: 8px;
     opacity: 0.9;
