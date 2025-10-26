@@ -233,6 +233,11 @@
   animation: pulseRegionSelected 1.2s ease-in-out infinite;
 }
 
+.deptBox.searched {
+  stroke-width: 3;
+  animation: pulseSearched 1.5s ease-in-out infinite;
+}
+
 @keyframes pulseCurrent {
   0%, 100% {
     opacity: 1;
@@ -263,6 +268,17 @@
     opacity: 0.9;
     stroke-width: 5;
     transform: scale(1.02);
+  }
+}
+
+@keyframes pulseSearched {
+  0%, 100% {
+    opacity: 1;
+    stroke-width: 3;
+  }
+  50% {
+    opacity: 0.8;
+    stroke-width: 4;
   }
 }
 

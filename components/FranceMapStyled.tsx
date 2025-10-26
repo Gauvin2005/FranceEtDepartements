@@ -7,6 +7,7 @@ import { departmentsPaths as departmentsPathsRealistic } from '../data/departmen
 interface FranceMapStyledProps {
   currentDepartmentNumber?: string;
   highlightedDepartments?: string[];
+  searchedDepartments?: string[]; // Liste des départements recherchés (compositions) format: ["01", "02", "2A", etc.]
   compact?: boolean;
   showControls?: boolean;
   // Timer
@@ -17,6 +18,7 @@ interface FranceMapStyledProps {
 export const FranceMapStyled: React.FC<FranceMapStyledProps> = ({ 
   currentDepartmentNumber, 
   highlightedDepartments = [],
+  searchedDepartments = [],
   compact = false,
   showControls = true,
   timeRemaining = 0,
@@ -110,8 +112,66 @@ export const FranceMapStyled: React.FC<FranceMapStyledProps> = ({
     );
   }
 
+  // Filtrer les départements recherchés pour exclure la réponse actuelle
+  const filteredSearchedDepartments = searchedDepartments.filter(
+    dept => dept !== currentDepartmentNumber
+  );
+
   const mapContent = (
     <>
+      {/* Liste des départements recherchés (visible en mode agrandi) */}
+      {isExpanded && filteredSearchedDepartments.length > 0 && (
+        <div style={{
+          marginBottom: '20px',
+          padding: '12px',
+          background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(37, 99, 235, 0.2))',
+          border: '2px solid rgba(59, 130, 246, 0.5)',
+          borderRadius: '12px'
+        }}>
+          <h4 style={{
+            fontSize: '14px',
+            fontWeight: 900,
+            marginBottom: '10px',
+            color: '#3b82f6',
+            textAlign: 'center',
+            letterSpacing: '1px',
+            fontFamily: 'Share Tech Mono, Courier New, monospace'
+          }}>
+            DEPARTEMENTS RECHERCHES ({filteredSearchedDepartments.length})
+          </h4>
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(50px, 1fr))',
+            gap: '6px'
+          }}>
+            {filteredSearchedDepartments.map((deptNum, idx) => (
+              <div
+                key={idx}
+                style={{
+                  padding: '6px',
+                  background: 'rgba(0, 0, 0, 0.5)',
+                  border: '2px solid rgba(59, 130, 246, 0.6)',
+                  borderRadius: '6px',
+                  textAlign: 'center',
+                  transition: 'all 0.3s ease',
+                  boxShadow: '0 0 15px rgba(59, 130, 246, 0.4)'
+                }}
+              >
+                <div style={{
+                  fontSize: '16px',
+                  fontWeight: 900,
+                  color: '#3b82f6',
+                  fontFamily: 'Share Tech Mono, Courier New, monospace',
+                  textShadow: '0 0 10px rgba(59, 130, 246, 0.8)'
+                }}>
+                  {deptNum}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+      
       <svg viewBox="0 0 1000 1000" className={styles.svg} style={{ minHeight: isExpanded ? '80vh' : '600px' }}>
         <defs>
           <filter id="glow">
@@ -151,6 +211,8 @@ export const FranceMapStyled: React.FC<FranceMapStyledProps> = ({
           const isHovered = hoveredDept === dept.num;
           const isCurrent = currentDepartmentNumber === dept.num || searchedDept?.numero === dept.num;
           const isHighlighted = highlightedDepartments.includes(dept.num);
+          // Exclure la réponse actuelle des départements recherchés
+          const isSearched = searchedDepartments.includes(dept.num) && dept.num !== currentDepartmentNumber;
           
           // Vérifier si ce département fait partie de la région sélectionnée
           const isInSelectedRegion = selectedRegion ? (
@@ -168,10 +230,10 @@ export const FranceMapStyled: React.FC<FranceMapStyledProps> = ({
             >
               <path
                 d={dept.path}
-                className={`${styles.deptBox} ${isHovered ? styles.hovered : ''} ${isCurrent ? styles.current : ''} ${isHighlighted ? styles.highlighted : ''} ${isInSelectedRegion ? styles.regionSelected : ''}`}
-                stroke={isCurrent ? '#06b6d4' : isHighlighted ? '#22c55e' : isInSelectedRegion ? '#fbbf24' : regionColor}
-                fill={isCurrent ? 'rgba(6, 182, 212, 0.2)' : isHighlighted ? 'rgba(34, 197, 94, 0.2)' : isInSelectedRegion ? 'rgba(251, 191, 36, 0.3)' : 'rgba(0,0,0,0.8)'}
-                filter={isHovered || isCurrent || isInSelectedRegion ? "url(#glowStrong)" : "url(#glow)"}
+                className={`${styles.deptBox} ${isHovered ? styles.hovered : ''} ${isCurrent ? styles.current : ''} ${isHighlighted ? styles.highlighted : ''} ${isInSelectedRegion ? styles.regionSelected : ''} ${isSearched ? styles.searched : ''}`}
+                stroke={isCurrent ? '#06b6d4' : isHighlighted ? '#22c55e' : isSearched ? '#3b82f6' : isInSelectedRegion ? '#fbbf24' : regionColor}
+                fill={isCurrent ? 'rgba(6, 182, 212, 0.2)' : isHighlighted ? 'rgba(34, 197, 94, 0.2)' : isSearched ? 'rgba(59, 130, 246, 0.3)' : isInSelectedRegion ? 'rgba(251, 191, 36, 0.3)' : 'rgba(0,0,0,0.8)'}
+                filter={isHovered || isCurrent || isSearched || isInSelectedRegion ? "url(#glowStrong)" : "url(#glow)"}
                 onClick={() => handleDepartmentClick(dept.num)}
                 style={{ cursor: 'pointer' }}
               />

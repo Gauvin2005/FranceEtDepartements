@@ -473,6 +473,7 @@ const GamePage: React.FC = () => {
                     const dept = getDepartmentById(id);
                     return dept?.numero || '';
                   }).filter(Boolean) || []}
+                  searchedDepartments={compositions}
                   showControls={true}
                   timeRemaining={timeRemaining}
                   timerActive={timerActive}
