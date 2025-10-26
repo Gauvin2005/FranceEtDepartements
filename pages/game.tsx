@@ -42,7 +42,8 @@ const GamePage: React.FC = () => {
     saveGame,
     loadGame,
     resetGame,
-    stopTimer
+    stopTimer,
+    accelerateTimer
   } = useGameStore();
 
   const [isRolling, setIsRolling] = useState(false);
@@ -57,6 +58,7 @@ const GamePage: React.FC = () => {
   const [editingName, setEditingName] = useState('');
   const [showEndGameConfirm, setShowEndGameConfirm] = useState(false);
   const [showFinalScores, setShowFinalScores] = useState(false);
+  const [hiddenStartTime, setHiddenStartTime] = useState<number | null>(null);
 
   const currentPlayer = players[currentPlayerIndex];
 
@@ -79,6 +81,35 @@ const GamePage: React.FC = () => {
       stopTimer();
     }
   }, [timerActive, timeRemaining, stopTimer]);
+
+  // Détecter les changements de visibilité pour accélérer le timer proportionnellement
+  useEffect(() => {
+    if (!gameStarted || gameEnded) return;
+
+    const handleVisibilityChange = () => {
+      if (document.hidden && timerActive) {
+        // La page est cachée, enregistrer le timestamp
+        setHiddenStartTime(Date.now());
+      } else if (hiddenStartTime && timerActive) {
+        // La page redevient visible, calculer le temps écoulé
+        const timeSpentHidden = Date.now() - hiddenStartTime;
+        const secondsSpent = Math.floor(timeSpentHidden / 1000);
+        
+        // Réduire le timer proportionnellement (1 seconde de timer = 1 seconde réellement passée)
+        if (secondsSpent > 0) {
+          accelerateTimer(secondsSpent);
+        }
+        
+        setHiddenStartTime(null);
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, [gameStarted, gameEnded, timerActive, hiddenStartTime, accelerateTimer]);
 
   const handleRollDice = () => {
     setIsRolling(true);
@@ -228,21 +259,29 @@ const GamePage: React.FC = () => {
                 </p>
                 {/* Timer */}
                 {gameStarted && !gameEnded && timerActive && (
-                  <div className="mt-2 flex items-center gap-2">
-                    <div className={`px-3 py-1 rounded-lg font-bold text-lg transition-all ${
-                      timeRemaining <= 30 
-                        ? 'bg-gradient-to-r from-red-500 to-orange-500 animate-pulse' 
-                        : timeRemaining <= 60 
-                        ? 'bg-gradient-to-r from-orange-500 to-yellow-500' 
-                        : 'bg-gradient-to-r from-green-500 to-cyan-500'
-                    }`}>
-                      ⏰ {Math.floor(timeRemaining / 60)}:{(timeRemaining % 60).toString().padStart(2, '0')}
+                  <div className="mt-2 space-y-2">
+                    <div className="flex items-center gap-2">
+                      <div className={`px-3 py-1 rounded-lg font-bold text-lg transition-all ${
+                        timeRemaining <= 30 
+                          ? 'bg-gradient-to-r from-red-500 to-orange-500 animate-pulse' 
+                          : timeRemaining <= 60 
+                          ? 'bg-gradient-to-r from-orange-500 to-yellow-500' 
+                          : 'bg-gradient-to-r from-green-500 to-cyan-500'
+                      }`}>
+                        ⏰ {Math.floor(timeRemaining / 60)}:{(timeRemaining % 60).toString().padStart(2, '0')}
+                      </div>
+                      {timeRemaining <= 30 && (
+                        <span className="text-red-300 text-sm font-semibold animate-pulse">
+                          ⚠️ Temps limité !
+                        </span>
+                      )}
                     </div>
-                    {timeRemaining <= 30 && (
-                      <span className="text-red-300 text-sm font-semibold animate-pulse">
-                        ⚠️ Temps limité !
-                      </span>
-                    )}
+                    <div className="bg-gradient-to-r from-orange-500/20 to-yellow-500/20 border border-orange-500/50 rounded-lg px-3 py-2">
+                      <p className="text-orange-300 text-xs font-semibold flex items-center gap-2">
+                        <span className="text-base">⚠️</span>
+                        <span>Le timer accélère si vous changez de fenêtre !</span>
+                      </p>
+                    </div>
                   </div>
                 )}
               </div>

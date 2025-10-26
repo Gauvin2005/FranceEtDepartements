@@ -75,6 +75,7 @@ interface GameActions {
   stopTimer: () => void;
   resetTimer: () => void;
   tickTimer: () => void;
+  accelerateTimer: (seconds: number) => void;
   
   // Actions de sauvegarde
   saveGame: () => void;
@@ -568,6 +569,14 @@ export const useGameStore = create<GameState & GameActions>()(
         const { timeRemaining, timerActive } = get();
         if (timerActive && timeRemaining > 0) {
           set({ timeRemaining: timeRemaining - 1 });
+        }
+      },
+      
+      accelerateTimer: (seconds: number) => {
+        const { timeRemaining, timerActive } = get();
+        if (timerActive && timeRemaining > 0) {
+          const newTimeRemaining = Math.max(0, timeRemaining - seconds);
+          set({ timeRemaining: newTimeRemaining });
         }
       },
       
