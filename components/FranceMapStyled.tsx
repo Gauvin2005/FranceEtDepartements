@@ -364,16 +364,6 @@ export const FranceMapStyled: React.FC<FranceMapStyledProps> = ({
                 >
                   <Minimize2 className={styles.icon} />
                 </button>
-                <button
-                  onClick={() => {
-                    setIsExpanded(false);
-                    setIsMinimized(true);
-                  }}
-                  className={styles.controlButtonClose}
-                  title="Minimiser"
-                >
-                  <X className={styles.icon} />
-                </button>
               </div>
             </div>
           )}

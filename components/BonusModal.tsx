@@ -85,12 +85,6 @@ export const BonusModal: React.FC<BonusModalProps> = ({
                 ⏰ {Math.floor(timeRemaining / 60)}:{(timeRemaining % 60).toString().padStart(2, '0')}
               </div>
             )}
-            <button
-              onClick={handleSkipBonus}
-              className="text-red-400 hover:text-red-300 text-2xl font-bold transition-colors"
-            >
-              ✕
-            </button>
           </div>
         </div>
 
