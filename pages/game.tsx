@@ -150,6 +150,8 @@ const GamePage: React.FC = () => {
     finishTurn();
     nextTurn();
     setShowBonusModal(false);
+    setShowHintModal(false);
+    setShowCompositions(false);
     
     // Attendre que React mette à jour l'état avant d'afficher le marquee
     setTimeout(() => {
@@ -165,6 +167,7 @@ const GamePage: React.FC = () => {
     nextTurn();
     setShowHintModal(false);
     setShowCompositions(false);
+    setShowBonusModal(false);
     
     // Attendre que React mette à jour l'état avant d'afficher le marquee
     setTimeout(() => {
@@ -233,6 +236,10 @@ const GamePage: React.FC = () => {
 
   const handleTimeoutClose = () => {
     setShowTimeoutModal(false);
+    // Fermer toutes les modals ouvertes
+    setShowHintModal(false);
+    setShowBonusModal(false);
+    setShowCompositions(false);
     // Passer automatiquement au tour suivant
     handlePassTurn();
   };
@@ -553,7 +560,7 @@ const GamePage: React.FC = () => {
         </div>
 
         {/* Bonus Modal */}
-        {currentDepartment && (
+        {currentDepartment && timerActive && timeRemaining > 0 && (
           <BonusModal
             isOpen={showBonusModal}
             onClose={handleFinishTurn}
