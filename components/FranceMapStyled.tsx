@@ -126,9 +126,15 @@ export const FranceMapStyled: React.FC<FranceMapStyledProps> = ({
     );
   }
 
-  // Filtrer les départements recherchés pour exclure la réponse actuelle
+  // Créer un ensemble de tous les départements déjà gagnés par n'importe quel joueur
+  const allWonDepartments = new Set<string>();
+  Object.values(departmentsByPlayer).forEach(depts => {
+    depts.forEach(dept => allWonDepartments.add(dept));
+  });
+
+  // Filtrer les départements recherchés pour exclure la réponse actuelle ET les départements déjà gagnés
   const filteredSearchedDepartments = searchedDepartments.filter(
-    dept => dept !== currentDepartmentNumber
+    dept => dept !== currentDepartmentNumber && !allWonDepartments.has(dept)
   );
 
   const mapContent = (
@@ -225,8 +231,8 @@ export const FranceMapStyled: React.FC<FranceMapStyledProps> = ({
           const isHovered = hoveredDept === dept.num;
           const isCurrent = currentDepartmentNumber === dept.num || searchedDept?.numero === dept.num;
           const isHighlighted = highlightedDepartments.includes(dept.num);
-          // Exclure la réponse actuelle des départements recherchés
-          const isSearched = searchedDepartments.includes(dept.num) && dept.num !== currentDepartmentNumber;
+          // Vérifier si le département est recherché (disponible et pas déjà gagné)
+          const isSearched = filteredSearchedDepartments.includes(dept.num);
           
           // Déterminer le propriétaire du département
           const departmentOwner = getDepartmentOwner(dept.num);

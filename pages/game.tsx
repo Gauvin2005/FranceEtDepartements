@@ -529,6 +529,11 @@ const GamePage: React.FC = () => {
                     return acc;
                   }, {} as Record<number, string[]>);
 
+                  // Filtrer les départements recherchés pour ne garder que ceux encore disponibles
+                  const availableSearchedDepartments = compositions.filter(comp => 
+                    availableDepartments.includes(comp)
+                  );
+
                   return (
                     <FranceMapStyled 
                       currentDepartmentNumber={currentDepartment?.numero}
@@ -538,7 +543,7 @@ const GamePage: React.FC = () => {
                       }).filter(Boolean) || []}
                       departmentsByPlayer={departmentsByPlayer}
                       currentPlayerId={players[currentPlayerIndex]?.id}
-                      searchedDepartments={compositions}
+                      searchedDepartments={availableSearchedDepartments}
                       showControls={true}
                       timeRemaining={timeRemaining}
                       timerActive={timerActive}
