@@ -255,11 +255,11 @@ export const FranceMapStyled: React.FC<FranceMapStyledProps> = ({
                 <circle 
                   cx={magnifierPosition.x} 
                   cy={magnifierPosition.y} 
-                  r="70"
+                  r="120"
                 />
               </clipPath>
               <filter id="magnifier-shadow">
-                <feDropShadow dx="0" dy="3" stdDeviation="6" floodColor="rgba(139, 92, 246, 0.7)"/>
+                <feDropShadow dx="0" dy="3" stdDeviation="8" floodColor="rgba(139, 92, 246, 0.7)"/>
               </filter>
             </>
           )}
@@ -352,12 +352,12 @@ export const FranceMapStyled: React.FC<FranceMapStyledProps> = ({
             <circle
               cx={magnifierPosition.x}
               cy={magnifierPosition.y}
-              r="90"
+              r="155"
               fill="rgba(0, 0, 0, 0.3)"
               pointerEvents="none"
             />
             <g clipPath="url(#magnifier-clip)">
-              <g transform={`translate(${magnifierPosition.x}, ${magnifierPosition.y}) scale(2.5) translate(${-magnifierPosition.x}, ${-magnifierPosition.y})`}>
+              <g transform={`translate(${magnifierPosition.x}, ${magnifierPosition.y}) scale(3.0) translate(${-magnifierPosition.x}, ${-magnifierPosition.y})`}>
               {departmentsPathsRealistic.map((dept) => {
                 let regionColor = getDepartmentColor(dept.num);
                 
@@ -407,7 +407,7 @@ export const FranceMapStyled: React.FC<FranceMapStyledProps> = ({
                       x={dept.labelX}
                       y={dept.labelY + 4}
                       fill="#ffffff"
-                      fontSize={`${14 * (dept.scale || 1)}px`}
+                      fontSize={`${16 * (dept.scale || 1)}px`}
                     >
                       {dept.num}
                     </text>
@@ -419,7 +419,7 @@ export const FranceMapStyled: React.FC<FranceMapStyledProps> = ({
             <circle
               cx={magnifierPosition.x}
               cy={magnifierPosition.y}
-              r="70"
+              r="120"
               fill="none"
               stroke="rgba(139, 92, 246, 0.7)"
               strokeWidth="2"
