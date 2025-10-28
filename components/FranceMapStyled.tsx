@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Maximize2, Minimize2, X, Search } from 'lucide-react';
+import { Maximize2, Minimize2, X, Search, ZoomIn } from 'lucide-react';
 import styles from './FranceMapStyled.module.css';
 import { departments as allDepartments } from '../data/departments';
 import { departmentsPaths as departmentsPathsRealistic } from '../data/departmentsPathsRealistic';
@@ -33,6 +33,9 @@ export const FranceMapStyled: React.FC<FranceMapStyledProps> = ({
   const [isMinimized, setIsMinimized] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedRegion, setSelectedRegion] = useState<string | null>(null);
+  const [magnifierPosition, setMagnifierPosition] = useState<{ x: number; y: number } | null>(null);
+  const [magnifierActive, setMagnifierActive] = useState(false);
+  const [magnifierEnabled, setMagnifierEnabled] = useState(true);
 
   // Trouver le département correspondant à la recherche
   const searchedDept = useMemo(() => {
@@ -110,6 +113,37 @@ export const FranceMapStyled: React.FC<FranceMapStyledProps> = ({
       // Toggle : si la région est déjà sélectionnée, on la désélectionne
       setSelectedRegion(selectedRegion === regionName ? null : regionName);
     }
+  };
+
+  // Gestionnaire pour la position de la souris (loupe)
+  const handleMouseMove = (e: React.MouseEvent<SVGSVGElement>) => {
+    if (!magnifierEnabled) return;
+    
+    const svg = e.currentTarget;
+    const ctm = svg.getScreenCTM();
+    
+    if (!ctm) return;
+    
+    // Utiliser createSVGPoint pour obtenir les coordonnées SVG correctes
+    const point = svg.createSVGPoint();
+    point.x = e.clientX;
+    point.y = e.clientY;
+    
+    // Conversion du point client vers les coordonnées SVG
+    const svgPoint = point.matrixTransform(ctm.inverse());
+    
+    setMagnifierPosition({ x: svgPoint.x, y: svgPoint.y });
+  };
+
+  const handleMouseEnter = () => {
+    if (magnifierEnabled) {
+      setMagnifierActive(true);
+    }
+  };
+
+  const handleMouseLeave = () => {
+    setMagnifierActive(false);
+    setMagnifierPosition(null);
   };
 
 
@@ -192,7 +226,14 @@ export const FranceMapStyled: React.FC<FranceMapStyledProps> = ({
         </div>
       )}
       
-      <svg viewBox="0 0 1000 1000" className={styles.svg} style={{ minHeight: isExpanded ? '80vh' : '600px' }}>
+      <svg 
+        viewBox="0 0 1000 1000" 
+        className={styles.svg} 
+        style={{ minHeight: isExpanded ? '80vh' : '600px' }}
+        onMouseMove={handleMouseMove}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+      >
         <defs>
           <filter id="glow">
             <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
@@ -208,6 +249,20 @@ export const FranceMapStyled: React.FC<FranceMapStyledProps> = ({
               <feMergeNode in="SourceGraphic"/>
             </feMerge>
           </filter>
+          {magnifierEnabled && magnifierActive && magnifierPosition && (
+            <>
+              <clipPath id="magnifier-clip">
+                <circle 
+                  cx={magnifierPosition.x} 
+                  cy={magnifierPosition.y} 
+                  r="70"
+                />
+              </clipPath>
+              <filter id="magnifier-shadow">
+                <feDropShadow dx="0" dy="3" stdDeviation="6" floodColor="rgba(139, 92, 246, 0.7)"/>
+              </filter>
+            </>
+          )}
         </defs>
 
         {/* Cadre Corse */}
@@ -291,6 +346,88 @@ export const FranceMapStyled: React.FC<FranceMapStyledProps> = ({
             </g>
           );
         })}
+        
+        {magnifierEnabled && magnifierActive && magnifierPosition && (
+          <>
+            <circle
+              cx={magnifierPosition.x}
+              cy={magnifierPosition.y}
+              r="90"
+              fill="rgba(0, 0, 0, 0.3)"
+              pointerEvents="none"
+            />
+            <g clipPath="url(#magnifier-clip)">
+              <g transform={`translate(${magnifierPosition.x}, ${magnifierPosition.y}) scale(2.5) translate(${-magnifierPosition.x}, ${-magnifierPosition.y})`}>
+              {departmentsPathsRealistic.map((dept) => {
+                let regionColor = getDepartmentColor(dept.num);
+                
+                if (["2A", "2B"].includes(dept.num)) regionColor = "#8b5cf6";
+                if (["75", "77", "78", "91", "92", "93", "94", "95"].includes(dept.num)) regionColor = "#d946ef";
+                if (["971", "972", "973", "974", "976"].includes(dept.num)) regionColor = "#c026d3";
+                
+                const isCurrent = currentDepartmentNumber === dept.num || searchedDept?.numero === dept.num;
+                const isHighlighted = highlightedDepartments.includes(dept.num);
+                const isSearched = filteredSearchedDepartments.includes(dept.num);
+                const departmentOwner = getDepartmentOwner(dept.num);
+                const isOwnDepartment = currentPlayerId !== undefined && departmentOwner === currentPlayerId;
+                const isOtherPlayerDepartment = departmentOwner !== null && departmentOwner !== currentPlayerId;
+                const isInSelectedRegion = selectedRegion ? (
+                  departmentsByRegion[selectedRegion]?.nums.includes(dept.num) ||
+                  (selectedRegion === "Corse" && ["2A", "2B"].includes(dept.num)) ||
+                  (selectedRegion === "Île-de-France" && ["75", "77", "78", "91", "92", "93", "94", "95"].includes(dept.num)) ||
+                  (selectedRegion === "DOM-TOM" && ["971", "972", "973", "974", "976"].includes(dept.num))
+                ) : false;
+                
+                return (
+                  <g key={`magnifier-${dept.num}`}>
+                    <path
+                      d={dept.path}
+                      stroke={
+                        isCurrent ? '#06b6d4' : 
+                        isOwnDepartment ? '#22c55e' : 
+                        isOtherPlayerDepartment ? '#a0a0a0' : 
+                        isHighlighted ? '#22c55e' : 
+                        isSearched ? '#3b82f6' : 
+                        isInSelectedRegion ? '#fbbf24' : 
+                        regionColor
+                      }
+                      fill={
+                        isCurrent ? 'rgba(6, 182, 212, 0.2)' : 
+                        isOwnDepartment ? 'rgba(34, 197, 94, 0.2)' : 
+                        isOtherPlayerDepartment ? 'rgba(160, 160, 160, 0.2)' : 
+                        isHighlighted ? 'rgba(34, 197, 94, 0.2)' : 
+                        isSearched ? 'rgba(59, 130, 246, 0.3)' : 
+                        isInSelectedRegion ? 'rgba(251, 191, 36, 0.3)' : 
+                        'rgba(0,0,0,0.8)'
+                      }
+                      strokeWidth="1.5"
+                      opacity="0.98"
+                    />
+                    <text
+                      x={dept.labelX}
+                      y={dept.labelY + 4}
+                      fill="#ffffff"
+                      fontSize={`${14 * (dept.scale || 1)}px`}
+                    >
+                      {dept.num}
+                    </text>
+                  </g>
+                );
+              })}
+              </g>
+            </g>
+            <circle
+              cx={magnifierPosition.x}
+              cy={magnifierPosition.y}
+              r="70"
+              fill="none"
+              stroke="rgba(139, 92, 246, 0.7)"
+              strokeWidth="2"
+              filter="url(#magnifier-shadow)"
+              pointerEvents="none"
+            />
+          </>
+        )}
       </svg>
 
       {hoveredDept && (
@@ -399,6 +536,17 @@ export const FranceMapStyled: React.FC<FranceMapStyledProps> = ({
                   </div>
                 )}
                 <button
+                  onClick={() => setMagnifierEnabled(!magnifierEnabled)}
+                  className={styles.controlButton}
+                  title={magnifierEnabled ? "Désactiver la loupe" : "Activer la loupe"}
+                  style={{
+                    backgroundColor: magnifierEnabled ? 'rgba(139, 92, 246, 0.4)' : 'rgba(139, 92, 246, 0.2)',
+                    borderColor: magnifierEnabled ? 'rgba(139, 92, 246, 0.7)' : 'rgba(139, 92, 246, 0.5)'
+                  }}
+                >
+                  <ZoomIn className={styles.icon} />
+                </button>
+                <button
                   onClick={() => setIsExpanded(false)}
                   className={styles.controlButton}
                   title="Réduire"
@@ -434,6 +582,17 @@ export const FranceMapStyled: React.FC<FranceMapStyledProps> = ({
                 ⏰ {Math.floor(timeRemaining / 60)}:{(timeRemaining % 60).toString().padStart(2, '0')}
               </div>
             )}
+            <button
+              onClick={() => setMagnifierEnabled(!magnifierEnabled)}
+              className={styles.controlButton}
+              title={magnifierEnabled ? "Désactiver la loupe" : "Activer la loupe"}
+              style={{
+                backgroundColor: magnifierEnabled ? 'rgba(139, 92, 246, 0.4)' : 'rgba(139, 92, 246, 0.2)',
+                borderColor: magnifierEnabled ? 'rgba(139, 92, 246, 0.7)' : 'rgba(139, 92, 246, 0.5)'
+              }}
+            >
+              <ZoomIn className={styles.icon} />
+            </button>
             <button
               onClick={() => setIsExpanded(true)}
               className={styles.controlButton}
