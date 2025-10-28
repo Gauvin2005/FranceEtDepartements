@@ -86,20 +86,24 @@ const GamePage: React.FC = () => {
     }
   }, [timerActive, timeRemaining, stopTimer]);
 
+  // Détecter la fin de partie automatique
+  useEffect(() => {
+    if (gameEnded && gameStarted) {
+      setShowFinalScores(true);
+    }
+  }, [gameEnded, gameStarted]);
+
   // Détecter les changements de visibilité pour accélérer le timer proportionnellement
   useEffect(() => {
     if (!gameStarted || gameEnded) return;
 
     const handleVisibilityChange = () => {
       if (document.hidden && timerActive) {
-        // La page est cachée, enregistrer le timestamp
         setHiddenStartTime(Date.now());
       } else if (hiddenStartTime && timerActive) {
-        // La page redevient visible, calculer le temps écoulé
         const timeSpentHidden = Date.now() - hiddenStartTime;
         const secondsSpent = Math.floor(timeSpentHidden / 1000);
         
-        // Réduire le timer proportionnellement (1 seconde de timer = 1 seconde réellement passée)
         if (secondsSpent > 0) {
           accelerateTimer(secondsSpent);
         }
@@ -652,6 +656,11 @@ const GamePage: React.FC = () => {
                   <h2 className="text-4xl font-black bg-gradient-to-r from-yellow-300 to-orange-300 bg-clip-text text-transparent glow-text">
                     SCORES FINAUX
                   </h2>
+                  {availableDepartments.length === 0 && (
+                    <p className="mt-4 text-lg font-bold text-white">
+                      Tous les départements ont été remportés ! Félicitations aux participants !
+                    </p>
+                  )}
                 </div>
               </div>
               <div className="p-6 space-y-6">

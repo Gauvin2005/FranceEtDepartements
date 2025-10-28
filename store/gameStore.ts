@@ -297,13 +297,29 @@ export const useGameStore = create<GameState & GameActions>()(
       },
       
       rollDice: () => {
-        // 2 dés d10 (0-9) et 1 dé d6 (1-6)
-        const dice1 = Math.floor(Math.random() * 10); // 0-9
-        const dice2 = Math.floor(Math.random() * 10); // 0-9  
-        const dice3 = Math.floor(Math.random() * 6) + 1; // 1-6
+        const { availableDepartments } = get();
+        
+        if (availableDepartments.length === 0) {
+          get().endGame();
+          return;
+        }
+        
+        const dice1 = Math.floor(Math.random() * 10);
+        const dice2 = Math.floor(Math.random() * 10);
+        const dice3 = Math.floor(Math.random() * 6) + 1;
         
         const diceResults = [dice1, dice2, dice3];
-        const compositions = calculateCompositions(diceResults);
+        let compositions = calculateCompositions(diceResults);
+        
+        const validCompositions = compositions.filter(c => availableDepartments.includes(c));
+        
+        if (validCompositions.length === 0 && availableDepartments.length > 0) {
+          const randomIndex = Math.floor(Math.random() * availableDepartments.length);
+          const randomDepartment = availableDepartments[randomIndex];
+          compositions = [randomDepartment];
+        } else {
+          compositions = validCompositions;
+        }
         
         console.log('Dés lancés:', diceResults, 'Compositions:', compositions);
         
@@ -314,14 +330,31 @@ export const useGameStore = create<GameState & GameActions>()(
           hintsUsed: 0,
         });
         
-        // Démarrer le timer après le lancer de dés
         setTimeout(() => {
           get().startTimer();
         }, 100);
       },
       
       setDiceResults: (results: number[]) => {
-        const compositions = calculateCompositions(results);
+        const { availableDepartments } = get();
+        
+        if (availableDepartments.length === 0) {
+          get().endGame();
+          return;
+        }
+        
+        let compositions = calculateCompositions(results);
+        
+        const validCompositions = compositions.filter(c => availableDepartments.includes(c));
+        
+        if (validCompositions.length === 0 && availableDepartments.length > 0) {
+          const randomIndex = Math.floor(Math.random() * availableDepartments.length);
+          const randomDepartment = availableDepartments[randomIndex];
+          compositions = [randomDepartment];
+        } else {
+          compositions = validCompositions;
+        }
+        
         set({ diceResults: results, compositions });
       },
       
