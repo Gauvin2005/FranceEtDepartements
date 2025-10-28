@@ -229,21 +229,22 @@ export const FranceMapStyled: React.FC<FranceMapStyledProps> = ({
       <svg 
         viewBox="0 0 1000 1000" 
         className={styles.svg} 
-        style={{ minHeight: isExpanded ? '80vh' : '600px' }}
+        style={{ minHeight: isExpanded ? '80vh' : '37.5rem' }}
         onMouseMove={handleMouseMove}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
       >
         <defs>
-          <filter id="glow">
-            <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+          {/* Optimisation des filtres SVG pour performance avec zoom natif */}
+          <filter id="glow" colorInterpolationFilters="sRGB">
+            <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
             <feMerge>
               <feMergeNode in="coloredBlur"/>
               <feMergeNode in="SourceGraphic"/>
             </feMerge>
           </filter>
-          <filter id="glowStrong">
-            <feGaussianBlur stdDeviation="5" result="coloredBlur"/>
+          <filter id="glowStrong" colorInterpolationFilters="sRGB">
+            <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
             <feMerge>
               <feMergeNode in="coloredBlur"/>
               <feMergeNode in="SourceGraphic"/>
@@ -258,8 +259,8 @@ export const FranceMapStyled: React.FC<FranceMapStyledProps> = ({
                   r="120"
                 />
               </clipPath>
-              <filter id="magnifier-shadow">
-                <feDropShadow dx="0" dy="3" stdDeviation="8" floodColor="rgba(139, 92, 246, 0.7)"/>
+              <filter id="magnifier-shadow" colorInterpolationFilters="sRGB">
+                <feDropShadow dx="0" dy="2" stdDeviation="5" floodColor="rgba(139, 92, 246, 0.6)"/>
               </filter>
             </>
           )}
@@ -338,7 +339,7 @@ export const FranceMapStyled: React.FC<FranceMapStyledProps> = ({
                 y={dept.labelY + 4}
                 className={styles.deptNum}
                 fill="#ffffff"
-                fontSize={`${12 * (dept.scale || 1)}px`}
+                fontSize={`${0.75 * (dept.scale || 1)}rem`}
                 style={{ pointerEvents: 'none' }}
               >
                 {dept.num}
@@ -407,7 +408,7 @@ export const FranceMapStyled: React.FC<FranceMapStyledProps> = ({
                       x={dept.labelX}
                       y={dept.labelY + 4}
                       fill="#ffffff"
-                      fontSize={`${16 * (dept.scale || 1)}px`}
+                      fontSize={`${1 * (dept.scale || 1)}rem`}
                     >
                       {dept.num}
                     </text>

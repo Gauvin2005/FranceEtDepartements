@@ -109,20 +109,25 @@
   width: 100%;
   max-width: 100%;
   background: #000000;
-  border-radius: 12px;
-  padding: 30px;
+  border-radius: 0.75rem;
+  padding: 1.875rem;
   position: relative;
   overflow: hidden;
-  min-height: 700px;
+  min-height: 43.75rem;
+  /* Optimisation pour le zoom natif */
+  will-change: contents;
+  contain: layout style paint;
 }
 
 .container::before {
   content: '';
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at 50% 50%, rgba(139, 92, 246, 0.15) 0%, transparent 70%);
+  background: radial-gradient(circle at 50% 50%, rgba(139, 92, 246, 0.12) 0%, transparent 65%);
   pointer-events: none;
-  animation: pulseGlow 4s ease-in-out infinite;
+  /* Simplification de l'animation pour performance */
+  animation: pulseGlow 6s ease-in-out infinite;
+  will-change: opacity;
 }
 
 .container::after {
@@ -130,11 +135,13 @@
   position: absolute;
   inset: 0;
   background-image: 
-    linear-gradient(90deg, rgba(139, 92, 246, 0.03) 1px, transparent 1px),
-    linear-gradient(0deg, rgba(139, 92, 246, 0.03) 1px, transparent 1px);
-  background-size: 20px 20px;
+    linear-gradient(90deg, rgba(139, 92, 246, 0.025) 0.0625rem, transparent 0.0625rem),
+    linear-gradient(0deg, rgba(139, 92, 246, 0.025) 0.0625rem, transparent 0.0625rem);
+  background-size: 1.25rem 1.25rem;
   pointer-events: none;
-  animation: gridMove 20s linear infinite;
+  /* Simplification de l'animation pour performance */
+  animation: gridMove 25s linear infinite;
+  will-change: transform;
 }
 
 @keyframes pulseGlow {
@@ -142,7 +149,7 @@
     opacity: 1;
   }
   50% {
-    opacity: 0.7;
+    opacity: 0.75;
   }
 }
 
@@ -151,18 +158,23 @@
     transform: translate(0, 0);
   }
   100% {
-    transform: translate(20px, 20px);
+    transform: translate(1.25rem, 1.25rem);
   }
 }
 
 .svg {
   width: 100%;
   height: auto;
-  min-height: 600px;
+  min-height: 37.5rem;
   max-height: 80vh;
-  filter: drop-shadow(0 0 20px rgba(139, 92, 246, 0.3));
+  /* Réduction de l'effet drop-shadow pour performance */
+  filter: drop-shadow(0 0 10px rgba(139, 92, 246, 0.2));
   position: relative;
   z-index: 1;
+  /* Optimisation pour le zoom natif */
+  will-change: transform;
+  transform-origin: center center;
+  contain: strict;
 }
 
 .region {
@@ -208,44 +220,47 @@
 }
 
 .deptBox {
-  stroke-width: 2;
-  transition: stroke-width 0.2s ease;
+  stroke-width: 0.125rem;
+  transition: stroke-width 0.15s ease;
   cursor: pointer;
+  /* Optimisation pour le zoom natif */
+  will-change: stroke-width, opacity;
+  contain: layout style paint;
 }
 
 .deptBox:hover,
 .deptBox.hovered {
-  stroke-width: 3;
+  stroke-width: 0.1875rem;
 }
 
 .deptBox.current {
-  stroke-width: 4;
+  stroke-width: 0.25rem;
   animation: pulseCurrent 1.5s ease-in-out infinite;
 }
 
 .deptBox.highlighted {
-  stroke-width: 3;
+  stroke-width: 0.1875rem;
   animation: pulseHighlighted 2s ease-in-out infinite;
 }
 
 .deptBox.regionSelected {
-  stroke-width: 4;
+  stroke-width: 0.25rem;
   animation: pulseRegionSelected 1.2s ease-in-out infinite;
 }
 
 .deptBox.searched {
-  stroke-width: 3;
+  stroke-width: 0.1875rem;
   animation: pulseSearched 1.5s ease-in-out infinite;
 }
 
 @keyframes pulseCurrent {
   0%, 100% {
     opacity: 1;
-    stroke-width: 4;
+    stroke-width: 0.25rem;
   }
   50% {
-    opacity: 0.7;
-    stroke-width: 5;
+    opacity: 0.8;
+    stroke-width: 0.3125rem;
   }
 }
 
@@ -254,41 +269,42 @@
     opacity: 1;
   }
   50% {
-    opacity: 0.8;
+    opacity: 0.85;
   }
 }
 
 @keyframes pulseRegionSelected {
   0%, 100% {
     opacity: 1;
-    stroke-width: 4;
-    transform: scale(1);
+    stroke-width: 0.25rem;
   }
   50% {
-    opacity: 0.9;
-    stroke-width: 5;
-    transform: scale(1.02);
+    opacity: 0.92;
+    stroke-width: 0.3125rem;
   }
 }
 
 @keyframes pulseSearched {
   0%, 100% {
     opacity: 1;
-    stroke-width: 3;
+    stroke-width: 0.1875rem;
   }
   50% {
-    opacity: 0.8;
-    stroke-width: 4;
+    opacity: 0.85;
+    stroke-width: 0.25rem;
   }
 }
 
 .deptNum {
-  font-size: 14px;
+  font-size: 0.875rem;
   font-weight: bold;
   text-anchor: middle;
   pointer-events: none;
   font-family: 'Share Tech Mono', 'Courier New', monospace;
-  text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+  /* Réduction de l'effet de shadow pour performance */
+  text-shadow: 0 0 3px rgba(255, 255, 255, 0.4);
+  /* Optimisation pour le zoom natif */
+  will-change: opacity;
 }
 
 .island {
@@ -575,26 +591,68 @@
 
 @media (max-width: 768px) {
   .container {
-    padding: 10px;
+    padding: 0.625rem;
+  }
+  
+  .title {
+    font-size: 1.125rem;
+  }
+  
+  .icon {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+  
+  .controlButton,
+  .controlButtonClose {
+    padding: 0.5rem;
   }
   
   .regionLabel {
-    font-size: 7px;
+    font-size: 0.75rem;
+    letter-spacing: 0.0625rem;
   }
   
   .deptNum {
-    font-size: 9px;
+    font-size: 0.5625rem;
   }
   
   .islandLabel {
-    font-size: 7px;
+    font-size: 0.625rem;
   }
   
   .tooltip {
-    top: 10px;
-    right: 10px;
-    padding: 8px 16px;
-    font-size: 14px;
+    top: 0.625rem;
+    right: 0.625rem;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+  }
+  
+  .regionsGrid {
+    grid-template-columns: repeat(auto-fit, minmax(11.25rem, 1fr));
+    gap: 0.625rem;
+  }
+  
+  .regionLegendItem {
+    padding: 0.375rem 0.625rem;
+  }
+  
+  .regionLegendName {
+    font-size: 0.75rem;
+  }
+  
+  .legendTitle {
+    font-size: 0.875rem;
+  }
+  
+  .searchContainer {
+    width: 100%;
+    max-width: 100%;
+  }
+  
+  .searchInput {
+    font-size: 0.8125rem;
+    padding: 0.5rem 2.1875rem 0.5rem 2.1875rem;
   }
 }
 
@@ -622,21 +680,26 @@
 .containerFullscreen {
   width: 100%;
   background: #000000;
-  border-radius: 12px;
-  padding: 30px;
+  border-radius: 0.75rem;
+  padding: 1.875rem;
   position: relative;
   overflow: hidden;
-  border: 2px solid rgba(139, 92, 246, 0.5);
-  box-shadow: 0 0 50px rgba(139, 92, 246, 0.5);
+  border: 0.125rem solid rgba(139, 92, 246, 0.5);
+  box-shadow: 0 0 30px rgba(139, 92, 246, 0.4);
+  /* Optimisation pour le zoom natif */
+  will-change: contents;
+  contain: layout style paint;
 }
 
 .containerFullscreen::before {
   content: '';
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at 50% 50%, rgba(139, 92, 246, 0.15) 0%, transparent 70%);
+  background: radial-gradient(circle at 50% 50%, rgba(139, 92, 246, 0.12) 0%, transparent 65%);
   pointer-events: none;
-  animation: pulseGlow 4s ease-in-out infinite;
+  /* Simplification de l'animation pour performance */
+  animation: pulseGlow 6s ease-in-out infinite;
+  will-change: opacity;
 }
 
 .containerFullscreen::after {
@@ -644,11 +707,13 @@
   position: absolute;
   inset: 0;
   background-image: 
-    linear-gradient(90deg, rgba(139, 92, 246, 0.03) 1px, transparent 1px),
-    linear-gradient(0deg, rgba(139, 92, 246, 0.03) 1px, transparent 1px);
-  background-size: 20px 20px;
+    linear-gradient(90deg, rgba(139, 92, 246, 0.025) 0.0625rem, transparent 0.0625rem),
+    linear-gradient(0deg, rgba(139, 92, 246, 0.025) 0.0625rem, transparent 0.0625rem);
+  background-size: 1.25rem 1.25rem;
   pointer-events: none;
-  animation: gridMove 20s linear infinite;
+  /* Simplification de l'animation pour performance */
+  animation: gridMove 25s linear infinite;
+  will-change: transform;
 }
 
 .minimizedButton {
@@ -712,109 +777,57 @@
   }
 }
 
-@media (max-width: 768px) {
-  .title {
-    font-size: 18px;
-  }
-  
-  .icon {
-    width: 20px;
-    height: 20px;
-  }
-  
-  .controlButton,
-  .controlButtonClose {
-    padding: 8px;
-  }
-  
-  .regionLabel {
-    font-size: 12px;
-    letter-spacing: 1px;
-  }
-  
-  .islandLabel {
-    font-size: 10px;
-  }
-  
-  .regionsGrid {
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 10px;
-  }
-  
-  .regionLegendItem {
-    padding: 6px 10px;
-  }
-  
-  .regionLegendName {
-    font-size: 12px;
-  }
-  
-  .legendTitle {
-    font-size: 14px;
-  }
-  
-  .searchContainer {
-    width: 100%;
-    max-width: 100%;
-  }
-  
-  .searchInput {
-    font-size: 13px;
-    padding: 8px 35px 8px 35px;
-  }
-}
-
 @media (max-width: 480px) {
   .svg {
-    min-height: 400px;
+    min-height: 25rem;
     max-height: 60vh;
   }
   
   .regionLabel {
-    font-size: 8px;
+    font-size: 0.5rem;
     opacity: 0.9;
-    letter-spacing: 0.5px;
-    stroke-width: 2px;
+    letter-spacing: 0.03125rem;
+    stroke-width: 0.125rem;
   }
   
   .deptNum {
-    font-size: 8px;
+    font-size: 0.5rem;
   }
   
   .islandLabel {
-    font-size: 7px;
-    stroke-width: 1px;
+    font-size: 0.4375rem;
+    stroke-width: 0.0625rem;
   }
   
   .title {
-    font-size: 16px;
+    font-size: 1rem;
   }
   
   .controls {
-    padding: 12px;
+    padding: 0.75rem;
   }
   
   .regionsGrid {
     grid-template-columns: 1fr;
-    gap: 8px;
+    gap: 0.5rem;
   }
   
   .regionLegendItem {
-    padding: 6px 8px;
+    padding: 0.375rem 0.5rem;
   }
   
   .regionColorBox {
-    width: 16px;
-    height: 16px;
+    width: 1rem;
+    height: 1rem;
   }
   
   .regionLegendName {
-    font-size: 11px;
+    font-size: 0.6875rem;
   }
   
   .legendTitle {
-    font-size: 12px;
-    margin-bottom: 12px;
+    font-size: 0.75rem;
+    margin-bottom: 0.75rem;
   }
 }
 
