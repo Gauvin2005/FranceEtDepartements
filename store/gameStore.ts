@@ -201,8 +201,16 @@ const calculateCompositions = (diceResults: number[]): string[] => {
   }
   
   // Règles spéciales pour les DOM (971, 972, 973, 974, 976)
-  // Si on a un 9 et un 7 dans les dés, on peut obtenir les DOM
-  if (dice.includes(9) && dice.includes(7)) {
+  // Stratégie : Augmenter significativement les chances d'obtenir les DOM-TOM
+  // Le problème original est qu'il fallait avoir 9 ET 7, ce qui est trop rare
+  
+  // Règle original trop restrictive : 9 ET 7 requis
+  // On garde cette règle pour la compatibilité
+  
+  // NOUVELLE RÈGLE PLUS PERMISSIVE : Si on a un 9 dans les dés
+  // → On ouvre l'accès aux DOM-TOM (même sans le 7 exact)
+  // Cela multiplie les chances car le 9 apparaît plus souvent
+  if (dice.includes(9)) {
     compositions.add('971');
     compositions.add('972');
     compositions.add('973');
