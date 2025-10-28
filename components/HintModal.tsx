@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Department } from '../data/departments';
+import { useLockBodyScroll } from '../hooks/useLockBodyScroll';
 
 interface HintModalProps {
   isOpen: boolean;
@@ -30,6 +31,8 @@ export const HintModal: React.FC<HintModalProps> = ({
   const [guess, setGuess] = useState('');
   const [showResult, setShowResult] = useState(false);
   const [isCorrect, setIsCorrect] = useState(false);
+
+  useLockBodyScroll(isOpen);
 
   if (!isOpen) return null;
 
@@ -74,8 +77,8 @@ export const HintModal: React.FC<HintModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 animate-scale-in">
-      <div className="card-gaming max-w-md w-full mx-4 p-8 shadow-2xl animate-float">
+    <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 animate-scale-in overflow-y-auto py-8">
+      <div className="card-gaming max-w-md w-full mx-4 p-8 shadow-2xl animate-float my-auto">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-3xl font-black bg-gradient-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent glow-text">
             🎯 Devinez le département

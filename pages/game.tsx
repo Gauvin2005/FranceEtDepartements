@@ -10,6 +10,7 @@ import { Marquee } from '../components/Marquee';
 import ScoreBoard from '../components/ScoreBoard';
 import { FranceMapStyled } from '../components/FranceMapStyled';
 import { Department, getDepartmentById } from '../data/departments';
+import { useLockBodyScroll } from '../hooks/useLockBodyScroll';
 
 const GamePage: React.FC = () => {
   const {
@@ -61,6 +62,9 @@ const GamePage: React.FC = () => {
   const [hiddenStartTime, setHiddenStartTime] = useState<number | null>(null);
 
   const currentPlayer = players[currentPlayerIndex];
+
+  // Bloquer le scroll pour les modales inline (les composants HintModal, BonusModal, TimeoutModal gèrent déjà leur propre verrouillage)
+  useLockBodyScroll(showEndGameConfirm || showFinalScores);
 
   // Charger la partie sauvegardée au montage
   useEffect(() => {
@@ -580,8 +584,8 @@ const GamePage: React.FC = () => {
 
         {/* Modal de confirmation de fin de jeu */}
         {showEndGameConfirm && (
-          <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 animate-scale-in">
-            <div className="card-gaming p-8 max-w-md mx-4 shadow-2xl animate-float">
+          <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 animate-scale-in overflow-y-auto py-8">
+            <div className="card-gaming p-8 max-w-md mx-4 shadow-2xl animate-float my-auto">
               <div className="mb-6 text-center">
                 <div className="text-6xl mb-4 animate-glow-pulse">⚠️</div>
                 <h3 className="text-3xl font-black bg-gradient-to-r from-orange-400 to-red-400 bg-clip-text text-transparent glow-text">
@@ -618,8 +622,8 @@ const GamePage: React.FC = () => {
 
         {/* Modal des scores finaux */}
         {showFinalScores && (
-          <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-scale-in">
-            <div className="card-gaming max-w-4xl w-full max-h-[90vh] overflow-auto shadow-2xl animate-float">
+          <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-scale-in overflow-y-auto">
+            <div className="card-gaming max-w-4xl w-full max-h-[90vh] overflow-auto shadow-2xl animate-float my-auto">
               <div className="bg-gradient-to-r from-yellow-500/30 to-orange-500/30 p-8 rounded-t-xl border-b-2 border-yellow-500/50">
                 <div className="text-center">
                   <div className="text-6xl mb-4 animate-glow-pulse">🏆</div>

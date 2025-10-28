@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useLockBodyScroll } from '../hooks/useLockBodyScroll';
 
 interface TimeoutModalProps {
   isOpen: boolean;
@@ -12,6 +13,8 @@ export const TimeoutModal: React.FC<TimeoutModalProps> = ({
   playerName
 }) => {
   const [isVisible, setIsVisible] = useState(false);
+
+  useLockBodyScroll(isOpen);
 
   useEffect(() => {
     if (isOpen) {
@@ -29,8 +32,8 @@ export const TimeoutModal: React.FC<TimeoutModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 animate-scale-in">
-      <div className="card-gaming p-8 max-w-md mx-4 shadow-2xl animate-float">
+    <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 animate-scale-in overflow-y-auto py-8">
+      <div className="card-gaming p-8 max-w-md mx-4 shadow-2xl animate-float my-auto">
         <div className="mb-6 text-center">
           <div className="text-6xl mb-4 animate-glow-pulse">⏰</div>
           <h3 className="text-3xl font-black bg-gradient-to-r from-red-400 to-orange-400 bg-clip-text text-transparent glow-text">

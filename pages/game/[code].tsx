@@ -12,6 +12,7 @@ import { useGameStore } from '@/stores/gameStore';
 import { useAuthStore } from '@/stores/authStore';
 import { Loader2, ArrowLeft, Trophy, AlertTriangle } from 'lucide-react';
 import type { Department } from '@/types';
+import { useLockBodyScroll } from '@/hooks/useLockBodyScroll';
 
 export default function GamePage() {
   const router = useRouter();
@@ -42,6 +43,8 @@ export default function GamePage() {
   const [connectionError, setConnectionError] = useState<string | null>(null);
   const [showEndGameConfirm, setShowEndGameConfirm] = useState(false);
   const [showFinalScores, setShowFinalScores] = useState(false);
+
+  useLockBodyScroll(showEndGameConfirm || showFinalScores);
 
   const { isConnected, joinGame, startGame, rollDice, revealIndex, chooseComposition } =
     useSocket({
@@ -396,8 +399,8 @@ export default function GamePage() {
 
           {/* Modal de confirmation de fin de jeu */}
           {showEndGameConfirm && (
-            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-              <Card className="max-w-md mx-4">
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 overflow-y-auto py-8">
+              <Card className="max-w-md mx-4 my-auto">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2 text-orange-600">
                     <AlertTriangle className="w-6 h-6" />
@@ -432,8 +435,8 @@ export default function GamePage() {
 
           {/* Modal des scores finaux */}
           {showFinalScores && (
-            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-              <Card className="max-w-4xl w-full max-h-[90vh] overflow-auto">
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 overflow-y-auto">
+              <Card className="max-w-4xl w-full max-h-[90vh] overflow-auto my-auto">
                 <CardHeader className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white">
                   <CardTitle className="flex items-center gap-2 text-2xl">
                     <Trophy className="w-8 h-8" />

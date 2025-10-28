@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Department } from '../data/departments';
+import { useLockBodyScroll } from '../hooks/useLockBodyScroll';
 
 interface BonusModalProps {
   isOpen: boolean;
@@ -23,6 +24,8 @@ export const BonusModal: React.FC<BonusModalProps> = ({
   const [showResult, setShowResult] = useState(false);
   const [isCorrect, setIsCorrect] = useState(false);
   const [hasPassed, setHasPassed] = useState(false);
+
+  useLockBodyScroll(isOpen);
 
   // Réinitialiser les états quand la modal s'ouvre
   React.useEffect(() => {
@@ -63,8 +66,8 @@ export const BonusModal: React.FC<BonusModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 animate-scale-in">
-      <div className="card-gaming max-w-md w-full mx-4 p-8 shadow-2xl animate-float">
+    <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 animate-scale-in overflow-y-auto py-8">
+      <div className="card-gaming max-w-md w-full mx-4 p-8 shadow-2xl animate-float my-auto">
         <div className="flex justify-between items-center mb-6">
           <div className="flex items-center gap-3">
             <div className="text-5xl animate-glow-pulse">🎁</div>
