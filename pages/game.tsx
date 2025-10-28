@@ -517,17 +517,34 @@ const GamePage: React.FC = () => {
 
               {/* Zone droite - Carte de France */}
               <div className="lg:col-span-1">
-                <FranceMapStyled 
-                  currentDepartmentNumber={currentDepartment?.numero}
-                  highlightedDepartments={players[currentPlayerIndex]?.souvenirCards.map(id => {
-                    const dept = getDepartmentById(id);
-                    return dept?.numero || '';
-                  }).filter(Boolean) || []}
-                  searchedDepartments={compositions}
-                  showControls={true}
-                  timeRemaining={timeRemaining}
-                  timerActive={timerActive}
-                />
+                {(() => {
+                  // Créer un objet qui associe chaque joueur à ses départements gagnés
+                  const departmentsByPlayer = players.reduce((acc, player) => {
+                    acc[player.id] = player.souvenirCards
+                      .map(id => {
+                        const dept = getDepartmentById(id);
+                        return dept?.numero || '';
+                      })
+                      .filter(Boolean);
+                    return acc;
+                  }, {} as Record<number, string[]>);
+
+                  return (
+                    <FranceMapStyled 
+                      currentDepartmentNumber={currentDepartment?.numero}
+                      highlightedDepartments={players[currentPlayerIndex]?.souvenirCards.map(id => {
+                        const dept = getDepartmentById(id);
+                        return dept?.numero || '';
+                      }).filter(Boolean) || []}
+                      departmentsByPlayer={departmentsByPlayer}
+                      currentPlayerId={players[currentPlayerIndex]?.id}
+                      searchedDepartments={compositions}
+                      showControls={true}
+                      timeRemaining={timeRemaining}
+                      timerActive={timerActive}
+                    />
+                  );
+                })()}
                 {currentDepartment && (
                   <div className="mt-4 p-3 bg-gradient-to-r from-cyan-500/20 to-purple-500/20 rounded-xl border-2 border-cyan-500/50 animate-glow-pulse">
                     <p className="text-white font-bold text-center text-sm">

@@ -6,7 +6,9 @@ import { departmentsPaths as departmentsPathsRealistic } from '../data/departmen
 
 interface FranceMapStyledProps {
   currentDepartmentNumber?: string;
-  highlightedDepartments?: string[];
+  highlightedDepartments?: string[]; // Départements gagnés par le joueur actuel (vert)
+  departmentsByPlayer?: Record<number, string[]>; // { playerId: [numero1, numero2, ...] } - départements gagnés par chaque joueur
+  currentPlayerId?: number; // ID du joueur actuel (pour savoir ce qui est "sien")
   searchedDepartments?: string[]; // Liste des départements recherchés (compositions) format: ["01", "02", "2A", etc.]
   compact?: boolean;
   showControls?: boolean;
@@ -18,6 +20,8 @@ interface FranceMapStyledProps {
 export const FranceMapStyled: React.FC<FranceMapStyledProps> = ({ 
   currentDepartmentNumber, 
   highlightedDepartments = [],
+  departmentsByPlayer = {},
+  currentPlayerId,
   searchedDepartments = [],
   compact = false,
   showControls = true,
@@ -86,6 +90,16 @@ export const FranceMapStyled: React.FC<FranceMapStyledProps> = ({
     if (["2A", "2B"].includes(num)) return "Corse";
     if (["75", "77", "78", "91", "92", "93", "94", "95"].includes(num)) return "Île-de-France";
     if (["971", "972", "973", "974", "976"].includes(num)) return "DOM-TOM";
+    return null;
+  };
+
+  // Fonction pour déterminer qui a gagné ce département
+  const getDepartmentOwner = (deptNum: string): number | null => {
+    for (const [playerId, depts] of Object.entries(departmentsByPlayer)) {
+      if (depts.includes(deptNum)) {
+        return parseInt(playerId);
+      }
+    }
     return null;
   };
 
@@ -214,6 +228,11 @@ export const FranceMapStyled: React.FC<FranceMapStyledProps> = ({
           // Exclure la réponse actuelle des départements recherchés
           const isSearched = searchedDepartments.includes(dept.num) && dept.num !== currentDepartmentNumber;
           
+          // Déterminer le propriétaire du département
+          const departmentOwner = getDepartmentOwner(dept.num);
+          const isOwnDepartment = currentPlayerId !== undefined && departmentOwner === currentPlayerId;
+          const isOtherPlayerDepartment = departmentOwner !== null && departmentOwner !== currentPlayerId;
+          
           // Vérifier si ce département fait partie de la région sélectionnée
           const isInSelectedRegion = selectedRegion ? (
             departmentsByRegion[selectedRegion]?.nums.includes(dept.num) ||
@@ -231,8 +250,24 @@ export const FranceMapStyled: React.FC<FranceMapStyledProps> = ({
               <path
                 d={dept.path}
                 className={`${styles.deptBox} ${isHovered ? styles.hovered : ''} ${isCurrent ? styles.current : ''} ${isHighlighted ? styles.highlighted : ''} ${isInSelectedRegion ? styles.regionSelected : ''} ${isSearched ? styles.searched : ''}`}
-                stroke={isCurrent ? '#06b6d4' : isHighlighted ? '#22c55e' : isSearched ? '#3b82f6' : isInSelectedRegion ? '#fbbf24' : regionColor}
-                fill={isCurrent ? 'rgba(6, 182, 212, 0.2)' : isHighlighted ? 'rgba(34, 197, 94, 0.2)' : isSearched ? 'rgba(59, 130, 246, 0.3)' : isInSelectedRegion ? 'rgba(251, 191, 36, 0.3)' : 'rgba(0,0,0,0.8)'}
+                stroke={
+                  isCurrent ? '#06b6d4' : 
+                  isOwnDepartment ? '#22c55e' : 
+                  isOtherPlayerDepartment ? '#a0a0a0' : 
+                  isHighlighted ? '#22c55e' : 
+                  isSearched ? '#3b82f6' : 
+                  isInSelectedRegion ? '#fbbf24' : 
+                  regionColor
+                }
+                fill={
+                  isCurrent ? 'rgba(6, 182, 212, 0.2)' : 
+                  isOwnDepartment ? 'rgba(34, 197, 94, 0.2)' : 
+                  isOtherPlayerDepartment ? 'rgba(160, 160, 160, 0.2)' : 
+                  isHighlighted ? 'rgba(34, 197, 94, 0.2)' : 
+                  isSearched ? 'rgba(59, 130, 246, 0.3)' : 
+                  isInSelectedRegion ? 'rgba(251, 191, 36, 0.3)' : 
+                  'rgba(0,0,0,0.8)'
+                }
                 filter={isHovered || isCurrent || isSearched || isInSelectedRegion ? "url(#glowStrong)" : "url(#glow)"}
                 onClick={() => handleDepartmentClick(dept.num)}
                 style={{ cursor: 'pointer' }}
