@@ -9,6 +9,7 @@ import { TimeoutModal } from '../components/TimeoutModal';
 import { Marquee } from '../components/Marquee';
 import ScoreBoard from '../components/ScoreBoard';
 import { FranceMapStyled } from '../components/FranceMapStyled';
+import GameBoard from '../components/GameBoard';
 import { Department, getDepartmentById } from '../data/departments';
 import { useLockBodyScroll } from '../hooks/useLockBodyScroll';
 
@@ -44,7 +45,14 @@ const GamePage: React.FC = () => {
     loadGame,
     resetGame,
     stopTimer,
-    accelerateTimer
+    accelerateTimer,
+    // Nouvelles fonctions pour le plateau
+    updateScore,
+    loseSouvenir,
+    sellSouvenir,
+    movePlayer,
+    addChampionCard,
+    addSouvenirCard,
   } = useGameStore();
 
   const [isRolling, setIsRolling] = useState(false);
@@ -252,6 +260,47 @@ const GamePage: React.FC = () => {
     handlePassTurn();
   };
 
+  // Handlers pour le GameBoard
+  const handleMovePlayer = (playerId: number, position: number) => {
+    movePlayer(playerId, position);
+  };
+
+  const handleStealAttempt = (fromPlayerId: number, toPlayerId: number) => {
+    const fromPlayer = players.find(p => p.id === fromPlayerId);
+    const toPlayer = players.find(p => p.id === toPlayerId);
+    
+    if (fromPlayer && toPlayer && fromPlayer.souvenirCards.length > 0) {
+      // Voler un souvenir : prendre le dernier de la liste
+      const stolenCardId = fromPlayer.souvenirCards[fromPlayer.souvenirCards.length - 1];
+      
+      // Retirer le souvenir de la victime
+      loseSouvenir(fromPlayerId);
+      
+      // Ajouter le souvenir au voleur
+      addSouvenirCard(stolenCardId, toPlayerId);
+      
+      setMarqueeText(`🎴 ${toPlayer.name} a volé un souvenir à ${fromPlayer.name} !`);
+      setShowMarquee(true);
+    } else {
+      setMarqueeText(`⚠️ Impossible de voler - ${fromPlayer?.name || 'Joueur'} n'a pas de souvenirs`);
+      setShowMarquee(true);
+    }
+  };
+
+  const handleStartQuiz = () => {
+    // Déclencher le lancer de dés pour le quiz
+    handleRollDice();
+  };
+
+  const handleStartNeutralDice = () => {
+    // Pour les cases neutres, on pourrait lancer 2 dés au lieu de 3
+    // Pour l'instant, on utilise le même système
+    handleRollDice();
+  };
+
+  // Déterminer si c'est mon tour
+  const isMyTurn = currentPlayerIndex >= 0 && players.length > 0;
+
   return (
     <>
       <Head>
@@ -458,66 +507,85 @@ const GamePage: React.FC = () => {
             </div>
           ) : (
             /* Jeu en cours */
-            <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-              {/* Zone gauche - Scores */}
-              <div className="lg:col-span-1">
-                <ScoreBoard
+            <div className="space-y-6">
+              {/* Plateau de jeu */}
+              <div>
+                <GameBoard
                   players={players}
                   currentPlayerIndex={currentPlayerIndex}
-                  onSellChampionCard={handleSellChampionCard}
-                  onUpdatePlayerName={updatePlayerName}
+                  gameStarted={gameStarted}
+                  isMyTurn={isMyTurn}
+                  onMovePlayer={handleMovePlayer}
+                  onUpdateScore={updateScore}
+                  onLoseSouvenir={loseSouvenir}
+                  onAddChampionCard={addChampionCard}
+                  onSellSouvenir={sellSouvenir}
+                  onStealAttempt={handleStealAttempt}
+                  onStartQuiz={handleStartQuiz}
+                  onStartNeutralDice={handleStartNeutralDice}
                 />
               </div>
 
-              {/* Zone centrale - Jeu */}
-              <div className="lg:col-span-2 space-y-6">
-                {/* Dés */}
-                <div className="card-gaming p-8 shadow-2xl animate-slide-in-left">
-                  <h3 className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent mb-4">
-                    🎲 Dés
-                  </h3>
-                  <DiceRoll
-                    diceResults={diceResults}
-                    isRolling={isRolling}
-                    onRollComplete={() => {}}
+              <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+                {/* Zone gauche - Scores */}
+                <div className="lg:col-span-1">
+                  <ScoreBoard
+                    players={players}
+                    currentPlayerIndex={currentPlayerIndex}
+                    onSellChampionCard={handleSellChampionCard}
+                    onUpdatePlayerName={updatePlayerName}
                   />
-                  
-                  {phase === 'rolling' && !showHintModal && (
-                    <div className="mt-6 text-center">
-                      <button
-                        onClick={handleRollDice}
-                        disabled={isRolling}
-                        className="btn-gaming px-10 py-4 text-white rounded-xl font-bold text-xl transition-all disabled:opacity-50 shadow-2xl"
-                      >
-                        {isRolling ? '🎲 Lancement...' : '🎲 Lancer les dés'}
-                      </button>
+                </div>
+
+                {/* Zone centrale - Jeu (Dés et Quiz) */}
+                <div className="lg:col-span-2 space-y-6">
+                  {/* Dés */}
+                  <div className="card-gaming p-8 shadow-2xl animate-slide-in-left">
+                    <h3 className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent mb-4">
+                      🎲 Dés pour le Quiz
+                    </h3>
+                    <DiceRoll
+                      diceResults={diceResults}
+                      isRolling={isRolling}
+                      onRollComplete={() => {}}
+                    />
+                    
+                    {phase === 'rolling' && !showHintModal && (
+                      <div className="mt-6 text-center">
+                        <button
+                          onClick={handleRollDice}
+                          disabled={isRolling}
+                          className="btn-gaming px-10 py-4 text-white rounded-xl font-bold text-xl transition-all disabled:opacity-50 shadow-2xl"
+                        >
+                          {isRolling ? '🎲 Lancement...' : '🎲 Lancer les dés'}
+                        </button>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Compositions */}
+                  {phase === 'choosing' && compositions.length > 0 && showCompositions && (
+                    <div className="card-gaming p-8 shadow-2xl animate-scale-in">
+                      <CompositionChoices
+                        compositions={compositions}
+                        availableDepartments={availableDepartments}
+                        onSelectComposition={handleSelectComposition}
+                      />
                     </div>
                   )}
-                </div>
 
-                {/* Compositions */}
-                {phase === 'choosing' && compositions.length > 0 && showCompositions && (
-                  <div className="card-gaming p-8 shadow-2xl animate-scale-in">
-                    <CompositionChoices
-                      compositions={compositions}
-                      availableDepartments={availableDepartments}
-                      onSelectComposition={handleSelectComposition}
-                    />
-                  </div>
-                )}
-
-                {/* Actions */}
-                <div className="card-gaming p-6 shadow-2xl">
-                  <div className="text-center">
-                    <button
-                      onClick={handlePassTurn}
-                      className="px-8 py-3 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 text-white rounded-xl font-bold transition-all shadow-lg hover:scale-105"
-                    >
-                      ⏭️ Tour du joueur suivant
-                    </button>
+                  {/* Actions */}
+                  <div className="card-gaming p-6 shadow-2xl">
+                    <div className="text-center">
+                      <button
+                        onClick={handlePassTurn}
+                        className="px-8 py-3 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 text-white rounded-xl font-bold transition-all shadow-lg hover:scale-105"
+                      >
+                        ⏭️ Tour du joueur suivant
+                      </button>
+                    </div>
                   </div>
                 </div>
-              </div>
 
               {/* Zone droite - Carte de France */}
               <div className="lg:col-span-1">
@@ -568,6 +636,7 @@ const GamePage: React.FC = () => {
                     </p>
                   </div>
                 )}
+              </div>
               </div>
             </div>
           )}

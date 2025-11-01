@@ -1,181 +1,582 @@
-import React from 'react';
-import { MockPlayer } from '../hooks/useMockGame';
+import React, { useState, useEffect, useCallback } from 'react';
+import { Player } from '../store/gameStore';
+import Dice from './Dice';
 
 interface GameBoardProps {
-  players: MockPlayer[];
-  currentPlayerId: number;
-  currentTurnPlayerId: number;
-  availableCards: number[];
-  gameStatus: 'lobby' | 'running' | 'finished';
-  onStartGame: () => void;
-  onNextTurn: () => void;
-  onRevealCard: (index: number) => void;
-  onChooseComposition: (composition: string) => void;
+  players: Player[];
+  currentPlayerIndex: number;
+  gameStarted: boolean;
+  onMovePlayer: (playerId: number, newPosition: number) => void;
+  onUpdateScore: (playerId: number, points: number) => void;
+  onLoseSouvenir: (playerId: number) => void;
+  onAddChampionCard: (playerId: number) => void;
+  onSellSouvenir: (playerId: number) => void;
+  onStealAttempt: (fromPlayerId: number, toPlayerId: number) => void;
+  onStartQuiz: () => void;
+  onStartNeutralDice: () => void;
   isMyTurn: boolean;
 }
 
+interface BoardCase {
+  id: number;
+  label: string;
+  type: 'start' | 'ordinary' | 'neutral' | 'special';
+  effect?: {
+    points?: number;
+    loseSouvenir?: number;
+    gainChampion?: number;
+  };
+  lore?: string;
+}
+
+const TOTAL_CASES = 24;
+
+// Définition du plateau avec 24 cases
+const boardCases: BoardCase[] = [
+  { id: 0, label: 'Départ', type: 'start', lore: 'Case de départ - +10 000 points au premier tour' },
+  { id: 1, label: 'Case 1', type: 'ordinary', lore: 'Lance 3 dés (2d10 + 1d6) pour le quiz' },
+  { id: 2, label: 'Case 2', type: 'ordinary', lore: 'Lance 3 dés (2d10 + 1d6) pour le quiz' },
+  { id: 3, label: 'Case 3', type: 'neutral', lore: 'Lance 2 dés (1d10 + 1d6) avec plusieurs combinaisons' },
+  { id: 4, label: 'Case 4', type: 'ordinary', lore: 'Lance 3 dés (2d10 + 1d6) pour le quiz' },
+  { id: 5, label: 'Taxe locale', type: 'special', effect: { points: -3000 }, lore: 'Payer une taxe pour le tourisme local' },
+  { id: 6, label: 'Case 6', type: 'ordinary', lore: 'Lance 3 dés (2d10 + 1d6) pour le quiz' },
+  { id: 7, label: 'Case 7', type: 'neutral', lore: 'Lance 2 dés (1d10 + 1d6) avec plusieurs combinaisons' },
+  { id: 8, label: 'Case 8', type: 'ordinary', lore: 'Lance 3 dés (2d10 + 1d6) pour le quiz' },
+  { id: 9, label: 'Mission express', type: 'special', effect: { points: 5000 }, lore: 'Mission réussie : gain de réputation et de points' },
+  { id: 10, label: 'Case 10', type: 'ordinary', lore: 'Lance 3 dés (2d10 + 1d6) pour le quiz' },
+  { id: 11, label: 'Case 11', type: 'neutral', lore: 'Lance 2 dés (1d10 + 1d6) avec plusieurs combinaisons' },
+  { id: 12, label: 'Souvenir perdu', type: 'special', effect: { loseSouvenir: 1 }, lore: 'Souvenir égaré à l\'aéroport' },
+  { id: 13, label: 'Case 13', type: 'ordinary', lore: 'Lance 3 dés (2d10 + 1d6) pour le quiz' },
+  { id: 14, label: 'Case 14', type: 'ordinary', lore: 'Lance 3 dés (2d10 + 1d6) pour le quiz' },
+  { id: 15, label: 'Case 15', type: 'neutral', lore: 'Lance 2 dés (1d10 + 1d6) avec plusieurs combinaisons' },
+  { id: 16, label: 'Bonus chance', type: 'special', effect: { points: 7000 }, lore: 'Bonne fortune vous sourit !' },
+  { id: 17, label: 'Case 17', type: 'ordinary', lore: 'Lance 3 dés (2d10 + 1d6) pour le quiz' },
+  { id: 18, label: 'Case 18', type: 'neutral', lore: 'Lance 2 dés (1d10 + 1d6) avec plusieurs combinaisons' },
+  { id: 19, label: 'Case 19', type: 'ordinary', lore: 'Lance 3 dés (2d10 + 1d6) pour le quiz' },
+  { id: 20, label: 'Amende', type: 'special', effect: { points: -5000 }, lore: 'Vous avez enfreint une règle de circulation' },
+  { id: 21, label: 'Case 21', type: 'ordinary', lore: 'Lance 3 dés (2d10 + 1d6) pour le quiz' },
+  { id: 22, label: 'Case 22', type: 'neutral', lore: 'Lance 2 dés (1d10 + 1d6) avec plusieurs combinaisons' },
+  { id: 23, label: 'Case 23', type: 'ordinary', lore: 'Lance 3 dés (2d10 + 1d6) pour le quiz' },
+];
+
 const GameBoard: React.FC<GameBoardProps> = ({
   players,
-  currentPlayerId,
-  currentTurnPlayerId,
-  availableCards,
-  gameStatus,
-  onStartGame,
-  onNextTurn,
-  onRevealCard,
-  onChooseComposition,
+  currentPlayerIndex,
+  gameStarted,
+  onMovePlayer,
+  onUpdateScore,
+  onLoseSouvenir,
+  onAddChampionCard,
+  onSellSouvenir,
+  onStealAttempt,
+  onStartQuiz,
+  onStartNeutralDice,
   isMyTurn,
 }) => {
-  const currentPlayer = players.find(p => p.id === currentTurnPlayerId);
+  const [moveDice, setMoveDice] = useState<number | null>(null);
+  const [isRollingMoveDice, setIsRollingMoveDice] = useState(false);
+  const [showStealChoice, setShowStealChoice] = useState(false);
+  const [currentEvent, setCurrentEvent] = useState<string | null>(null);
+  const [firstTurn, setFirstTurn] = useState<Set<number>>(new Set());
+
+  // Réinitialiser le dé de déplacement quand le joueur change
+  useEffect(() => {
+    setMoveDice(null);
+    setIsRollingMoveDice(false);
+    setShowStealChoice(false);
+  }, [currentPlayerIndex]);
+
+  // Initialiser les positions depuis le store si nécessaire
+  useEffect(() => {
+    if (gameStarted) {
+      // S'assurer que tous les joueurs ont une position
+      const playersWithoutPosition = players.filter(p => p.position === undefined);
+      if (playersWithoutPosition.length > 0) {
+        playersWithoutPosition.forEach(player => {
+          onMovePlayer(player.id, 0);
+        });
+      }
+    }
+  }, [gameStarted, players, onMovePlayer]);
+
+  // Obtenir la position d'un joueur depuis le store
+  const getPlayerPosition = useCallback((playerId: number): number => {
+    const player = players.find(p => p.id === playerId);
+    return player?.position ?? 0;
+  }, [players]);
+
+  // Calculer les positions pour affichage rectangulaire en serpent
+  const getCasePosition = (caseIndex: number) => {
+    // Disposition en serpent : 6 colonnes x 4 lignes
+    const cols = 6;
+    const row = Math.floor(caseIndex / cols);
+    const col = caseIndex % cols;
+    // Alternance gauche-droite pour effet serpent
+    const finalCol = row % 2 === 0 ? col : (cols - 1 - col);
+    return { row, col: finalCol, x: finalCol * 80, y: row * 80 };
+  };
+
+  // Obtenir la case actuelle d'un joueur
+  const getCurrentCase = (playerId: number): BoardCase => {
+    const position = getPlayerPosition(playerId);
+    return boardCases[position];
+  };
+
+  // Gérer les transactions (points, cartes) - définie en premier pour éviter dépendances circulaires
+  const handleTransaction = useCallback((
+    player: Player,
+    effect: { points?: number; loseSouvenir?: number; gainChampion?: number },
+    caseLabel: string
+  ) => {
+    if (effect.points !== undefined) {
+      if (effect.points < 0 && player.score + effect.points < 0) {
+        // Vérifier si le joueur peut payer
+        if (player.souvenirCards.length < 2) {
+          setCurrentEvent(`❌ ${player.name} est éliminé ! Pas assez de points et moins de 2 souvenirs.`);
+          // TODO: Éliminer le joueur
+          return;
+        } else {
+          // Forcer la vente de 2 souvenirs
+          onSellSouvenir(player.id);
+          setCurrentEvent(`⚠️ ${player.name} a dû vendre 2 souvenirs pour payer !`);
+        }
+      } else {
+        onUpdateScore(player.id, effect.points);
+        const sign = effect.points > 0 ? '+' : '';
+        setCurrentEvent(`${caseLabel}: ${sign}${effect.points.toLocaleString()} points`);
+      }
+    }
+
+    if (effect.loseSouvenir && effect.loseSouvenir > 0) {
+      if (player.souvenirCards.length >= effect.loseSouvenir) {
+        for (let i = 0; i < effect.loseSouvenir; i++) {
+          onLoseSouvenir(player.id);
+        }
+        setCurrentEvent(`${caseLabel}: ${effect.loseSouvenir} souvenir(s) perdu(s)`);
+      } else {
+        setCurrentEvent(`${caseLabel}: Pas assez de souvenirs à perdre`);
+      }
+    }
+
+    if (effect.gainChampion && effect.gainChampion > 0) {
+      for (let i = 0; i < effect.gainChampion; i++) {
+        onAddChampionCard(player.id);
+      }
+      setCurrentEvent(`${caseLabel}: ${effect.gainChampion} carte(s) Champion gagnée(s) !`);
+    }
+
+    setTimeout(() => setCurrentEvent(null), 3000);
+  }, [onUpdateScore, onLoseSouvenir, onAddChampionCard, onSellSouvenir]);
+
+  // Gérer l'effet de la case
+  const handleCaseAction = useCallback((caseIndex: number, player: Player) => {
+    const caseData = boardCases[caseIndex];
+
+    if (!caseData) return;
+
+    // Case départ - bonus au premier tour
+    if (caseData.type === 'start') {
+      setFirstTurn(prev => {
+        const newSet = new Set(prev);
+        if (!newSet.has(player.id)) {
+          newSet.add(player.id);
+          onUpdateScore(player.id, 10000);
+          setCurrentEvent(`🎉 Bonus de départ ! +10 000 points`);
+          setTimeout(() => setCurrentEvent(null), 3000);
+        }
+        return newSet;
+      });
+      return;
+    }
+
+    // Cases spéciales - appliquer les effets
+    if (caseData.type === 'special' && caseData.effect) {
+      handleTransaction(player, caseData.effect, caseData.label);
+      return;
+    }
+
+    // Cases ordinaires - lancer le quiz
+    if (caseData.type === 'ordinary') {
+      setCurrentEvent(`🎯 Quiz - Trouvez le département !`);
+      setTimeout(() => {
+        setCurrentEvent(null);
+        onStartQuiz();
+      }, 1500);
+      return;
+    }
+
+    // Cases neutres - lancer les dés neutres
+    if (caseData.type === 'neutral') {
+      setCurrentEvent(`🎲 Lancez 2 dés pour des combinaisons`);
+      setTimeout(() => {
+        setCurrentEvent(null);
+        onStartNeutralDice();
+      }, 1500);
+      return;
+    }
+  }, [onUpdateScore, onStartQuiz, onStartNeutralDice, handleTransaction]);
+
+  // Gérer le déplacement
+  const handleMove = useCallback((steps: number) => {
+    const currentPlayer = players[currentPlayerIndex];
+    if (!currentPlayer) return;
+
+    const currentPos = getPlayerPosition(currentPlayer.id);
+    const newPos = (currentPos + steps) % TOTAL_CASES;
+    
+    // Mettre à jour la position dans le store
+    onMovePlayer(currentPlayer.id, newPos);
+
+    // Déclencher l'effet de la case après un court délai
+    setTimeout(() => {
+      handleCaseAction(newPos, currentPlayer);
+    }, 500);
+  }, [currentPlayerIndex, players, onMovePlayer, handleCaseAction, getPlayerPosition]);
+
+  // Lancer le dé de déplacement (d6)
+  const rollMoveDice = useCallback(() => {
+    setIsRollingMoveDice(true);
+    setMoveDice(null);
+    setShowStealChoice(false);
+    
+    setTimeout(() => {
+      const result = Math.floor(Math.random() * 6) + 1;
+      setMoveDice(result);
+      setIsRollingMoveDice(false);
+
+      const currentPlayer = players[currentPlayerIndex];
+      if (!currentPlayer) return;
+
+      // Si résultat = 6, proposer vol ou avancer
+      if (result === 6) {
+        setShowStealChoice(true);
+      } else {
+        handleMove(result);
+      }
+    }, 1500);
+  }, [currentPlayerIndex, players, handleMove]);
+
+  // Gérer le vol de carte
+  const handleStealChoice = useCallback((choice: 'steal' | 'move') => {
+    setShowStealChoice(false);
+    
+    if (choice === 'steal') {
+      // Trouver un autre joueur avec des souvenirs
+      const currentPlayer = players[currentPlayerIndex];
+      const targetPlayer = players.find(p => 
+        p.id !== currentPlayer.id && p.souvenirCards.length > 0
+      );
+
+      if (targetPlayer) {
+        onStealAttempt(targetPlayer.id, currentPlayer.id);
+        setCurrentEvent(`🎴 Tentative de vol sur ${targetPlayer.name}...`);
+      } else {
+        setCurrentEvent(`⚠️ Aucun joueur avec des souvenirs à voler`);
+        handleMove(6); // Avancer normalement si personne à voler
+      }
+    } else {
+      handleMove(6);
+    }
+  }, [currentPlayerIndex, players, onStealAttempt, handleMove]);
+
+  // Vérifier les cartes Champion (tous les 10 souvenirs)
+  useEffect(() => {
+    players.forEach(player => {
+      const souvenirCount = player.souvenirCards.length;
+      const expectedChampionCards = Math.floor(souvenirCount / 10);
+      
+      if (expectedChampionCards > player.championCards) {
+        const missing = expectedChampionCards - player.championCards;
+        for (let i = 0; i < missing; i++) {
+          onAddChampionCard(player.id);
+        }
+      }
+    });
+  }, [players, onAddChampionCard]);
+
+  // Couleurs selon le type de case
+  const getCaseColor = (type: BoardCase['type']) => {
+    switch (type) {
+      case 'start': return 'bg-yellow-500 border-yellow-400';
+      case 'ordinary': return 'bg-blue-500 border-blue-400';
+      case 'neutral': return 'bg-gray-500 border-gray-400';
+      case 'special': return 'bg-green-500 border-green-400';
+      default: return 'bg-gray-500 border-gray-400';
+    }
+  };
+
+  const currentPlayer = players[currentPlayerIndex];
+
+  if (!gameStarted) {
+    return (
+      <div className="card-gaming p-8 text-center">
+        <p className="text-white text-lg">Le plateau apparaîtra une fois la partie démarrée.</p>
+      </div>
+    );
+  }
 
   return (
-    <div className="min-h-screen bg-gray-100 dark:bg-gray-900 p-4">
-      <div className="max-w-6xl mx-auto">
-        {/* En-tête de la partie */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 mb-6">
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
-            La France et ses 101 départements
-          </h1>
-          
-          <div className="flex justify-between items-center">
-            <div className="text-lg text-gray-700 dark:text-gray-300">
-              Statut: <span className="font-semibold capitalize">{gameStatus}</span>
+    <div className="space-y-6">
+      {/* Zone d'événements */}
+      {currentEvent && (
+        <div className="card-gaming p-4 bg-gradient-to-r from-purple-500/20 to-cyan-500/20 border-2 border-purple-500/50 rounded-xl animate-pulse">
+          <p className="text-white font-bold text-center text-lg">{currentEvent}</p>
+        </div>
+      )}
+
+      {/* Informations du joueur actuel */}
+      {currentPlayer && (
+        <div className="card-gaming p-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+            <div>
+              <div className="text-xs text-purple-300 mb-1">Joueur</div>
+              <div className="text-lg font-bold text-white">{currentPlayer.name}</div>
             </div>
-            
-            {gameStatus === 'lobby' && (
+            <div>
+              <div className="text-xs text-purple-300 mb-1">Position</div>
+              <div className="text-lg font-bold text-cyan-400">
+                Case {getPlayerPosition(currentPlayer.id) + 1}
+              </div>
+            </div>
+            <div>
+              <div className="text-xs text-purple-300 mb-1">Score</div>
+              <div className="text-lg font-bold text-green-400">
+                {currentPlayer.score.toLocaleString()} pts
+              </div>
+            </div>
+            <div>
+              <div className="text-xs text-purple-300 mb-1">Souvenirs</div>
+              <div className="text-lg font-bold text-purple-400">
+                💳 {currentPlayer.souvenirCards.length} | 🏆 {currentPlayer.championCards}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Contrôles de jeu - Dé de déplacement */}
+      {isMyTurn && currentPlayer && (
+        <div className="card-gaming p-6">
+          <h3 className="text-xl font-bold text-white mb-4 text-center">
+            Tour de {currentPlayer.name} - Lancer le dé de déplacement
+          </h3>
+
+          {/* Dé de déplacement */}
+          <div className="flex flex-col items-center space-y-4">
+            {moveDice !== null && !isRollingMoveDice && !showStealChoice && (
+              <div className="text-2xl font-bold text-white mb-4">
+                Résultat : <span className="text-cyan-400">{moveDice}</span>
+              </div>
+            )}
+
+            {!isRollingMoveDice && moveDice === null && (
               <button
-                onClick={onStartGame}
-                className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-semibold transition-colors"
+                onClick={rollMoveDice}
+                className="btn-gaming px-8 py-4 text-white rounded-xl font-bold text-xl transition-all shadow-2xl hover:scale-105"
               >
-                Démarrer la partie
+                🎲 Lancer le dé de déplacement (d6)
               </button>
+            )}
+
+            {isRollingMoveDice && (
+              <div className="flex flex-col items-center space-y-4">
+                <Dice value={moveDice || 6} isRolling={true} size="lg" type="d6" />
+                <p className="text-white font-semibold animate-pulse">Lancement en cours...</p>
+              </div>
+            )}
+
+            {/* Choix vol vs avancer */}
+            {showStealChoice && moveDice === 6 && (
+              <div className="mt-4 p-4 bg-gradient-to-r from-orange-500/20 to-red-500/20 rounded-xl border-2 border-orange-500/50">
+                <p className="text-white font-bold mb-4 text-center">
+                  🎲 Vous avez fait 6 ! Choisissez :
+                </p>
+                <div className="flex gap-4 justify-center">
+                  <button
+                    onClick={() => handleStealChoice('steal')}
+                    className="btn-gaming px-6 py-3 text-white rounded-lg font-bold transition-all hover:scale-105"
+                  >
+                    🎴 Tenter un vol
+                  </button>
+                  <button
+                    onClick={() => handleStealChoice('move')}
+                    className="px-6 py-3 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white rounded-lg font-bold transition-all hover:scale-105"
+                  >
+                    ➡️ Avancer de 6
+                  </button>
+                </div>
+              </div>
             )}
           </div>
         </div>
+      )}
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Liste des joueurs */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
-            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
-              Joueurs ({players.length})
-            </h2>
-            
-            <div className="space-y-3">
-              {players.map((player) => (
+      {/* Plateau rectangulaire en serpent */}
+      <div className="card-gaming p-8">
+        <h3 className="text-2xl font-bold text-white mb-6 text-center">Plateau de jeu</h3>
+        
+        <div className="flex justify-center">
+          <div className="relative" style={{ width: '520px', minHeight: '400px' }}>
+            {/* Layer 1: Cases uniquement - Disposition en grille 6x4 avec positions absolues */}
+            {boardCases.map((caseData, index) => {
+              const { row, col } = getCasePosition(index);
+              const caseSize = 80;
+              const gap = 8;
+              const left = col * (caseSize + gap);
+              const top = row * (caseSize + gap);
+
+              return (
                 <div
-                  key={player.id}
-                  className={`p-4 rounded-lg border-2 transition-colors ${
-                    player.id === currentTurnPlayerId
-                      ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20'
-                      : 'border-gray-200 dark:border-gray-700'
-                  }`}
+                  key={`case-${caseData.id}`}
+                  className="absolute"
+                  style={{
+                    left: `${left}px`,
+                    top: `${top}px`,
+                    width: `${caseSize}px`,
+                    height: `${caseSize}px`,
+                    zIndex: 10,
+                  }}
                 >
-                  <div className="flex justify-between items-center">
-                    <div>
-                      <div className="font-semibold text-gray-900 dark:text-white">
-                        {player.guestPseudo}
-                        {player.id === currentTurnPlayerId && (
-                          <span className="ml-2 text-blue-600 dark:text-blue-400">
-                            (Tour actuel)
-                          </span>
-                        )}
-                      </div>
-                      <div className="text-sm text-gray-600 dark:text-gray-400">
-                        Position: {player.position} | Argent: {player.money}€
-                      </div>
-                    </div>
-                    
-                    {player.isEliminated && (
-                      <span className="text-red-600 dark:text-red-400 font-semibold">
-                        Éliminé
-                      </span>
-                    )}
+                  {/* Case */}
+                  <div
+                    className={`
+                      w-full h-full rounded-lg border-2 flex items-center justify-center
+                      ${getCaseColor(caseData.type)}
+                      transition-all hover:scale-110
+                      shadow-lg
+                    `}
+                    title={`${caseData.label} - ${caseData.lore}`}
+                  >
+                    <span className="text-white font-bold text-sm text-center">
+                      {caseData.id + 1}
+                    </span>
                   </div>
                 </div>
-              ))}
-            </div>
+              );
+            })}
+
+            {/* Layer 2: Pions uniquement - au-dessus de tout */}
+            {boardCases.map((caseData, index) => {
+              const playersOnCase = players.filter(
+                p => getPlayerPosition(p.id) === index
+              );
+
+              if (playersOnCase.length === 0) return null;
+
+              const { row, col } = getCasePosition(index);
+              const caseSize = 80;
+              const gap = 8;
+              const left = col * (caseSize + gap) + caseSize / 2;
+              const top = row * (caseSize + gap) + caseSize + 4;
+
+              return (
+                <div
+                  key={`pawns-${caseData.id}`}
+                  className="absolute pointer-events-none transform -translate-x-1/2"
+                  style={{
+                    left: `${left}px`,
+                    top: `${top}px`,
+                    zIndex: 100,
+                  }}
+                >
+                  <div 
+                    className="flex gap-1 pointer-events-auto"
+                  >
+                    {playersOnCase.map((player, idx) => {
+                      const colors = [
+                        'bg-red-500',
+                        'bg-blue-500',
+                        'bg-green-500',
+                        'bg-yellow-500',
+                      ];
+                      return (
+                        <div
+                          key={player.id}
+                          className={`
+                            w-7 h-7 rounded-full border-2 border-white
+                            ${colors[idx % colors.length]}
+                            transition-transform duration-500 ease-in-out
+                            shadow-lg
+                            hover:scale-110
+                            cursor-pointer
+                          `}
+                          style={{ 
+                            zIndex: 100 + idx,
+                            boxShadow: '0 2px 8px rgba(0, 0, 0, 0.3)',
+                          }}
+                          title={`${player.name} - Case ${caseData.id + 1}`}
+                        />
+                      );
+                    })}
+                  </div>
+                </div>
+              );
+            })}
           </div>
+        </div>
 
-          {/* Actions du joueur */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
-            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
-              Actions
-            </h2>
-            
-            {gameStatus === 'running' && currentPlayer && (
-              <div className="space-y-4">
-                <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-                  <div className="font-semibold text-blue-900 dark:text-blue-100">
-                    Tour de: {currentPlayer.guestPseudo}
+        {/* Légende */}
+        <div className="mt-8 grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+          <div className="p-3 bg-yellow-500/20 rounded-lg border border-yellow-500/50">
+            <div className="text-xs text-yellow-300 mb-1">Départ</div>
+            <div className="text-xs text-white">+10k pts</div>
+                </div>
+          <div className="p-3 bg-blue-500/20 rounded-lg border border-blue-500/50">
+            <div className="text-xs text-blue-300 mb-1">Ordinaire</div>
+            <div className="text-xs text-white">Quiz 3 dés</div>
+            </div>
+          <div className="p-3 bg-gray-500/20 rounded-lg border border-gray-500/50">
+            <div className="text-xs text-gray-300 mb-1">Neutre</div>
+            <div className="text-xs text-white">2 dés combos</div>
+          </div>
+          <div className="p-3 bg-green-500/20 rounded-lg border border-green-500/50">
+            <div className="text-xs text-green-300 mb-1">Spéciale</div>
+            <div className="text-xs text-white">Effets divers</div>
                   </div>
-                  <div className="text-sm text-blue-700 dark:text-blue-300">
-                    Position: {currentPlayer.position} | Argent: {currentPlayer.money}€
                   </div>
                 </div>
 
-                {isMyTurn && (
-                  <div className="space-y-3">
-                    <button
-                      onClick={onNextTurn}
-                      className="w-full bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-semibold transition-colors"
-                    >
-                      Passer le tour
-                    </button>
-                    
-                    <div className="grid grid-cols-2 gap-2">
-                      <button
-                        onClick={() => onChooseComposition('composition1')}
-                        className="bg-purple-600 hover:bg-purple-700 text-white px-3 py-2 rounded-lg text-sm font-semibold transition-colors"
-                      >
-                        Composition 1
-                      </button>
-                      <button
-                        onClick={() => onChooseComposition('composition2')}
-                        className="bg-purple-600 hover:bg-purple-700 text-white px-3 py-2 rounded-lg text-sm font-semibold transition-colors"
-                      >
-                        Composition 2
-                      </button>
-                    </div>
-                  </div>
-                )}
-
-                {!isMyTurn && (
-                  <div className="p-4 bg-gray-100 dark:bg-gray-700 rounded-lg text-center">
-                    <div className="text-gray-600 dark:text-gray-400">
-                      En attente du tour de {currentPlayer.guestPseudo}
-                    </div>
+      {/* Version linéaire responsive (mobile) */}
+      <div className="block md:hidden card-gaming p-4">
+        <h3 className="text-xl font-bold text-white mb-4 text-center">Plateau (vue mobile)</h3>
+        <div className="grid grid-cols-4 gap-2">
+          {boardCases.map((caseData) => {
+            const playersOnCase = players.filter(
+              p => getPlayerPosition(p.id) === caseData.id
+            );
+            return (
+              <div
+                key={caseData.id}
+                className={`
+                  aspect-square rounded-lg border-2 flex flex-col items-center justify-center
+                  ${getCaseColor(caseData.type)}
+                  relative p-1
+                `}
+                title={caseData.lore}
+              >
+                <span className="text-white font-bold text-xs">
+                  {caseData.id + 1}
+                </span>
+                {playersOnCase.length > 0 && (
+                  <div 
+                    className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 flex gap-0.5 z-20"
+                    style={{ zIndex: 20 }}
+                  >
+                    {playersOnCase.map((player, idx) => {
+                      const colors = ['bg-red-500', 'bg-blue-500', 'bg-green-500', 'bg-yellow-500'];
+                      return (
+                        <div
+                          key={player.id}
+                          className={`w-2.5 h-2.5 rounded-full border border-white ${colors[idx % colors.length]} relative`}
+                          style={{ zIndex: 30 + idx }}
+                        />
+                      );
+                    })}
                   </div>
                 )}
               </div>
-            )}
-
-            {gameStatus === 'lobby' && (
-              <div className="p-4 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg text-center">
-                <div className="text-yellow-800 dark:text-yellow-200">
-                  En attente du démarrage de la partie
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* Cartes disponibles */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
-            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
-              Cartes disponibles ({availableCards.length})
-            </h2>
-            
-            <div className="grid grid-cols-10 gap-1 max-h-96 overflow-y-auto">
-              {availableCards.map((cardNumber) => (
-                <button
-                  key={cardNumber}
-                  onClick={() => onRevealCard(cardNumber)}
-                  className="w-8 h-8 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 text-xs font-semibold rounded transition-colors"
-                >
-                  {cardNumber}
-                </button>
-              ))}
-            </div>
-          </div>
+            );
+          })}
         </div>
       </div>
     </div>

@@ -9,6 +9,7 @@ export interface Player {
   souvenirCards: number[];
   championCards: number;
   isActive: boolean;
+  position: number; // Position sur le plateau (0-23)
 }
 
 export interface GameState {
@@ -60,9 +61,14 @@ interface GameActions {
   passTurn: () => void;
   
   // Actions de cartes
-  addSouvenirCard: (departmentId: number) => void;
-  addChampionCard: () => void;
+  addSouvenirCard: (departmentId: number, playerId?: number) => void; // Si playerId non fourni, utilise le joueur actuel
+  addChampionCard: (playerId?: number) => void; // Si playerId non fourni, utilise le joueur actuel
   sellChampionCard: () => void;
+  loseSouvenir: (playerId: number) => void;
+  sellSouvenir: (playerId: number) => void; // Vendre 2 souvenirs pour 4000 points
+  
+  // Actions de plateau
+  movePlayer: (playerId: number, position: number) => void;
   
   // Actions de score
   updateScore: (playerId: number, points: number) => void;
@@ -85,7 +91,7 @@ interface GameActions {
 
 const initialGameState: GameState = {
   players: [
-    { id: 1, name: 'Joueur 1', score: 0, souvenirCards: [], championCards: 0, isActive: true }
+    { id: 1, name: 'Joueur 1', score: 0, souvenirCards: [], championCards: 0, isActive: true, position: 0 }
   ],
   currentPlayerIndex: 0,
   diceResults: [],
@@ -260,6 +266,7 @@ export const useGameStore = create<GameState & GameActions>()(
           souvenirCards: [],
           championCards: 0,
           isActive: true,
+          position: 0,
         };
         
         set({ players: [...players, newPlayer] });
@@ -494,12 +501,14 @@ export const useGameStore = create<GameState & GameActions>()(
         get().nextTurn();
       },
       
-      addSouvenirCard: (departmentId: number) => {
+      addSouvenirCard: (departmentId: number, playerId?: number) => {
         const { players, currentPlayerIndex } = get();
-        const currentPlayer = players[currentPlayerIndex];
+        const targetPlayerId = playerId ?? players[currentPlayerIndex]?.id;
         
-        const updatedPlayers = players.map((player, index) => 
-          index === currentPlayerIndex 
+        if (!targetPlayerId) return;
+        
+        const updatedPlayers = players.map(player => 
+          player.id === targetPlayerId
             ? { ...player, souvenirCards: [...player.souvenirCards, departmentId] }
             : player
         );
@@ -507,12 +516,14 @@ export const useGameStore = create<GameState & GameActions>()(
         set({ players: updatedPlayers });
       },
       
-      addChampionCard: () => {
+      addChampionCard: (playerId?: number) => {
         const { players, currentPlayerIndex } = get();
-        const currentPlayer = players[currentPlayerIndex];
+        const targetPlayerId = playerId ?? players[currentPlayerIndex]?.id;
         
-        const updatedPlayers = players.map((player, index) => 
-          index === currentPlayerIndex 
+        if (!targetPlayerId) return;
+        
+        const updatedPlayers = players.map(player => 
+          player.id === targetPlayerId
             ? { ...player, championCards: player.championCards + 1 }
             : player
         );
@@ -537,6 +548,56 @@ export const useGameStore = create<GameState & GameActions>()(
           
           set({ players: updatedPlayers });
         }
+      },
+      
+      loseSouvenir: (playerId: number) => {
+        const { players } = get();
+        const player = players.find(p => p.id === playerId);
+        
+        if (player && player.souvenirCards.length > 0) {
+          const updatedPlayers = players.map(p => 
+            p.id === playerId 
+              ? { 
+                  ...p, 
+                  souvenirCards: p.souvenirCards.slice(0, -1) // Retire le dernier
+                }
+              : p
+          );
+          
+          set({ players: updatedPlayers });
+        }
+      },
+      
+      sellSouvenir: (playerId: number) => {
+        const { players } = get();
+        const player = players.find(p => p.id === playerId);
+        
+        // Vendre 2 souvenirs pour 4000 points
+        if (player && player.souvenirCards.length >= 2) {
+          const updatedPlayers = players.map(p => 
+            p.id === playerId 
+              ? { 
+                  ...p, 
+                  souvenirCards: p.souvenirCards.slice(0, -2), // Retire les 2 derniers
+                  score: p.score + 4000
+                }
+              : p
+          );
+          
+          set({ players: updatedPlayers });
+        }
+      },
+      
+      movePlayer: (playerId: number, position: number) => {
+        // Mettre à jour la position du joueur dans le store
+        const { players } = get();
+        const updatedPlayers = players.map(player => 
+          player.id === playerId
+            ? { ...player, position }
+            : player
+        );
+        
+        set({ players: updatedPlayers });
       },
       
       updateScore: (playerId: number, points: number) => {
@@ -642,7 +703,7 @@ export const useGameStore = create<GameState & GameActions>()(
     {
       name: 'france-departments-game',
       partialize: (state) => ({
-        players: state.players,
+        players: state.players, // Les positions sont maintenant incluses dans les players
         currentPlayerIndex: state.currentPlayerIndex,
         availableDepartments: state.availableDepartments,
         gameStarted: state.gameStarted,
