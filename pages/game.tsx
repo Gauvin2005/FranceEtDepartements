@@ -68,6 +68,7 @@ const GamePage: React.FC = () => {
   const [showEndGameConfirm, setShowEndGameConfirm] = useState(false);
   const [showFinalScores, setShowFinalScores] = useState(false);
   const [hiddenStartTime, setHiddenStartTime] = useState<number | null>(null);
+  const [hasMovedThisTurn, setHasMovedThisTurn] = useState(false);
 
   const currentPlayer = players[currentPlayerIndex];
 
@@ -301,6 +302,16 @@ const GamePage: React.FC = () => {
   // Déterminer si c'est mon tour
   const isMyTurn = currentPlayerIndex >= 0 && players.length > 0;
 
+  // Réinitialiser hasMovedThisTurn quand le joueur change
+  useEffect(() => {
+    setHasMovedThisTurn(false);
+  }, [currentPlayerIndex]);
+
+  // Handler pour notifier que le mouvement est terminé
+  const handleMoveComplete = () => {
+    setHasMovedThisTurn(true);
+  };
+
   return (
     <>
       <Head>
@@ -523,6 +534,7 @@ const GamePage: React.FC = () => {
                   onStealAttempt={handleStealAttempt}
                   onStartQuiz={handleStartQuiz}
                   onStartNeutralDice={handleStartNeutralDice}
+                  onMoveComplete={handleMoveComplete}
                 />
               </div>
 
@@ -539,29 +551,50 @@ const GamePage: React.FC = () => {
 
                 {/* Zone centrale - Jeu (Dés et Quiz) */}
                 <div className="lg:col-span-2 space-y-6">
-                  {/* Dés */}
-                  <div className="card-gaming p-8 shadow-2xl animate-slide-in-left">
-                    <h3 className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent mb-4">
-                      🎲 Dés pour le Quiz
-                    </h3>
-                    <DiceRoll
-                      diceResults={diceResults}
-                      isRolling={isRolling}
-                      onRollComplete={() => {}}
-                    />
-                    
-                    {phase === 'rolling' && !showHintModal && (
-                      <div className="mt-6 text-center">
-                        <button
-                          onClick={handleRollDice}
-                          disabled={isRolling}
-                          className="btn-gaming px-10 py-4 text-white rounded-xl font-bold text-xl transition-all disabled:opacity-50 shadow-2xl"
-                        >
-                          {isRolling ? '🎲 Lancement...' : '🎲 Lancer les dés'}
-                        </button>
+                  {/* Dés - Seulement disponibles après le déplacement */}
+                  {hasMovedThisTurn || !isMyTurn ? (
+                    <div className="card-gaming p-8 shadow-2xl animate-slide-in-left">
+                      <h3 className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent mb-4">
+                        {hasMovedThisTurn ? '🎲 Étape 2 : Dés pour le Quiz' : '🎲 Dés pour le Quiz'}
+                      </h3>
+                      <DiceRoll
+                        diceResults={diceResults}
+                        isRolling={isRolling}
+                        onRollComplete={() => {}}
+                      />
+                      
+                      {(phase === 'rolling' || hasMovedThisTurn) && !showHintModal && isMyTurn && (
+                        <div className="mt-6 text-center">
+                          <button
+                            onClick={handleRollDice}
+                            disabled={isRolling}
+                            className="btn-gaming px-10 py-4 text-white rounded-xl font-bold text-xl transition-all disabled:opacity-50 shadow-2xl"
+                          >
+                            {isRolling ? '🎲 Lancement...' : '🎲 Lancer les dés'}
+                          </button>
+                        </div>
+                      )}
+                      
+                      {!hasMovedThisTurn && isMyTurn && (
+                        <div className="mt-4 p-3 bg-gradient-to-r from-orange-500/20 to-yellow-500/20 rounded-xl border-2 border-orange-500/50">
+                          <p className="text-white font-semibold text-center text-sm">
+                            ⚠️ Vous devez d'abord lancer le dé de déplacement sur le plateau
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  ) : (
+                    <div className="card-gaming p-8 shadow-2xl bg-gray-800/50 opacity-60">
+                      <h3 className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent mb-4">
+                        🎲 Dés pour le Quiz
+                      </h3>
+                      <div className="p-4 bg-gradient-to-r from-orange-500/20 to-yellow-500/20 rounded-xl border-2 border-orange-500/50">
+                        <p className="text-white font-bold text-center">
+                          ⏳ Lancer d'abord le dé de déplacement sur le plateau
+                        </p>
                       </div>
-                    )}
-                  </div>
+                    </div>
+                  )}
 
                   {/* Compositions */}
                   {phase === 'choosing' && compositions.length > 0 && showCompositions && (

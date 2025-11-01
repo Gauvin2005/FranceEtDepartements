@@ -14,6 +14,7 @@ interface GameBoardProps {
   onStealAttempt: (fromPlayerId: number, toPlayerId: number) => void;
   onStartQuiz: () => void;
   onStartNeutralDice: () => void;
+  onMoveComplete: () => void; // Callback quand le mouvement est terminé
   isMyTurn: boolean;
 }
 
@@ -71,6 +72,7 @@ const GameBoard: React.FC<GameBoardProps> = ({
   onStealAttempt,
   onStartQuiz,
   onStartNeutralDice,
+  onMoveComplete,
   isMyTurn,
 }) => {
   const [moveDice, setMoveDice] = useState<number | null>(null);
@@ -78,12 +80,14 @@ const GameBoard: React.FC<GameBoardProps> = ({
   const [showStealChoice, setShowStealChoice] = useState(false);
   const [currentEvent, setCurrentEvent] = useState<string | null>(null);
   const [firstTurn, setFirstTurn] = useState<Set<number>>(new Set());
+  const [hasMovedThisTurn, setHasMovedThisTurn] = useState(false);
 
   // Réinitialiser le dé de déplacement quand le joueur change
   useEffect(() => {
     setMoveDice(null);
     setIsRollingMoveDice(false);
     setShowStealChoice(false);
+    setHasMovedThisTurn(false);
   }, [currentPlayerIndex]);
 
   // Initialiser les positions depuis le store si nécessaire
@@ -226,12 +230,18 @@ const GameBoard: React.FC<GameBoardProps> = ({
     
     // Mettre à jour la position dans le store
     onMovePlayer(currentPlayer.id, newPos);
+    
+    // Marquer que le mouvement est terminé
+    setHasMovedThisTurn(true);
+    
+    // Notifier que le mouvement est complet (pour débloquer les dés de composition)
+    onMoveComplete();
 
     // Déclencher l'effet de la case après un court délai
     setTimeout(() => {
       handleCaseAction(newPos, currentPlayer);
     }, 500);
-  }, [currentPlayerIndex, players, onMovePlayer, handleCaseAction, getPlayerPosition]);
+  }, [currentPlayerIndex, players, onMovePlayer, handleCaseAction, getPlayerPosition, onMoveComplete]);
 
   // Lancer le dé de déplacement (d6)
   const rollMoveDice = useCallback(() => {
@@ -355,10 +365,10 @@ const GameBoard: React.FC<GameBoardProps> = ({
       )}
 
       {/* Contrôles de jeu - Dé de déplacement */}
-      {isMyTurn && currentPlayer && (
+      {isMyTurn && currentPlayer && !hasMovedThisTurn && (
         <div className="card-gaming p-6">
           <h3 className="text-xl font-bold text-white mb-4 text-center">
-            Tour de {currentPlayer.name} - Lancer le dé de déplacement
+            Tour de {currentPlayer.name} - Étape 1 : Lancer le dé de déplacement
           </h3>
 
           {/* Dé de déplacement */}
@@ -408,6 +418,22 @@ const GameBoard: React.FC<GameBoardProps> = ({
               </div>
             )}
           </div>
+          
+          {hasMovedThisTurn && (
+            <div className="mt-4 p-3 bg-gradient-to-r from-green-500/20 to-emerald-500/20 rounded-xl border-2 border-green-500/50">
+              <p className="text-white font-bold text-center">
+                ✅ Déplacement effectué ! Vous pouvez maintenant lancer les dés pour le quiz.
+              </p>
+            </div>
+          )}
+        </div>
+      )}
+      
+      {isMyTurn && currentPlayer && hasMovedThisTurn && (
+        <div className="card-gaming p-4 bg-gradient-to-r from-green-500/20 to-emerald-500/20 border-2 border-green-500/50">
+          <p className="text-white font-bold text-center">
+            ✅ Déplacement terminé ! Vous pouvez maintenant utiliser les dés de composition ci-dessous.
+          </p>
         </div>
       )}
 
