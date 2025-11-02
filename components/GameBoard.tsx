@@ -466,14 +466,19 @@ const GameBoard: React.FC<GameBoardProps> = ({
                   {/* Case */}
                   <div
                     className={`
-                      w-full h-full rounded-lg border-2 flex items-center justify-center
+                      w-full h-full rounded-lg border-2 flex flex-col items-center justify-between
                       ${getCaseColor(caseData.type)}
                       transition-all hover:scale-110
                       shadow-lg
+                      p-1 relative
                     `}
                     title={`${caseData.label} - ${caseData.lore}`}
                   >
-                    <span className="text-white font-bold text-sm text-center">
+                    {/* Zone pour les pions en haut/centre */}
+                    <div className="w-full flex-1 flex items-center justify-center"></div>
+                    
+                    {/* Numéro de la case en bas */}
+                    <span className="text-white font-bold text-sm text-center flex-shrink-0 z-10 relative bg-black/30 px-1 rounded">
                       {caseData.id + 1}
                     </span>
                   </div>
@@ -492,21 +497,66 @@ const GameBoard: React.FC<GameBoardProps> = ({
               const { row, col } = getCasePosition(index);
               const caseSize = 80;
               const gap = 8;
-              const left = col * (caseSize + gap) + caseSize / 2;
-              const top = row * (caseSize + gap) + caseSize + 4;
+              const caseLeft = col * (caseSize + gap);
+              const caseTop = row * (caseSize + gap);
+              
+              // Calculer la taille des pions selon l'espace disponible
+              const pawnCount = playersOnCase.length;
+              const basePawnSize = 28; // Taille de base (w-7 = 28px)
+              const minPawnSize = 16; // Taille minimale
+              
+              // Padding pour éviter que les pions touchent les bords
+              const padding = 6; // 3px de chaque côté
+              const availableWidth = caseSize - (padding * 2);
+              const availableHeight = caseSize - (padding * 2);
+              
+              // Espacement minimal entre les pions
+              const minGap = 3;
+              
+              // Calculer la taille optimale
+              let pawnSize = basePawnSize;
+              let gapBetween = minGap;
+              
+              // Calculer la largeur totale nécessaire avec la taille de base
+              const totalWidthNeeded = (pawnCount * basePawnSize) + ((pawnCount - 1) * minGap);
+              
+              // Si les pions dépassent ou touchent les bords, réduire
+              if (totalWidthNeeded > availableWidth || pawnCount > 2) {
+                // Calculer la taille maximale possible
+                const maxWidthForPawns = availableWidth - ((pawnCount - 1) * minGap);
+                const calculatedSize = Math.max(minPawnSize, Math.floor(maxWidthForPawns / pawnCount));
+                pawnSize = calculatedSize;
+                
+                // Ajuster l'espacement pour centrer
+                const remainingSpace = availableWidth - (pawnCount * pawnSize);
+                gapBetween = pawnCount > 1 ? Math.max(minGap, Math.floor(remainingSpace / (pawnCount - 1))) : 0;
+              }
+              
+              // Vérifier aussi la hauteur (un seul pion ne devrait pas toucher le haut/bas)
+              if (pawnCount === 1 && pawnSize > availableHeight) {
+                pawnSize = Math.min(pawnSize, availableHeight);
+              }
+              
+              // Positionner les pions au centre vertical et horizontal de la case
+              // Le numéro est en bas donc les pions ne le masquent pas
+              const totalPawnsWidth = (pawnCount * pawnSize) + ((pawnCount - 1) * gapBetween);
+              const startLeft = caseLeft + (caseSize - totalPawnsWidth) / 2;
+              // Centrer verticalement mais laisser de l'espace en bas pour le numéro (environ 20px)
+              const startTop = caseTop + (caseSize - pawnSize - 20) / 2;
 
               return (
                 <div
                   key={`pawns-${caseData.id}`}
-                  className="absolute pointer-events-none transform -translate-x-1/2"
+                  className="absolute pointer-events-none"
                   style={{
-                    left: `${left}px`,
-                    top: `${top}px`,
+                    left: `${startLeft}px`,
+                    top: `${startTop}px`,
                     zIndex: 100,
                   }}
                 >
                   <div 
-                    className="flex gap-1 pointer-events-auto"
+                    className="flex pointer-events-auto"
+                    style={{ gap: `${gapBetween}px` }}
                   >
                     {playersOnCase.map((player, idx) => {
                       const colors = [
@@ -519,14 +569,16 @@ const GameBoard: React.FC<GameBoardProps> = ({
                         <div
                           key={player.id}
                           className={`
-                            w-7 h-7 rounded-full border-2 border-white
+                            rounded-full border-2 border-white
                             ${colors[idx % colors.length]}
-                            transition-transform duration-500 ease-in-out
+                            transition-all duration-300 ease-in-out
                             shadow-lg
                             hover:scale-110
                             cursor-pointer
                           `}
                           style={{ 
+                            width: `${pawnSize}px`,
+                            height: `${pawnSize}px`,
                             zIndex: 100 + idx,
                             boxShadow: '0 2px 8px rgba(0, 0, 0, 0.3)',
                           }}
@@ -585,16 +637,25 @@ const GameBoard: React.FC<GameBoardProps> = ({
                 </span>
                 {playersOnCase.length > 0 && (
                   <div 
-                    className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 flex gap-0.5 z-20"
-                    style={{ zIndex: 20 }}
+                    className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 flex z-20"
+                    style={{ 
+                      zIndex: 20,
+                      gap: playersOnCase.length > 2 ? '2px' : '3px',
+                    }}
                   >
                     {playersOnCase.map((player, idx) => {
                       const colors = ['bg-red-500', 'bg-blue-500', 'bg-green-500', 'bg-yellow-500'];
+                      // Taille adaptative pour mobile
+                      const mobileSize = playersOnCase.length > 2 ? 6 : 8;
                       return (
                         <div
                           key={player.id}
-                          className={`w-2.5 h-2.5 rounded-full border border-white ${colors[idx % colors.length]} relative`}
-                          style={{ zIndex: 30 + idx }}
+                          className={`rounded-full border border-white ${colors[idx % colors.length]} relative`}
+                          style={{ 
+                            zIndex: 30 + idx,
+                            width: `${mobileSize}px`,
+                            height: `${mobileSize}px`,
+                          }}
                         />
                       );
                     })}
