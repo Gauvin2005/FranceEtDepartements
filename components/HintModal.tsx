@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Department } from '../data/departments';
 import { useLockBodyScroll } from '../hooks/useLockBodyScroll';
+import { Mascot } from './Mascot';
+import { useThemeStore } from '../stores/themeStore';
 
 interface HintModalProps {
   isOpen: boolean;
@@ -28,6 +30,7 @@ export const HintModal: React.FC<HintModalProps> = ({
   timeRemaining = 0,
   timerActive = false
 }) => {
+  const { theme } = useThemeStore();
   const [guess, setGuess] = useState('');
   const [showResult, setShowResult] = useState(false);
   const [isCorrect, setIsCorrect] = useState(false);
@@ -78,6 +81,9 @@ export const HintModal: React.FC<HintModalProps> = ({
 
   return (
     <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 animate-scale-in overflow-y-auto py-8">
+      {theme === 'space' && (
+        <Mascot show={isOpen} variant="thinking" size="medium" position="left" />
+      )}
       <div className="card-gaming max-w-md w-full mx-4 p-8 shadow-2xl animate-float my-auto">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-3xl font-black bg-gradient-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent glow-text">

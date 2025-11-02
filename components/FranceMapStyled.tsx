@@ -3,6 +3,7 @@ import { Maximize2, Minimize2, X, Search, ZoomIn } from 'lucide-react';
 import styles from './FranceMapStyled.module.css';
 import { departments as allDepartments } from '../data/departments';
 import { departmentsPaths as departmentsPathsRealistic } from '../data/departmentsPathsRealistic';
+import { useThemeStore } from '../stores/themeStore';
 
 interface FranceMapStyledProps {
   currentDepartmentNumber?: string;
@@ -28,6 +29,7 @@ export const FranceMapStyled: React.FC<FranceMapStyledProps> = ({
   timeRemaining = 0,
   timerActive = false
 }) => {
+  const { theme } = useThemeStore();
   const [hoveredDept, setHoveredDept] = useState<string | null>(null);
   const [isExpanded, setIsExpanded] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
@@ -178,8 +180,12 @@ export const FranceMapStyled: React.FC<FranceMapStyledProps> = ({
         <div style={{
           marginBottom: '20px',
           padding: '12px',
-          background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(37, 99, 235, 0.2))',
-          border: '2px solid rgba(59, 130, 246, 0.5)',
+          background: theme === 'space' 
+            ? 'linear-gradient(135deg, rgba(61, 59, 255, 0.2), rgba(0, 247, 255, 0.2))'
+            : 'linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(37, 99, 235, 0.2))',
+          border: theme === 'space'
+            ? '2px solid rgba(0, 247, 255, 0.5)'
+            : '2px solid rgba(59, 130, 246, 0.5)',
           borderRadius: '12px'
         }}>
           <h4 style={{
@@ -250,6 +256,23 @@ export const FranceMapStyled: React.FC<FranceMapStyledProps> = ({
               <feMergeNode in="SourceGraphic"/>
             </feMerge>
           </filter>
+          {theme === 'space' && (
+            <>
+              <pattern id="clouds" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse">
+                <circle cx="20" cy="30" r="15" fill="rgba(255, 255, 255, 0.15)" />
+                <circle cx="40" cy="30" r="18" fill="rgba(255, 255, 255, 0.12)" />
+                <circle cx="30" cy="25" r="12" fill="rgba(255, 255, 255, 0.1)" />
+                <circle cx="60" cy="50" r="12" fill="rgba(255, 255, 255, 0.1)" />
+                <circle cx="75" cy="50" r="15" fill="rgba(255, 255, 255, 0.12)" />
+                <circle cx="85" cy="45" r="10" fill="rgba(255, 255, 255, 0.08)" />
+              </pattern>
+              <radialGradient id="earthGradient" cx="50%" cy="50%">
+                <stop offset="0%" stopColor="#0b0f26" stopOpacity="0.8" />
+                <stop offset="50%" stopColor="#1a1f3a" stopOpacity="0.6" />
+                <stop offset="100%" stopColor="#0b0f26" stopOpacity="0.9" />
+              </radialGradient>
+            </>
+          )}
           {magnifierEnabled && magnifierActive && magnifierPosition && (
             <>
               <clipPath id="magnifier-clip">
@@ -266,14 +289,24 @@ export const FranceMapStyled: React.FC<FranceMapStyledProps> = ({
           )}
         </defs>
 
+        {/* Fond spatial avec nuages */}
+        {theme === 'space' && (
+          <>
+            <rect x="0" y="0" width="1000" height="1000" fill="url(#earthGradient)" />
+            <rect x="0" y="0" width="1000" height="1000" fill="url(#clouds)" opacity="0.6" />
+            <circle cx="500" cy="500" r="450" fill="none" stroke="rgba(0, 247, 255, 0.2)" strokeWidth="2" />
+            <circle cx="500" cy="500" r="460" fill="none" stroke="rgba(61, 59, 255, 0.15)" strokeWidth="1" />
+          </>
+        )}
+
         {/* Cadre Corse */}
-        <rect x="800" y="200" width="120" height="150" fill="none" stroke="#8b5cf6" strokeWidth="2" strokeDasharray="4" opacity="0.5" rx="5"/>
+        <rect x="800" y="200" width="120" height="150" fill="none" stroke={theme === 'space' ? 'rgba(0, 247, 255, 0.5)' : '#8b5cf6'} strokeWidth="2" strokeDasharray="4" opacity="0.5" rx="5"/>
         
         {/* Cadre Île-de-France */}
-        <rect x="400" y="300" width="200" height="200" fill="none" stroke="#d946ef" strokeWidth="2" strokeDasharray="4" opacity="0.5" rx="5"/>
+        <rect x="400" y="300" width="200" height="200" fill="none" stroke={theme === 'space' ? 'rgba(0, 247, 255, 0.5)' : '#d946ef'} strokeWidth="2" strokeDasharray="4" opacity="0.5" rx="5"/>
         
         {/* Cadre DOM-TOM */}
-        <rect x="50" y="50" width="200" height="150" fill="none" stroke="#c026d3" strokeWidth="2" strokeDasharray="4" opacity="0.5" rx="5"/>
+        <rect x="50" y="50" width="200" height="150" fill="none" stroke={theme === 'space' ? 'rgba(0, 247, 255, 0.5)' : '#c026d3'} strokeWidth="2" strokeDasharray="4" opacity="0.5" rx="5"/>
 
         {/* Tous les départements */}
         {departmentsPathsRealistic.map((dept) => {

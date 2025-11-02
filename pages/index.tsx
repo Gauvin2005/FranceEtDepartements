@@ -8,11 +8,14 @@ import { useAuth } from '@/hooks/useAuth';
 import { useAuthenticatedFetch } from '@/hooks/useAuthenticatedFetch';
 import { Users, Play, LogIn, UserPlus } from 'lucide-react';
 import { FranceMapStyled } from '@/components/FranceMapStyled';
+import { ThemeSelector } from '@/components/ThemeSelector';
+import { useThemeStore } from '@/stores/themeStore';
 
 export default function Home() {
   const router = useRouter();
   const { user, login, register, logout } = useAuth();
   const authenticatedFetch = useAuthenticatedFetch();
+  const { theme } = useThemeStore();
   const [showLogin, setShowLogin] = useState(false);
   const [showRegister, setShowRegister] = useState(false);
   const [gameCode, setGameCode] = useState('');
@@ -101,16 +104,7 @@ export default function Home() {
       <main className="min-h-screen p-8">
         <div className="max-w-6xl mx-auto">
           <div className="flex justify-end mb-4">
-            <button
-              onClick={() => {
-                alert('Bascule de thème - Fonctionnalité en cours de développement (WIP)');
-              }}
-              className="px-4 py-2 bg-gradient-to-r from-purple-600 to-cyan-600 hover:from-purple-700 hover:to-cyan-700 text-white rounded-lg font-bold transition-all shadow-lg flex items-center gap-2"
-              title="Basculer de thème (WIP)"
-            >
-              <span>🎨</span>
-              <span className="hidden sm:inline">Thème</span>
-            </button>
+            <ThemeSelector />
           </div>
           <div className="text-center mb-12 animate-scale-in">
             <div className="mb-6 text-7xl animate-float">🇫🇷</div>

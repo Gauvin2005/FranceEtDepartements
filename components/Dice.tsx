@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useThemeStore } from '../stores/themeStore';
 
 interface DiceProps {
   value: number;
@@ -13,6 +14,7 @@ const Dice: React.FC<DiceProps> = ({
   size = 'md', 
   type = 'd10' 
 }) => {
+  const { theme } = useThemeStore();
   const [displayValue, setDisplayValue] = useState(value);
   const [isAnimating, setIsAnimating] = useState(false);
 
@@ -47,22 +49,26 @@ const Dice: React.FC<DiceProps> = ({
     lg: 'w-24 h-24 text-4xl'
   };
 
+  const isSpaceTheme = theme === 'space';
+  
   const diceClasses = `
     ${sizeClasses[size]}
-    bg-gradient-to-br from-purple-600 to-cyan-600
-    border-2 border-purple-400/50
     rounded-xl shadow-2xl
     flex items-center justify-center
     font-black text-white
     transition-all duration-300
     ${isAnimating ? 'animate-glow-pulse scale-110 glow-effect' : ''}
     ${isRolling ? 'animate-spin' : ''}
-    hover:scale-105 hover:shadow-purple-500/50
+    ${isSpaceTheme 
+      ? 'bg-gradient-to-br from-[#3d3bff] to-[#00f7ff] border-2 border-[#00f7ff]/50 hover:shadow-[#00f7ff]/50' 
+      : 'bg-gradient-to-br from-purple-600 to-cyan-600 border-2 border-purple-400/50 hover:shadow-purple-500/50'
+    }
+    hover:scale-105
   `;
 
   return (
     <div className={diceClasses}>
-      <span className={isAnimating ? 'opacity-70' : 'opacity-100 glow-text'}>
+      <span className={`${isAnimating ? 'opacity-70' : 'opacity-100'} ${isSpaceTheme ? '' : 'glow-text'}`}>
         {displayValue}
       </span>
     </div>
@@ -80,7 +86,9 @@ export const DiceRoll: React.FC<DiceRollProps> = ({
   isRolling, 
   onRollComplete 
 }) => {
+  const { theme } = useThemeStore();
   const [showResults, setShowResults] = useState(false);
+  const isSpaceTheme = theme === 'space';
 
   useEffect(() => {
     if (isRolling) {
@@ -92,8 +100,8 @@ export const DiceRoll: React.FC<DiceRollProps> = ({
   }, [isRolling, diceResults, onRollComplete]);
 
   return (
-    <div className="flex flex-col items-center space-y-6">
-      <div className="flex space-x-6">
+    <div className="flex flex-col items-center space-y-6 relative z-10">
+      <div className="flex space-x-6 relative z-10">
         {/* Premier dé (0-9) */}
         <div className="flex flex-col items-center space-y-3 animate-scale-in">
           <Dice 
@@ -102,7 +110,11 @@ export const DiceRoll: React.FC<DiceRollProps> = ({
             size="lg"
             type="d10"
           />
-          <span className="text-sm text-purple-300 font-bold px-3 py-1 bg-purple-500/20 rounded-full border border-purple-500/50">
+          <span className={`text-sm font-bold px-3 py-1 rounded-full border ${
+            isSpaceTheme
+              ? 'text-[#00f7ff] bg-[#00f7ff]/20 border-[#00f7ff]/50'
+              : 'text-purple-300 bg-purple-500/20 border-purple-500/50'
+          }`}>
             D10 (0-9)
           </span>
         </div>
@@ -115,7 +127,11 @@ export const DiceRoll: React.FC<DiceRollProps> = ({
             size="lg"
             type="d10"
           />
-          <span className="text-sm text-cyan-300 font-bold px-3 py-1 bg-cyan-500/20 rounded-full border border-cyan-500/50">
+          <span className={`text-sm font-bold px-3 py-1 rounded-full border ${
+            isSpaceTheme
+              ? 'text-[#00f7ff] bg-[#00f7ff]/20 border-[#00f7ff]/50'
+              : 'text-cyan-300 bg-cyan-500/20 border-cyan-500/50'
+          }`}>
             D10 (0-9)
           </span>
         </div>
@@ -128,16 +144,24 @@ export const DiceRoll: React.FC<DiceRollProps> = ({
             size="lg"
             type="d6"
           />
-          <span className="text-sm text-pink-300 font-bold px-3 py-1 bg-pink-500/20 rounded-full border border-pink-500/50">
+          <span className={`text-sm font-bold px-3 py-1 rounded-full border ${
+            isSpaceTheme
+              ? 'text-[#3d3bff] bg-[#3d3bff]/20 border-[#3d3bff]/50'
+              : 'text-pink-300 bg-pink-500/20 border-pink-500/50'
+          }`}>
             D6 (1-6)
           </span>
         </div>
       </div>
 
       {showResults && diceResults.length === 3 && (
-        <div className="mt-4 p-4 bg-gradient-to-r from-purple-500/20 to-cyan-500/20 rounded-xl border-2 border-purple-500/50 animate-scale-in">
+        <div className={`mt-4 p-4 rounded-xl border-2 animate-scale-in ${
+          isSpaceTheme
+            ? 'bg-gradient-to-r from-[#3d3bff]/20 to-[#00f7ff]/20 border-[#00f7ff]/50'
+            : 'bg-gradient-to-r from-purple-500/20 to-cyan-500/20 border-purple-500/50'
+        }`}>
           <p className="text-center text-white font-black text-lg">
-            Résultat: <span className="text-purple-300">{diceResults[0]}</span> - <span className="text-cyan-300">{diceResults[1]}</span> - <span className="text-pink-300">{diceResults[2]}</span>
+            Résultat: <span className={isSpaceTheme ? 'text-[#00f7ff]' : 'text-purple-300'}>{diceResults[0]}</span> - <span className={isSpaceTheme ? 'text-[#00f7ff]' : 'text-cyan-300'}>{diceResults[1]}</span> - <span className={isSpaceTheme ? 'text-[#3d3bff]' : 'text-pink-300'}>{diceResults[2]}</span>
           </p>
         </div>
       )}

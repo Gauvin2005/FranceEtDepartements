@@ -12,8 +12,12 @@ import { FranceMapStyled } from '../components/FranceMapStyled';
 import GameBoard from '../components/GameBoard';
 import { Department, getDepartmentById } from '../data/departments';
 import { useLockBodyScroll } from '../hooks/useLockBodyScroll';
+import { ThemeSelector } from '../components/ThemeSelector';
+import { Mascot } from '../components/Mascot';
+import { useThemeStore } from '../stores/themeStore';
 
 const GamePage: React.FC = () => {
+  const { theme } = useThemeStore();
   const {
     players,
     currentPlayerIndex,
@@ -391,16 +395,7 @@ const GamePage: React.FC = () => {
               </div>
               
               <div className="flex space-x-3">
-                <button
-                  onClick={() => {
-                    alert('Bascule de thème - Fonctionnalité en cours de développement (WIP)');
-                  }}
-                  className="px-4 py-2 bg-gradient-to-r from-purple-600 to-cyan-600 hover:from-purple-700 hover:to-cyan-700 text-white rounded-lg font-bold transition-all shadow-lg flex items-center gap-2"
-                  title="Basculer de thème (WIP)"
-                >
-                  <span>🎨</span>
-                  <span className="hidden sm:inline">Thème</span>
-                </button>
+                <ThemeSelector />
                 {gameStarted && !gameEnded && (
                   <button
                     onClick={() => setShowEndGameConfirm(true)}
@@ -617,18 +612,24 @@ const GamePage: React.FC = () => {
                     
                     if (hasMovedThisTurn && isOrdinaryCase && phase !== 'guessing' && phase !== 'end') {
                       return (
-                        <div className="card-gaming p-8 shadow-2xl animate-slide-in-left">
-                          <h3 className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent mb-4">
+                        <div className="card-gaming p-8 shadow-2xl animate-slide-in-left relative z-10">
+                          <h3 className={`text-2xl font-bold mb-4 bg-clip-text text-transparent ${
+                            theme === 'space'
+                              ? 'bg-gradient-to-r from-[#3d3bff] to-[#00f7ff]'
+                              : 'bg-gradient-to-r from-purple-400 to-cyan-400 glow-text'
+                          }`}>
                             🎲 Étape 2 : Lancer les dés de composition
                           </h3>
-                          <DiceRoll
-                            diceResults={diceResults}
-                            isRolling={isRolling}
-                            onRollComplete={() => {}}
-                          />
+                          <div className="relative z-10">
+                            <DiceRoll
+                              diceResults={diceResults}
+                              isRolling={isRolling}
+                              onRollComplete={() => {}}
+                            />
+                          </div>
                           
                           {phase === 'rolling' && !showHintModal && (
-                            <div className="mt-6 text-center">
+                            <div className="mt-6 text-center relative z-10">
                               <button
                                 onClick={handleRollDice}
                                 disabled={isRolling}
@@ -806,6 +807,16 @@ const GamePage: React.FC = () => {
           isVisible={showMarquee}
           onComplete={() => setShowMarquee(false)}
         />
+        
+        {/* Mascot */}
+        {theme === 'space' && (
+          <>
+            <Mascot show={true} variant="idle" size="medium" position="right" />
+            {showMarquee && (
+              <Mascot show={true} variant="excited" size="large" position="center" />
+            )}
+          </>
+        )}
 
         {/* Modal de confirmation de fin de jeu */}
         {showEndGameConfirm && (
