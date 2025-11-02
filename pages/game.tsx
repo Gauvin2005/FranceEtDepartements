@@ -578,7 +578,7 @@ const GamePage: React.FC = () => {
                       {!hasMovedThisTurn && isMyTurn && (
                         <div className="mt-4 p-3 bg-gradient-to-r from-orange-500/20 to-yellow-500/20 rounded-xl border-2 border-orange-500/50">
                           <p className="text-white font-semibold text-center text-sm">
-                            ⚠️ Vous devez d'abord lancer le dé de déplacement sur le plateau
+                            ⚠️ Vous devez d&apos;abord lancer le dé de déplacement sur le plateau
                           </p>
                         </div>
                       )}
@@ -590,7 +590,7 @@ const GamePage: React.FC = () => {
                       </h3>
                       <div className="p-4 bg-gradient-to-r from-orange-500/20 to-yellow-500/20 rounded-xl border-2 border-orange-500/50">
                         <p className="text-white font-bold text-center">
-                          ⏳ Lancer d'abord le dé de déplacement sur le plateau
+                          ⏳ Lancer d&apos;abord le dé de déplacement sur le plateau
                         </p>
                       </div>
                     </div>
