@@ -69,6 +69,7 @@ const GamePage: React.FC = () => {
   const [showFinalScores, setShowFinalScores] = useState(false);
   const [hiddenStartTime, setHiddenStartTime] = useState<number | null>(null);
   const [hasMovedThisTurn, setHasMovedThisTurn] = useState(false);
+  const [turnResetKey, setTurnResetKey] = useState(0); // Clé pour forcer la réinitialisation du GameBoard
 
   const currentPlayer = players[currentPlayerIndex];
 
@@ -165,6 +166,10 @@ const GamePage: React.FC = () => {
 
   const handleFinishTurn = () => {
     finishTurn();
+    // Réinitialiser hasMovedThisTurn avant de passer au tour suivant
+    setHasMovedThisTurn(false);
+    // Forcer la réinitialisation du GameBoard AVANT de passer au tour suivant
+    setTurnResetKey(prev => prev + 1);
     nextTurn();
     setShowBonusModal(false);
     setShowHintModal(false);
@@ -181,6 +186,10 @@ const GamePage: React.FC = () => {
   };
 
   const handlePassTurn = () => {
+    // Réinitialiser hasMovedThisTurn avant de passer au tour suivant
+    setHasMovedThisTurn(false);
+    // Forcer la réinitialisation du GameBoard AVANT de passer au tour suivant
+    setTurnResetKey(prev => prev + 1);
     nextTurn();
     setShowHintModal(false);
     setShowCompositions(false);
@@ -215,6 +224,10 @@ const GamePage: React.FC = () => {
       players.forEach(player => {
         updateScore(player.id, 10000);
       });
+      
+      // Réinitialiser les états pour le premier tour
+      setHasMovedThisTurn(false);
+      setTurnResetKey(prev => prev + 1);
       
       // Afficher le marquee pour le premier joueur
       const firstPlayer = players[0];
@@ -310,7 +323,18 @@ const GamePage: React.FC = () => {
   // Réinitialiser hasMovedThisTurn quand le joueur change
   useEffect(() => {
     setHasMovedThisTurn(false);
+    // Incrémenter turnResetKey pour forcer la réinitialisation du GameBoard même si currentPlayerIndex ne change pas
+    setTurnResetKey(prev => prev + 1);
   }, [currentPlayerIndex]);
+
+  // S'assurer que tout est réinitialisé quand le marquee apparaît (nouveau tour)
+  useEffect(() => {
+    if (showMarquee && gameStarted) {
+      // Forcer une réinitialisation complète quand le marquee s'affiche
+      setHasMovedThisTurn(false);
+      setTurnResetKey(prev => prev + 1);
+    }
+  }, [showMarquee, gameStarted]);
 
   // Handler pour notifier que le mouvement est terminé
   const handleMoveComplete = () => {
@@ -541,6 +565,7 @@ const GamePage: React.FC = () => {
                   onStartNeutralDice={handleStartNeutralDice}
                   onMoveComplete={handleMoveComplete}
                   onPassTurn={handlePassTurn}
+                  turnResetKey={turnResetKey}
                 />
               </div>
 
@@ -580,7 +605,7 @@ const GamePage: React.FC = () => {
                     const isOrdinaryCase = currentCase?.type === 'ordinary';
                     const canRollDice = hasMovedThisTurn && isOrdinaryCase && isMyTurn;
                     
-                    if (hasMovedThisTurn && isOrdinaryCase) {
+                    if (hasMovedThisTurn && isOrdinaryCase && phase !== 'guessing' && phase !== 'end') {
                       return (
                         <div className="card-gaming p-8 shadow-2xl animate-slide-in-left">
                           <h3 className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent mb-4">
@@ -603,6 +628,22 @@ const GamePage: React.FC = () => {
                               </button>
                             </div>
                           )}
+                        </div>
+                      );
+                    }
+                    
+                    // Si le joueur a déjà choisi une composition (phase = 'guessing'), désactiver les dés
+                    if (hasMovedThisTurn && isOrdinaryCase && (phase === 'guessing' || phase === 'end')) {
+                      return (
+                        <div className="card-gaming p-8 shadow-2xl bg-gray-800/50 opacity-60">
+                          <h3 className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent mb-4">
+                            🎲 Dés pour le Quiz
+                          </h3>
+                          <div className="p-4 bg-gradient-to-r from-gray-500/20 to-gray-600/20 rounded-xl border-2 border-gray-500/50">
+                            <p className="text-white font-bold text-center">
+                              ✅ Action terminée - Appuyez sur &quot;Passer au tour suivant&quot;
+                            </p>
+                          </div>
                         </div>
                       );
                     }

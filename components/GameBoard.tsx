@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Player } from '../store/gameStore';
 import Dice from './Dice';
 
@@ -16,6 +16,7 @@ interface GameBoardProps {
   onStartNeutralDice: () => void;
   onMoveComplete: () => void; // Callback quand le mouvement est terminé
   onPassTurn: () => void; // Passer au tour suivant
+  turnResetKey?: number; // Clé pour forcer la réinitialisation même si currentPlayerIndex ne change pas
   isMyTurn: boolean;
 }
 
@@ -74,6 +75,7 @@ const GameBoard: React.FC<GameBoardProps> = ({
   onStartNeutralDice,
   onMoveComplete,
   onPassTurn,
+  turnResetKey,
   isMyTurn,
 }) => {
   const [moveDice, setMoveDice] = useState<number | null>(null);
@@ -84,8 +86,10 @@ const GameBoard: React.FC<GameBoardProps> = ({
   const [hasMovedThisTurn, setHasMovedThisTurn] = useState(false);
   const [currentCaseIndex, setCurrentCaseIndex] = useState<number | null>(null); // Case actuelle après déplacement
   const [caseEffectApplied, setCaseEffectApplied] = useState(false); // Si l'effet a été appliqué
+  const caseEffectAppliedThisTurnRef = useRef<number | null>(null); // ID de la case où l'effet a été appliqué ce tour (useRef pour éviter les re-renders)
 
   // Réinitialiser le dé de déplacement quand le joueur change
+  // Utiliser turnResetKey pour forcer la réinitialisation même si currentPlayerIndex ne change pas
   useEffect(() => {
     setMoveDice(null);
     setIsRollingMoveDice(false);
@@ -93,7 +97,8 @@ const GameBoard: React.FC<GameBoardProps> = ({
     setHasMovedThisTurn(false);
     setCurrentCaseIndex(null);
     setCaseEffectApplied(false);
-  }, [currentPlayerIndex]);
+    caseEffectAppliedThisTurnRef.current = null; // Réinitialiser quel case a eu son effet appliqué
+  }, [currentPlayerIndex, turnResetKey]);
 
   // Initialiser les positions depuis le store si nécessaire
   useEffect(() => {
@@ -214,6 +219,9 @@ const GameBoard: React.FC<GameBoardProps> = ({
       return;
     }
   }, [handleTransaction]);
+
+  // NOTE: On ne doit PAS appliquer automatiquement les effets au début du tour
+  // Les effets doivent être appliqués uniquement quand le joueur arrive sur une case après avoir lancé le dé
 
   // Gérer le déplacement
   const handleMove = useCallback((steps: number) => {
@@ -590,7 +598,7 @@ const GameBoard: React.FC<GameBoardProps> = ({
                     {/* Numéro de la case en bas */}
                     <span className="text-white font-bold text-sm text-center flex-shrink-0 z-10 relative bg-black/30 px-1 rounded">
                       {caseData.id}
-                    </span>
+                      </span>
                   </div>
                 </div>
               );
@@ -714,9 +722,9 @@ const GameBoard: React.FC<GameBoardProps> = ({
           <div className="p-3 bg-red-500/20 rounded-lg border border-red-500/50">
             <div className="text-xs text-red-300 mb-1">Malus</div>
             <div className="text-xs text-white">Perte points/souvenirs</div>
-          </div>
-        </div>
-      </div>
+                    </div>
+                  </div>
+                    </div>
 
       {/* Version linéaire responsive (mobile) */}
       <div className="block md:hidden card-gaming p-4">
