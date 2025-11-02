@@ -31,34 +31,71 @@ interface BoardCase {
   lore?: string;
 }
 
-const TOTAL_CASES = 24;
+const TOTAL_CASES = 60;
 
-// Définition du plateau avec 24 cases
+// Définition du plateau avec 60 cases
+// Répartition: 1 case départ + 41 cases ordinaires + 6 bonus (10%) + 12 malus (20%) = 60 cases
 const boardCases: BoardCase[] = [
   { id: 0, label: 'Départ', type: 'start', lore: 'Case de départ - +10 000 points à tous les joueurs' },
   { id: 1, label: 'Case 1', type: 'ordinary', lore: 'Lancez les dés de composition quand vous êtes prêt' },
   { id: 2, label: 'Case 2', type: 'ordinary', lore: 'Lancez les dés de composition quand vous êtes prêt' },
-  { id: 3, label: 'Bonus', type: 'bonus', effect: { points: 3000 }, lore: 'Gain de points !' },
+  { id: 3, label: 'Malus', type: 'malus', effect: { points: -1500 }, lore: 'Perte de points' },
   { id: 4, label: 'Case 4', type: 'ordinary', lore: 'Lancez les dés de composition quand vous êtes prêt' },
-  { id: 5, label: 'Malus', type: 'malus', effect: { points: -2000 }, lore: 'Perte de points' },
+  { id: 5, label: 'Case 5', type: 'ordinary', lore: 'Lancez les dés de composition quand vous êtes prêt' },
   { id: 6, label: 'Case 6', type: 'ordinary', lore: 'Lancez les dés de composition quand vous êtes prêt' },
-  { id: 7, label: 'Bonus', type: 'bonus', effect: { points: 5000 }, lore: 'Gain de points !' },
-  { id: 8, label: 'Case 8', type: 'ordinary', lore: 'Lancez les dés de composition quand vous êtes prêt' },
+  { id: 7, label: 'Case 7', type: 'ordinary', lore: 'Lancez les dés de composition quand vous êtes prêt' },
+  { id: 8, label: 'Bonus', type: 'bonus', effect: { points: 3000 }, lore: 'Gain de points !' },
   { id: 9, label: 'Case 9', type: 'ordinary', lore: 'Lancez les dés de composition quand vous êtes prêt' },
-  { id: 10, label: 'Malus', type: 'malus', effect: { loseSouvenir: 1 }, lore: 'Perte d\'un souvenir' },
+  { id: 10, label: 'Malus', type: 'malus', effect: { points: -2000 }, lore: 'Perte de points' },
   { id: 11, label: 'Case 11', type: 'ordinary', lore: 'Lancez les dés de composition quand vous êtes prêt' },
-  { id: 12, label: 'Bonus', type: 'bonus', effect: { points: 4000 }, lore: 'Gain de points !' },
-  { id: 13, label: 'Case 13', type: 'ordinary', lore: 'Lancez les dés de composition quand vous êtes prêt' },
+  { id: 12, label: 'Case 12', type: 'ordinary', lore: 'Lancez les dés de composition quand vous êtes prêt' },
+  { id: 13, label: 'Malus', type: 'malus', effect: { points: -1800 }, lore: 'Perte de points' },
   { id: 14, label: 'Case 14', type: 'ordinary', lore: 'Lancez les dés de composition quand vous êtes prêt' },
-  { id: 15, label: 'Malus', type: 'malus', effect: { points: -3000 }, lore: 'Perte de points' },
-  { id: 16, label: 'Case 16', type: 'ordinary', lore: 'Lancez les dés de composition quand vous êtes prêt' },
-  { id: 17, label: 'Bonus', type: 'bonus', effect: { points: 6000 }, lore: 'Gain de points !' },
+  { id: 15, label: 'Case 15', type: 'ordinary', lore: 'Lancez les dés de composition quand vous êtes prêt' },
+  { id: 16, label: 'Malus', type: 'malus', effect: { points: -1500 }, lore: 'Perte de points' },
+  { id: 17, label: 'Case 17', type: 'ordinary', lore: 'Lancez les dés de composition quand vous êtes prêt' },
   { id: 18, label: 'Case 18', type: 'ordinary', lore: 'Lancez les dés de composition quand vous êtes prêt' },
   { id: 19, label: 'Case 19', type: 'ordinary', lore: 'Lancez les dés de composition quand vous êtes prêt' },
-  { id: 20, label: 'Malus', type: 'malus', effect: { points: -4000 }, lore: 'Perte de points' },
+  { id: 20, label: 'Case 20', type: 'ordinary', lore: 'Lancez les dés de composition quand vous êtes prêt' },
   { id: 21, label: 'Case 21', type: 'ordinary', lore: 'Lancez les dés de composition quand vous êtes prêt' },
-  { id: 22, label: 'Bonus', type: 'bonus', effect: { points: 8000 }, lore: 'Gain de points !' },
+  { id: 22, label: 'Bonus', type: 'bonus', effect: { points: 4000 }, lore: 'Gain de points !' },
   { id: 23, label: 'Case 23', type: 'ordinary', lore: 'Lancez les dés de composition quand vous êtes prêt' },
+  { id: 24, label: 'Malus', type: 'malus', effect: { loseSouvenir: 1 }, lore: 'Perte d\'un souvenir' },
+  { id: 25, label: 'Case 25', type: 'ordinary', lore: 'Lancez les dés de composition quand vous êtes prêt' },
+  { id: 26, label: 'Case 26', type: 'ordinary', lore: 'Lancez les dés de composition quand vous êtes prêt' },
+  { id: 27, label: 'Case 27', type: 'ordinary', lore: 'Lancez les dés de composition quand vous êtes prêt' },
+  { id: 28, label: 'Case 28', type: 'ordinary', lore: 'Lancez les dés de composition quand vous êtes prêt' },
+  { id: 29, label: 'Case 29', type: 'ordinary', lore: 'Lancez les dés de composition quand vous êtes prêt' },
+  { id: 30, label: 'Malus', type: 'malus', effect: { points: -2500 }, lore: 'Perte de points' },
+  { id: 31, label: 'Case 31', type: 'ordinary', lore: 'Lancez les dés de composition quand vous êtes prêt' },
+  { id: 32, label: 'Case 32', type: 'ordinary', lore: 'Lancez les dés de composition quand vous êtes prêt' },
+  { id: 33, label: 'Case 33', type: 'ordinary', lore: 'Lancez les dés de composition quand vous êtes prêt' },
+  { id: 34, label: 'Case 34', type: 'ordinary', lore: 'Lancez les dés de composition quand vous êtes prêt' },
+  { id: 35, label: 'Case 35', type: 'ordinary', lore: 'Lancez les dés de composition quand vous êtes prêt' },
+  { id: 36, label: 'Bonus', type: 'bonus', effect: { points: 5000 }, lore: 'Gain de points !' },
+  { id: 37, label: 'Case 37', type: 'ordinary', lore: 'Lancez les dés de composition quand vous êtes prêt' },
+  { id: 38, label: 'Malus', type: 'malus', effect: { points: -2000 }, lore: 'Perte de points' },
+  { id: 39, label: 'Case 39', type: 'ordinary', lore: 'Lancez les dés de composition quand vous êtes prêt' },
+  { id: 40, label: 'Case 40', type: 'ordinary', lore: 'Lancez les dés de composition quand vous êtes prêt' },
+  { id: 41, label: 'Case 41', type: 'ordinary', lore: 'Lancez les dés de composition quand vous êtes prêt' },
+  { id: 42, label: 'Case 42', type: 'ordinary', lore: 'Lancez les dés de composition quand vous êtes prêt' },
+  { id: 43, label: 'Bonus', type: 'bonus', effect: { points: 8000 }, lore: 'Gain de points !' },
+  { id: 44, label: 'Malus', type: 'malus', effect: { points: -3000 }, lore: 'Perte de points' },
+  { id: 45, label: 'Case 45', type: 'ordinary', lore: 'Lancez les dés de composition quand vous êtes prêt' },
+  { id: 46, label: 'Case 46', type: 'ordinary', lore: 'Lancez les dés de composition quand vous êtes prêt' },
+  { id: 47, label: 'Case 47', type: 'ordinary', lore: 'Lancez les dés de composition quand vous êtes prêt' },
+  { id: 48, label: 'Bonus', type: 'bonus', effect: { points: 6000 }, lore: 'Gain de points !' },
+  { id: 49, label: 'Case 49', type: 'ordinary', lore: 'Lancez les dés de composition quand vous êtes prêt' },
+  { id: 50, label: 'Malus', type: 'malus', effect: { loseSouvenir: 1 }, lore: 'Perte d\'un souvenir' },
+  { id: 51, label: 'Case 51', type: 'ordinary', lore: 'Lancez les dés de composition quand vous êtes prêt' },
+  { id: 52, label: 'Case 52', type: 'ordinary', lore: 'Lancez les dés de composition quand vous êtes prêt' },
+  { id: 53, label: 'Malus', type: 'malus', effect: { points: -2800 }, lore: 'Perte de points' },
+  { id: 54, label: 'Case 54', type: 'ordinary', lore: 'Lancez les dés de composition quand vous êtes prêt' },
+  { id: 55, label: 'Case 55', type: 'ordinary', lore: 'Lancez les dés de composition quand vous êtes prêt' },
+  { id: 56, label: 'Malus', type: 'malus', effect: { points: -3500 }, lore: 'Perte de points' },
+  { id: 57, label: 'Bonus', type: 'bonus', effect: { points: 7000 }, lore: 'Gain de points !' },
+  { id: 58, label: 'Malus', type: 'malus', effect: { points: -2500 }, lore: 'Perte de points' },
+  { id: 59, label: 'Case 59', type: 'ordinary', lore: 'Lancez les dés de composition quand vous êtes prêt' },
 ];
 
 const GameBoard: React.FC<GameBoardProps> = ({
@@ -133,8 +170,8 @@ const GameBoard: React.FC<GameBoardProps> = ({
 
   // Calculer les positions pour affichage rectangulaire en serpent
   const getCasePosition = (caseIndex: number) => {
-    // Disposition en serpent : 6 colonnes x 4 lignes
-    const cols = 6;
+    // Disposition en serpent : 10 colonnes x 6 lignes (pour 60 cases)
+    const cols = 10;
     const row = Math.floor(caseIndex / cols);
     const col = caseIndex % cols;
     // Alternance gauche-droite pour effet serpent
@@ -560,7 +597,7 @@ const GameBoard: React.FC<GameBoardProps> = ({
         <h3 className="text-2xl font-bold text-white mb-6 text-center">Plateau de jeu</h3>
         
         <div className="flex justify-center">
-          <div className="relative" style={{ width: '520px', minHeight: '400px' }}>
+          <div className="relative" style={{ width: '880px', minHeight: '520px' }}>
             {/* Layer 1: Cases uniquement - Disposition en grille 6x4 avec positions absolues */}
             {boardCases.map((caseData, index) => {
               const { row, col } = getCasePosition(index);
