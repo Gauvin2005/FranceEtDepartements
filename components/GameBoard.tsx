@@ -15,17 +15,17 @@ interface GameBoardProps {
   onStartQuiz: () => void;
   onStartNeutralDice: () => void;
   onMoveComplete: () => void; // Callback quand le mouvement est terminé
+  onPassTurn: () => void; // Passer au tour suivant
   isMyTurn: boolean;
 }
 
 interface BoardCase {
   id: number;
   label: string;
-  type: 'start' | 'ordinary' | 'neutral' | 'special';
+  type: 'start' | 'ordinary' | 'bonus' | 'malus';
   effect?: {
     points?: number;
     loseSouvenir?: number;
-    gainChampion?: number;
   };
   lore?: string;
 }
@@ -34,30 +34,30 @@ const TOTAL_CASES = 24;
 
 // Définition du plateau avec 24 cases
 const boardCases: BoardCase[] = [
-  { id: 0, label: 'Départ', type: 'start', lore: 'Case de départ - +10 000 points au premier tour' },
-  { id: 1, label: 'Case 1', type: 'ordinary', lore: 'Lance 3 dés (2d10 + 1d6) pour le quiz' },
-  { id: 2, label: 'Case 2', type: 'ordinary', lore: 'Lance 3 dés (2d10 + 1d6) pour le quiz' },
-  { id: 3, label: 'Case 3', type: 'neutral', lore: 'Lance 2 dés (1d10 + 1d6) avec plusieurs combinaisons' },
-  { id: 4, label: 'Case 4', type: 'ordinary', lore: 'Lance 3 dés (2d10 + 1d6) pour le quiz' },
-  { id: 5, label: 'Taxe locale', type: 'special', effect: { points: -3000 }, lore: 'Payer une taxe pour le tourisme local' },
-  { id: 6, label: 'Case 6', type: 'ordinary', lore: 'Lance 3 dés (2d10 + 1d6) pour le quiz' },
-  { id: 7, label: 'Case 7', type: 'neutral', lore: 'Lance 2 dés (1d10 + 1d6) avec plusieurs combinaisons' },
-  { id: 8, label: 'Case 8', type: 'ordinary', lore: 'Lance 3 dés (2d10 + 1d6) pour le quiz' },
-  { id: 9, label: 'Mission express', type: 'special', effect: { points: 5000 }, lore: 'Mission réussie : gain de réputation et de points' },
-  { id: 10, label: 'Case 10', type: 'ordinary', lore: 'Lance 3 dés (2d10 + 1d6) pour le quiz' },
-  { id: 11, label: 'Case 11', type: 'neutral', lore: 'Lance 2 dés (1d10 + 1d6) avec plusieurs combinaisons' },
-  { id: 12, label: 'Souvenir perdu', type: 'special', effect: { loseSouvenir: 1 }, lore: 'Souvenir égaré à l\'aéroport' },
-  { id: 13, label: 'Case 13', type: 'ordinary', lore: 'Lance 3 dés (2d10 + 1d6) pour le quiz' },
-  { id: 14, label: 'Case 14', type: 'ordinary', lore: 'Lance 3 dés (2d10 + 1d6) pour le quiz' },
-  { id: 15, label: 'Case 15', type: 'neutral', lore: 'Lance 2 dés (1d10 + 1d6) avec plusieurs combinaisons' },
-  { id: 16, label: 'Bonus chance', type: 'special', effect: { points: 7000 }, lore: 'Bonne fortune vous sourit !' },
-  { id: 17, label: 'Case 17', type: 'ordinary', lore: 'Lance 3 dés (2d10 + 1d6) pour le quiz' },
-  { id: 18, label: 'Case 18', type: 'neutral', lore: 'Lance 2 dés (1d10 + 1d6) avec plusieurs combinaisons' },
-  { id: 19, label: 'Case 19', type: 'ordinary', lore: 'Lance 3 dés (2d10 + 1d6) pour le quiz' },
-  { id: 20, label: 'Amende', type: 'special', effect: { points: -5000 }, lore: 'Vous avez enfreint une règle de circulation' },
-  { id: 21, label: 'Case 21', type: 'ordinary', lore: 'Lance 3 dés (2d10 + 1d6) pour le quiz' },
-  { id: 22, label: 'Case 22', type: 'neutral', lore: 'Lance 2 dés (1d10 + 1d6) avec plusieurs combinaisons' },
-  { id: 23, label: 'Case 23', type: 'ordinary', lore: 'Lance 3 dés (2d10 + 1d6) pour le quiz' },
+  { id: 0, label: 'Départ', type: 'start', lore: 'Case de départ - +10 000 points à tous les joueurs' },
+  { id: 1, label: 'Case 1', type: 'ordinary', lore: 'Lancez les dés de composition quand vous êtes prêt' },
+  { id: 2, label: 'Case 2', type: 'ordinary', lore: 'Lancez les dés de composition quand vous êtes prêt' },
+  { id: 3, label: 'Bonus', type: 'bonus', effect: { points: 3000 }, lore: 'Gain de points !' },
+  { id: 4, label: 'Case 4', type: 'ordinary', lore: 'Lancez les dés de composition quand vous êtes prêt' },
+  { id: 5, label: 'Malus', type: 'malus', effect: { points: -2000 }, lore: 'Perte de points' },
+  { id: 6, label: 'Case 6', type: 'ordinary', lore: 'Lancez les dés de composition quand vous êtes prêt' },
+  { id: 7, label: 'Bonus', type: 'bonus', effect: { points: 5000 }, lore: 'Gain de points !' },
+  { id: 8, label: 'Case 8', type: 'ordinary', lore: 'Lancez les dés de composition quand vous êtes prêt' },
+  { id: 9, label: 'Case 9', type: 'ordinary', lore: 'Lancez les dés de composition quand vous êtes prêt' },
+  { id: 10, label: 'Malus', type: 'malus', effect: { loseSouvenir: 1 }, lore: 'Perte d\'un souvenir' },
+  { id: 11, label: 'Case 11', type: 'ordinary', lore: 'Lancez les dés de composition quand vous êtes prêt' },
+  { id: 12, label: 'Bonus', type: 'bonus', effect: { points: 4000 }, lore: 'Gain de points !' },
+  { id: 13, label: 'Case 13', type: 'ordinary', lore: 'Lancez les dés de composition quand vous êtes prêt' },
+  { id: 14, label: 'Case 14', type: 'ordinary', lore: 'Lancez les dés de composition quand vous êtes prêt' },
+  { id: 15, label: 'Malus', type: 'malus', effect: { points: -3000 }, lore: 'Perte de points' },
+  { id: 16, label: 'Case 16', type: 'ordinary', lore: 'Lancez les dés de composition quand vous êtes prêt' },
+  { id: 17, label: 'Bonus', type: 'bonus', effect: { points: 6000 }, lore: 'Gain de points !' },
+  { id: 18, label: 'Case 18', type: 'ordinary', lore: 'Lancez les dés de composition quand vous êtes prêt' },
+  { id: 19, label: 'Case 19', type: 'ordinary', lore: 'Lancez les dés de composition quand vous êtes prêt' },
+  { id: 20, label: 'Malus', type: 'malus', effect: { points: -4000 }, lore: 'Perte de points' },
+  { id: 21, label: 'Case 21', type: 'ordinary', lore: 'Lancez les dés de composition quand vous êtes prêt' },
+  { id: 22, label: 'Bonus', type: 'bonus', effect: { points: 8000 }, lore: 'Gain de points !' },
+  { id: 23, label: 'Case 23', type: 'ordinary', lore: 'Lancez les dés de composition quand vous êtes prêt' },
 ];
 
 const GameBoard: React.FC<GameBoardProps> = ({
@@ -73,6 +73,7 @@ const GameBoard: React.FC<GameBoardProps> = ({
   onStartQuiz,
   onStartNeutralDice,
   onMoveComplete,
+  onPassTurn,
   isMyTurn,
 }) => {
   const [moveDice, setMoveDice] = useState<number | null>(null);
@@ -81,6 +82,8 @@ const GameBoard: React.FC<GameBoardProps> = ({
   const [currentEvent, setCurrentEvent] = useState<string | null>(null);
   const [firstTurn, setFirstTurn] = useState<Set<number>>(new Set());
   const [hasMovedThisTurn, setHasMovedThisTurn] = useState(false);
+  const [currentCaseIndex, setCurrentCaseIndex] = useState<number | null>(null); // Case actuelle après déplacement
+  const [caseEffectApplied, setCaseEffectApplied] = useState(false); // Si l'effet a été appliqué
 
   // Réinitialiser le dé de déplacement quand le joueur change
   useEffect(() => {
@@ -88,6 +91,8 @@ const GameBoard: React.FC<GameBoardProps> = ({
     setIsRollingMoveDice(false);
     setShowStealChoice(false);
     setHasMovedThisTurn(false);
+    setCurrentCaseIndex(null);
+    setCaseEffectApplied(false);
   }, [currentPlayerIndex]);
 
   // Initialiser les positions depuis le store si nécessaire
@@ -109,6 +114,18 @@ const GameBoard: React.FC<GameBoardProps> = ({
     return player?.position ?? 0;
   }, [players]);
 
+  // Obtenir la couleur d'un joueur (fixe selon son ID)
+  const getPlayerColor = useCallback((playerId: number): string => {
+    const colors = [
+      'bg-red-500',
+      'bg-blue-500',
+      'bg-green-500',
+      'bg-yellow-500',
+    ];
+    // Utiliser l'ID du joueur pour une couleur fixe (ID commence à 1, donc -1 pour l'index)
+    return colors[(playerId - 1) % colors.length];
+  }, []);
+
   // Calculer les positions pour affichage rectangulaire en serpent
   const getCasePosition = (caseIndex: number) => {
     // Disposition en serpent : 6 colonnes x 4 lignes
@@ -129,7 +146,7 @@ const GameBoard: React.FC<GameBoardProps> = ({
   // Gérer les transactions (points, cartes) - définie en premier pour éviter dépendances circulaires
   const handleTransaction = useCallback((
     player: Player,
-    effect: { points?: number; loseSouvenir?: number; gainChampion?: number },
+    effect: { points?: number; loseSouvenir?: number },
     caseLabel: string
   ) => {
     if (effect.points !== undefined) {
@@ -162,63 +179,41 @@ const GameBoard: React.FC<GameBoardProps> = ({
       }
     }
 
-    if (effect.gainChampion && effect.gainChampion > 0) {
-      for (let i = 0; i < effect.gainChampion; i++) {
-        onAddChampionCard(player.id);
-      }
-      setCurrentEvent(`${caseLabel}: ${effect.gainChampion} carte(s) Champion gagnée(s) !`);
-    }
-
     setTimeout(() => setCurrentEvent(null), 3000);
-  }, [onUpdateScore, onLoseSouvenir, onAddChampionCard, onSellSouvenir]);
+  }, [onUpdateScore, onLoseSouvenir, onSellSouvenir]);
 
-  // Gérer l'effet de la case
+  // Gérer l'effet de la case (sans lancer automatiquement les dés)
   const handleCaseAction = useCallback((caseIndex: number, player: Player) => {
     const caseData = boardCases[caseIndex];
 
     if (!caseData) return;
 
-    // Case départ - bonus au premier tour
+    // Enregistrer la case actuelle (pour afficher les boutons appropriés)
+    setCurrentCaseIndex(caseIndex);
+
+    // Case départ - ne fait rien quand on passe dessus (déjà géré au début)
     if (caseData.type === 'start') {
-      setFirstTurn(prev => {
-        const newSet = new Set(prev);
-        if (!newSet.has(player.id)) {
-          newSet.add(player.id);
-          onUpdateScore(player.id, 10000);
-          setCurrentEvent(`🎉 Bonus de départ ! +10 000 points`);
-          setTimeout(() => setCurrentEvent(null), 3000);
-        }
-        return newSet;
-      });
+      // On ne fait rien, juste afficher un message
+      setCurrentEvent(`📍 Case départ - Aucun effet`);
+      setTimeout(() => setCurrentEvent(null), 2000);
       return;
     }
 
-    // Cases spéciales - appliquer les effets
-    if (caseData.type === 'special' && caseData.effect) {
+    // Cases bonus/malus - appliquer les effets automatiquement
+    if ((caseData.type === 'bonus' || caseData.type === 'malus') && caseData.effect) {
       handleTransaction(player, caseData.effect, caseData.label);
+      setCaseEffectApplied(true);
       return;
     }
 
-    // Cases ordinaires - lancer le quiz
+    // Cases ordinaires - NE PAS lancer automatiquement, juste afficher un message
     if (caseData.type === 'ordinary') {
-      setCurrentEvent(`🎯 Quiz - Trouvez le département !`);
-      setTimeout(() => {
-        setCurrentEvent(null);
-        onStartQuiz();
-      }, 1500);
+      setCurrentEvent(`📍 Case ordinaire - Lancez les dés quand vous êtes prêt`);
+      setTimeout(() => setCurrentEvent(null), 2000);
+      // Ne pas lancer automatiquement, le joueur le fera manuellement
       return;
     }
-
-    // Cases neutres - lancer les dés neutres
-    if (caseData.type === 'neutral') {
-      setCurrentEvent(`🎲 Lancez 2 dés pour des combinaisons`);
-      setTimeout(() => {
-        setCurrentEvent(null);
-        onStartNeutralDice();
-      }, 1500);
-      return;
-    }
-  }, [onUpdateScore, onStartQuiz, onStartNeutralDice, handleTransaction]);
+  }, [handleTransaction]);
 
   // Gérer le déplacement
   const handleMove = useCallback((steps: number) => {
@@ -308,9 +303,9 @@ const GameBoard: React.FC<GameBoardProps> = ({
   const getCaseColor = (type: BoardCase['type']) => {
     switch (type) {
       case 'start': return 'bg-yellow-500 border-yellow-400';
-      case 'ordinary': return 'bg-blue-500 border-blue-400';
-      case 'neutral': return 'bg-gray-500 border-gray-400';
-      case 'special': return 'bg-green-500 border-green-400';
+      case 'ordinary': return 'bg-gray-500 border-gray-400';
+      case 'bonus': return 'bg-green-500 border-green-400';
+      case 'malus': return 'bg-red-500 border-red-400';
       default: return 'bg-gray-500 border-gray-400';
     }
   };
@@ -345,7 +340,7 @@ const GameBoard: React.FC<GameBoardProps> = ({
             <div>
               <div className="text-xs text-purple-300 mb-1">Position</div>
               <div className="text-lg font-bold text-cyan-400">
-                Case {getPlayerPosition(currentPlayer.id) + 1}
+                Case {getPlayerPosition(currentPlayer.id)}
               </div>
             </div>
             <div>
@@ -429,8 +424,123 @@ const GameBoard: React.FC<GameBoardProps> = ({
         </div>
       )}
       
-      {isMyTurn && currentPlayer && hasMovedThisTurn && (
+      {/* Informations sur la case actuelle */}
+      {isMyTurn && currentPlayer && hasMovedThisTurn && currentCaseIndex !== null && (
+        <div className="card-gaming p-4">
+          {(() => {
+            const caseData = boardCases[currentCaseIndex];
+            if (!caseData) return null;
+
+            if (caseData.type === 'ordinary') {
+              return (
+                <div className="bg-gradient-to-r from-gray-500/20 to-gray-600/20 border-2 border-gray-500/50 rounded-xl p-4">
+                  {moveDice !== null && (
+                    <div className="mb-3 pb-3 border-b border-gray-500/30">
+                      <p className="text-white font-semibold text-center text-sm mb-1">
+                        🎲 Dé de déplacement : <span className="text-cyan-400 font-bold text-lg">{moveDice}</span>
+                      </p>
+                    </div>
+                  )}
+                  <p className="text-white font-bold text-center mb-2">
+                    📍 Case ordinaire : {caseData.label}
+                  </p>
+                  <p className="text-gray-300 text-sm text-center mb-3">
+                    Vous pouvez maintenant lancer les dés de composition quand vous êtes prêt.
+                  </p>
+                </div>
+              );
+            }
+
+            if (caseData.type === 'bonus') {
+              return (
+                <div className="bg-gradient-to-r from-green-500/20 to-emerald-500/20 border-2 border-green-500/50 rounded-xl p-4">
+                  {moveDice !== null && (
+                    <div className="mb-3 pb-3 border-b border-green-500/30">
+                      <p className="text-white font-semibold text-center text-sm mb-1">
+                        🎲 Dé de déplacement : <span className="text-cyan-400 font-bold text-lg">{moveDice}</span>
+                      </p>
+                    </div>
+                  )}
+                  <p className="text-white font-bold text-center mb-2">
+                    ✅ Bonus appliqué : {caseData.label}
+                  </p>
+                  {caseData.effect?.points && (
+                    <p className="text-green-300 text-center font-semibold mb-3">
+                      +{caseData.effect.points.toLocaleString()} points
+                    </p>
+                  )}
+                  <button
+                    onClick={onPassTurn}
+                    className="w-full px-6 py-3 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 text-white rounded-lg font-bold transition-all shadow-lg hover:scale-105"
+                  >
+                    ⏭️ Passer au tour suivant
+                  </button>
+                </div>
+              );
+            }
+
+            if (caseData.type === 'malus') {
+              return (
+                <div className="bg-gradient-to-r from-red-500/20 to-orange-500/20 border-2 border-red-500/50 rounded-xl p-4">
+                  {moveDice !== null && (
+                    <div className="mb-3 pb-3 border-b border-red-500/30">
+                      <p className="text-white font-semibold text-center text-sm mb-1">
+                        🎲 Dé de déplacement : <span className="text-cyan-400 font-bold text-lg">{moveDice}</span>
+                      </p>
+                    </div>
+                  )}
+                  <p className="text-white font-bold text-center mb-2">
+                    ❌ Malus appliqué : {caseData.label}
+                  </p>
+                  {caseData.effect?.points && (
+                    <p className="text-red-300 text-center font-semibold mb-3">
+                      {caseData.effect.points.toLocaleString()} points
+                    </p>
+                  )}
+                  {caseData.effect?.loseSouvenir && (
+                    <p className="text-red-300 text-center font-semibold mb-3">
+                      -{caseData.effect.loseSouvenir} souvenir(s)
+                    </p>
+                  )}
+                  <button
+                    onClick={onPassTurn}
+                    className="w-full px-6 py-3 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 text-white rounded-lg font-bold transition-all shadow-lg hover:scale-105"
+                  >
+                    ⏭️ Passer au tour suivant
+                  </button>
+                </div>
+              );
+            }
+
+            if (caseData.type === 'start') {
+              return (
+                <div className="bg-gradient-to-r from-yellow-500/20 to-orange-500/20 border-2 border-yellow-500/50 rounded-xl p-4">
+                  {moveDice !== null && (
+                    <div className="mb-3 pb-3 border-b border-yellow-500/30">
+                      <p className="text-white font-semibold text-center text-sm mb-1">
+                        🎲 Dé de déplacement : <span className="text-cyan-400 font-bold text-lg">{moveDice}</span>
+                      </p>
+                    </div>
+                  )}
+                  <p className="text-white font-bold text-center">
+                    📍 Case départ - Aucun effet à appliquer
+                  </p>
+                </div>
+              );
+            }
+
+            return null;
+          })()}
+        </div>
+      )}
+
+      {isMyTurn && currentPlayer && hasMovedThisTurn && currentCaseIndex === null && (
         <div className="card-gaming p-4 bg-gradient-to-r from-green-500/20 to-emerald-500/20 border-2 border-green-500/50">
+          {moveDice !== null && (
+            <p className="text-white font-semibold text-center mb-2">
+              🎲 Dé de déplacement : <span className="text-cyan-400 font-bold text-lg">{moveDice}</span>
+            </p>
+          )}
           <p className="text-white font-bold text-center">
             ✅ Déplacement terminé ! Vous pouvez maintenant utiliser les dés de composition ci-dessous.
           </p>
@@ -479,7 +589,7 @@ const GameBoard: React.FC<GameBoardProps> = ({
                     
                     {/* Numéro de la case en bas */}
                     <span className="text-white font-bold text-sm text-center flex-shrink-0 z-10 relative bg-black/30 px-1 rounded">
-                      {caseData.id + 1}
+                      {caseData.id}
                     </span>
                   </div>
                 </div>
@@ -559,18 +669,12 @@ const GameBoard: React.FC<GameBoardProps> = ({
                     style={{ gap: `${gapBetween}px` }}
                   >
                     {playersOnCase.map((player, idx) => {
-                      const colors = [
-                        'bg-red-500',
-                        'bg-blue-500',
-                        'bg-green-500',
-                        'bg-yellow-500',
-                      ];
                       return (
                         <div
                           key={player.id}
                           className={`
                             rounded-full border-2 border-white
-                            ${colors[idx % colors.length]}
+                            ${getPlayerColor(player.id)}
                             transition-all duration-300 ease-in-out
                             shadow-lg
                             hover:scale-110
@@ -582,7 +686,7 @@ const GameBoard: React.FC<GameBoardProps> = ({
                             zIndex: 100 + idx,
                             boxShadow: '0 2px 8px rgba(0, 0, 0, 0.3)',
                           }}
-                          title={`${player.name} - Case ${caseData.id + 1}`}
+                          title={`${player.name} - Case ${caseData.id}`}
                         />
                       );
                     })}
@@ -598,21 +702,21 @@ const GameBoard: React.FC<GameBoardProps> = ({
           <div className="p-3 bg-yellow-500/20 rounded-lg border border-yellow-500/50">
             <div className="text-xs text-yellow-300 mb-1">Départ</div>
             <div className="text-xs text-white">+10k pts</div>
-                </div>
-          <div className="p-3 bg-blue-500/20 rounded-lg border border-blue-500/50">
-            <div className="text-xs text-blue-300 mb-1">Ordinaire</div>
-            <div className="text-xs text-white">Quiz 3 dés</div>
-            </div>
+          </div>
           <div className="p-3 bg-gray-500/20 rounded-lg border border-gray-500/50">
-            <div className="text-xs text-gray-300 mb-1">Neutre</div>
-            <div className="text-xs text-white">2 dés combos</div>
+            <div className="text-xs text-gray-300 mb-1">Ordinaire</div>
+            <div className="text-xs text-white">Dés de composition</div>
           </div>
           <div className="p-3 bg-green-500/20 rounded-lg border border-green-500/50">
-            <div className="text-xs text-green-300 mb-1">Spéciale</div>
-            <div className="text-xs text-white">Effets divers</div>
-                  </div>
-                  </div>
-                </div>
+            <div className="text-xs text-green-300 mb-1">Bonus</div>
+            <div className="text-xs text-white">Gain de points</div>
+          </div>
+          <div className="p-3 bg-red-500/20 rounded-lg border border-red-500/50">
+            <div className="text-xs text-red-300 mb-1">Malus</div>
+            <div className="text-xs text-white">Perte points/souvenirs</div>
+          </div>
+        </div>
+      </div>
 
       {/* Version linéaire responsive (mobile) */}
       <div className="block md:hidden card-gaming p-4">
@@ -633,7 +737,7 @@ const GameBoard: React.FC<GameBoardProps> = ({
                 title={caseData.lore}
               >
                 <span className="text-white font-bold text-xs">
-                  {caseData.id + 1}
+                  {caseData.id}
                 </span>
                 {playersOnCase.length > 0 && (
                   <div 
@@ -644,13 +748,12 @@ const GameBoard: React.FC<GameBoardProps> = ({
                     }}
                   >
                     {playersOnCase.map((player, idx) => {
-                      const colors = ['bg-red-500', 'bg-blue-500', 'bg-green-500', 'bg-yellow-500'];
                       // Taille adaptative pour mobile
                       const mobileSize = playersOnCase.length > 2 ? 6 : 8;
                       return (
                         <div
                           key={player.id}
-                          className={`rounded-full border border-white ${colors[idx % colors.length]} relative`}
+                          className={`rounded-full border border-white ${getPlayerColor(player.id)} relative`}
                           style={{ 
                             zIndex: 30 + idx,
                             width: `${mobileSize}px`,

@@ -211,9 +211,14 @@ const GamePage: React.FC = () => {
     if (players.length >= 1) {
       startGame();
       
+      // Donner 10 000 points à tous les joueurs au début
+      players.forEach(player => {
+        updateScore(player.id, 10000);
+      });
+      
       // Afficher le marquee pour le premier joueur
       const firstPlayer = players[0];
-      setMarqueeText(`Début de la partie - Tour de ${firstPlayer.name}`);
+      setMarqueeText(`Début de la partie - Tour de ${firstPlayer.name} - +10 000 points à tous !`);
       setShowMarquee(true);
     }
   };
@@ -535,6 +540,7 @@ const GamePage: React.FC = () => {
                   onStartQuiz={handleStartQuiz}
                   onStartNeutralDice={handleStartNeutralDice}
                   onMoveComplete={handleMoveComplete}
+                  onPassTurn={handlePassTurn}
                 />
               </div>
 
@@ -551,50 +557,88 @@ const GamePage: React.FC = () => {
 
                 {/* Zone centrale - Jeu (Dés et Quiz) */}
                 <div className="lg:col-span-2 space-y-6">
-                  {/* Dés - Seulement disponibles après le déplacement */}
-                  {hasMovedThisTurn || !isMyTurn ? (
-                    <div className="card-gaming p-8 shadow-2xl animate-slide-in-left">
-                      <h3 className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent mb-4">
-                        {hasMovedThisTurn ? '🎲 Étape 2 : Dés pour le Quiz' : '🎲 Dés pour le Quiz'}
-                      </h3>
-                      <DiceRoll
-                        diceResults={diceResults}
-                        isRolling={isRolling}
-                        onRollComplete={() => {}}
-                      />
-                      
-                      {(phase === 'rolling' || hasMovedThisTurn) && !showHintModal && isMyTurn && (
-                        <div className="mt-6 text-center">
-                          <button
-                            onClick={handleRollDice}
-                            disabled={isRolling}
-                            className="btn-gaming px-10 py-4 text-white rounded-xl font-bold text-xl transition-all disabled:opacity-50 shadow-2xl"
-                          >
-                            {isRolling ? '🎲 Lancement...' : '🎲 Lancer les dés'}
-                          </button>
+                  {/* Dés - Seulement disponibles après le déplacement ET sur une case ordinaire */}
+                  {(() => {
+                    const currentPlayer = players[currentPlayerIndex];
+                    if (!currentPlayer) return null;
+                    
+                    // Importer boardCases depuis GameBoard (ou créer une référence locale)
+                    const boardCases = [
+                      { id: 0, type: 'start' },
+                      { id: 1, type: 'ordinary' }, { id: 2, type: 'ordinary' }, { id: 3, type: 'bonus' },
+                      { id: 4, type: 'ordinary' }, { id: 5, type: 'malus' }, { id: 6, type: 'ordinary' },
+                      { id: 7, type: 'bonus' }, { id: 8, type: 'ordinary' }, { id: 9, type: 'ordinary' },
+                      { id: 10, type: 'malus' }, { id: 11, type: 'ordinary' }, { id: 12, type: 'bonus' },
+                      { id: 13, type: 'ordinary' }, { id: 14, type: 'ordinary' }, { id: 15, type: 'malus' },
+                      { id: 16, type: 'ordinary' }, { id: 17, type: 'bonus' }, { id: 18, type: 'ordinary' },
+                      { id: 19, type: 'ordinary' }, { id: 20, type: 'malus' }, { id: 21, type: 'ordinary' },
+                      { id: 22, type: 'bonus' }, { id: 23, type: 'ordinary' },
+                    ];
+                    
+                    const playerPosition = currentPlayer.position ?? 0;
+                    const currentCase = boardCases[playerPosition];
+                    const isOrdinaryCase = currentCase?.type === 'ordinary';
+                    const canRollDice = hasMovedThisTurn && isOrdinaryCase && isMyTurn;
+                    
+                    if (hasMovedThisTurn && isOrdinaryCase) {
+                      return (
+                        <div className="card-gaming p-8 shadow-2xl animate-slide-in-left">
+                          <h3 className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent mb-4">
+                            🎲 Étape 2 : Lancer les dés de composition
+                          </h3>
+                          <DiceRoll
+                            diceResults={diceResults}
+                            isRolling={isRolling}
+                            onRollComplete={() => {}}
+                          />
+                          
+                          {phase === 'rolling' && !showHintModal && (
+                            <div className="mt-6 text-center">
+                              <button
+                                onClick={handleRollDice}
+                                disabled={isRolling}
+                                className="btn-gaming px-10 py-4 text-white rounded-xl font-bold text-xl transition-all disabled:opacity-50 shadow-2xl"
+                              >
+                                {isRolling ? '🎲 Lancement...' : '🎲 Lancer les dés'}
+                              </button>
+                            </div>
+                          )}
                         </div>
-                      )}
-                      
-                      {!hasMovedThisTurn && isMyTurn && (
-                        <div className="mt-4 p-3 bg-gradient-to-r from-orange-500/20 to-yellow-500/20 rounded-xl border-2 border-orange-500/50">
-                          <p className="text-white font-semibold text-center text-sm">
-                            ⚠️ Vous devez d&apos;abord lancer le dé de déplacement sur le plateau
-                          </p>
+                      );
+                    }
+                    
+                    if (!hasMovedThisTurn && isMyTurn) {
+                      return (
+                        <div className="card-gaming p-8 shadow-2xl bg-gray-800/50 opacity-60">
+                          <h3 className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent mb-4">
+                            🎲 Dés pour le Quiz
+                          </h3>
+                          <div className="p-4 bg-gradient-to-r from-orange-500/20 to-yellow-500/20 rounded-xl border-2 border-orange-500/50">
+                            <p className="text-white font-bold text-center">
+                              ⏳ Lancer d&apos;abord le dé de déplacement sur le plateau
+                            </p>
+                          </div>
                         </div>
-                      )}
-                    </div>
-                  ) : (
-                    <div className="card-gaming p-8 shadow-2xl bg-gray-800/50 opacity-60">
-                      <h3 className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent mb-4">
-                        🎲 Dés pour le Quiz
-                      </h3>
-                      <div className="p-4 bg-gradient-to-r from-orange-500/20 to-yellow-500/20 rounded-xl border-2 border-orange-500/50">
-                        <p className="text-white font-bold text-center">
-                          ⏳ Lancer d&apos;abord le dé de déplacement sur le plateau
-                        </p>
-                      </div>
-                    </div>
-                  )}
+                      );
+                    }
+                    
+                    if (hasMovedThisTurn && !isOrdinaryCase && isMyTurn && currentCase) {
+                      return (
+                        <div className="card-gaming p-8 shadow-2xl bg-gray-800/50 opacity-60">
+                          <h3 className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent mb-4">
+                            🎲 Dés pour le Quiz
+                          </h3>
+                          <div className="p-4 bg-gradient-to-r from-gray-500/20 to-gray-600/20 rounded-xl border-2 border-gray-500/50">
+                            <p className="text-white font-bold text-center">
+                              📍 Vous êtes sur une case {currentCase.type === 'bonus' ? 'bonus' : currentCase.type === 'malus' ? 'malus' : 'départ'} - Pas de dés disponibles
+                            </p>
+                          </div>
+                        </div>
+                      );
+                    }
+                    
+                    return null;
+                  })()}
 
                   {/* Compositions */}
                   {phase === 'choosing' && compositions.length > 0 && showCompositions && (
@@ -607,17 +651,19 @@ const GamePage: React.FC = () => {
                     </div>
                   )}
 
-                  {/* Actions */}
-                  <div className="card-gaming p-6 shadow-2xl">
-                    <div className="text-center">
-                      <button
-                        onClick={handlePassTurn}
-                        className="px-8 py-3 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 text-white rounded-xl font-bold transition-all shadow-lg hover:scale-105"
-                      >
-                        ⏭️ Tour du joueur suivant
-                      </button>
+                  {/* Actions - Bouton passer le tour */}
+                  {hasMovedThisTurn && isMyTurn && (
+                    <div className="card-gaming p-6 shadow-2xl">
+                      <div className="text-center">
+                        <button
+                          onClick={handlePassTurn}
+                          className="px-8 py-3 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 text-white rounded-xl font-bold transition-all shadow-lg hover:scale-105"
+                        >
+                          ⏭️ Tour du joueur suivant
+                        </button>
+                      </div>
                     </div>
-                  </div>
+                  )}
                 </div>
 
               {/* Zone droite - Carte de France */}
