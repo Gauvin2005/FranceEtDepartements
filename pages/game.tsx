@@ -391,6 +391,16 @@ const GamePage: React.FC = () => {
               </div>
               
               <div className="flex space-x-3">
+                <button
+                  onClick={() => {
+                    alert('Bascule de thème - Fonctionnalité en cours de développement (WIP)');
+                  }}
+                  className="px-4 py-2 bg-gradient-to-r from-purple-600 to-cyan-600 hover:from-purple-700 hover:to-cyan-700 text-white rounded-lg font-bold transition-all shadow-lg flex items-center gap-2"
+                  title="Basculer de thème (WIP)"
+                >
+                  <span>🎨</span>
+                  <span className="hidden sm:inline">Thème</span>
+                </button>
                 {gameStarted && !gameEnded && (
                   <button
                     onClick={() => setShowEndGameConfirm(true)}
