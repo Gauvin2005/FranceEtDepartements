@@ -608,9 +608,15 @@ const GamePage: React.FC = () => {
                     const playerPosition = currentPlayer.position ?? 0;
                     const currentCase = boardCases[playerPosition];
                     const isOrdinaryCase = currentCase?.type === 'ordinary';
-                    const canRollDice = hasMovedThisTurn && isOrdinaryCase && isMyTurn;
+                    // Condition robuste : afficher les dés si on est sur une case ordinaire ET que c'est notre tour
+                    // et qu'on n'est pas en phase de devinette ou fin de partie
+                    const shouldShowDice = isOrdinaryCase && isMyTurn && phase !== 'guessing' && phase !== 'end' && gameStarted && !gameEnded;
                     
-                    if (hasMovedThisTurn && isOrdinaryCase && phase !== 'guessing' && phase !== 'end') {
+                    // Afficher les dés si on est sur une case ordinaire après avoir bougé
+                    // et qu'on n'est pas encore en phase de devinette
+                    if (shouldShowDice) {
+                      const showDiceButton = phase === 'rolling' && !showHintModal;
+                      
                       return (
                         <div className="card-gaming p-8 shadow-2xl animate-slide-in-left relative z-10">
                           <h3 className={`text-2xl font-bold mb-4 bg-clip-text text-transparent ${
@@ -622,13 +628,13 @@ const GamePage: React.FC = () => {
                           </h3>
                           <div className="relative z-10">
                             <DiceRoll
-                              diceResults={diceResults}
+                              diceResults={diceResults.length > 0 ? diceResults : [0, 0, 1]}
                               isRolling={isRolling}
                               onRollComplete={() => {}}
                             />
                           </div>
                           
-                          {phase === 'rolling' && !showHintModal && (
+                          {showDiceButton && (
                             <div className="mt-6 text-center relative z-10">
                               <button
                                 onClick={handleRollDice}
@@ -639,12 +645,19 @@ const GamePage: React.FC = () => {
                               </button>
                             </div>
                           )}
+                          {phase === 'choosing' && !showDiceButton && (
+                            <div className="mt-4 p-4 bg-gradient-to-r from-blue-500/20 to-cyan-500/20 rounded-xl border-2 border-blue-500/50 text-center">
+                              <p className="text-white font-bold">
+                                Sélectionnez une composition ci-dessous
+                              </p>
+                            </div>
+                          )}
                         </div>
                       );
                     }
                     
                     // Si le joueur a déjà choisi une composition (phase = 'guessing'), désactiver les dés
-                    if (hasMovedThisTurn && isOrdinaryCase && (phase === 'guessing' || phase === 'end')) {
+                    if (isOrdinaryCase && isMyTurn && (phase === 'guessing' || phase === 'end')) {
                       return (
                         <div className="card-gaming p-8 shadow-2xl bg-gray-800/50 opacity-60">
                           <h3 className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent mb-4">
@@ -674,7 +687,7 @@ const GamePage: React.FC = () => {
                       );
                     }
                     
-                    if (hasMovedThisTurn && !isOrdinaryCase && isMyTurn && currentCase) {
+                    if (!isOrdinaryCase && isMyTurn && currentCase && gameStarted) {
                       return (
                         <div className="card-gaming p-8 shadow-2xl bg-gray-800/50 opacity-60">
                           <h3 className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent mb-4">
